@@ -1,23 +1,22 @@
-<!DOCTYPE html><html lang=en><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover"><title>Scale Space Tuner</title><link rel=icon href="data:,"><style>
+<!DOCTYPE html><html lang=en><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover"><title>Scale Space Intunist</title><link rel=icon href="data:,"><style>
 :root{--ac:#ffb454;--ach:#ff8f00}
 *{box-sizing:border-box;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:#000;overflow:hidden;color:#fff;font:12px/1.4 monospace}
+/* the whole page is a panel of black brushed metal: a fine horizontal grain, lit a little from above */
+body{margin:0;overflow:hidden;color:#fff;font:12px/1.4 monospace;background:radial-gradient(140% 70% at 50% -12%,rgba(255,255,255,.085),rgba(255,255,255,0) 62%),linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.3)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.003 1.3' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .17 0 0 0 -.055'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23n)'/%3E%3C/svg%3E"),#0d0e11}
 button{font:inherit;color:#fff;background:none;border:0;padding:0;cursor:pointer}
 [hidden]{display:none!important}
 /* the plate: a dark disc (#ring) with the sand drawn on its own canvas above it. #fld takes the touches */
 #c{position:fixed;left:0;top:0;pointer-events:none}
-#ring{position:fixed;translate:-50% -50%;border-radius:50%;border:1.5px solid rgba(160,185,220,.2);background:radial-gradient(circle at 36% 30%,#17191e,#0b0c0f 62%,#060709);box-shadow:inset 0 0 22px rgba(0,0,0,.8);pointer-events:none;transition:border-color .35s}
+#ring{position:fixed;translate:-50% -50%;border-radius:50%;border:1.5px solid rgba(160,185,220,.2);background:radial-gradient(circle at 36% 30%,#17191e,#0b0c0f 62%,#060709);box-shadow:inset 0 0 22px rgba(0,0,0,.8),0 0 0 1px #000,0 16px 36px rgba(0,0,0,.6);pointer-events:none;transition:border-color .35s}
 #ring.in{border-color:var(--ac)}
 #fld{position:fixed;inset:0;z-index:1}
 @keyframes pop{from{opacity:0;translate:0 10px;scale:.97}}@keyframes fin{from{opacity:0}}@keyframes bin{from{opacity:0;filter:blur(14px);scale:1.06}}
 :where(button,.ib){transition:background-color .18s,border-color .18s,color .18s,scale .12s}:where(button,.ib):active{scale:.93}
-/* the reading: the note above the plate, how far off beneath it. Both sit where the layout puts them (portrait: over and under; landscape: left and right) */
-.rdx{position:fixed;z-index:2;translate:-50% -50%;pointer-events:none;text-align:center;text-shadow:0 0 6px #000,0 0 2px #000;white-space:nowrap;transition:opacity .25s,color .35s}
-#nt{font-size:var(--ns,72px);line-height:1;letter-spacing:-.02em;display:flex;align-items:flex-start;justify-content:center}
-#nt sup{font-size:.42em;line-height:1.1;margin-left:.04em;min-width:.62em;text-align:left}#nt sub{font-size:.34em;line-height:1;align-self:flex-end;margin:0 0 .12em -.62em;min-width:.62em;text-align:left;opacity:.7}
-#nt.dim,#ce.dim{opacity:.38}#nt.in,#ce.in b{color:var(--ac)}#ce b{transition:color .35s}
-#ce{font-size:15px;letter-spacing:.06em;line-height:1.5}#ce b{font-weight:400;font-size:17px;font-variant-numeric:tabular-nums}#ce small{display:block;font-size:12px;opacity:.5;letter-spacing:.04em;font-variant-numeric:tabular-nums}
-#ce.wait b{font-size:13px;letter-spacing:.22em;opacity:.55}
+/* the readout and the dial: dark windows let into the panel. The readout is a dot-matrix display drawn on a canvas; #sr says the same in words */
+#dsp,#dial{border-radius:7px;background:#040506;box-shadow:inset 0 2px 7px #000,inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.08),0 -1px 0 rgba(0,0,0,.6)}
+#dsp{position:fixed;z-index:2;pointer-events:none;transition:opacity .25s}
+#dial{display:block;height:54px;cursor:ew-resize}
+.vh{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 /* chrome, as on Nano: 44 px icon buttons, a pill for a group, amber for what is on */
 .ib{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 2px #000)}
 svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -26,8 +25,9 @@ svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 #bot{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 8px calc(env(safe-area-inset-bottom,0px) + 14px);pointer-events:none}#bot>*{pointer-events:auto}
 .grp{display:flex;gap:2px;padding:0 3px;border-radius:24px;background:rgba(20,24,30,.55);box-shadow:inset 0 0 0 1px rgba(160,185,220,.12)}
 .cap{margin:0;font-size:12px;opacity:.75;text-align:center;pointer-events:none;text-shadow:0 0 4px #000}
-.land #bot{align-items:flex-end;padding-right:calc(env(safe-area-inset-right,0px) + 14px)}.land #hint{max-width:calc(50vw - 46vh - 16px);text-align:right}
-body.pre #top,body.pre #bot,body.pre .rdx{opacity:0;pointer-events:none}body.pre #fld{display:none}body.pre #top>*,body.pre #bot>*{pointer-events:none}
+.land #bot{left:auto;right:calc(env(safe-area-inset-right,0px) + 12px);top:0;bottom:0;justify-content:center;padding:0;gap:12px;width:var(--lw,240px)}
+#tvo{min-width:78px;height:44px;padding:0 12px;font:13px/1 monospace;letter-spacing:.06em;color:#dfe4ec}
+body.pre #top,body.pre #bot,body.pre #dsp{opacity:0;pointer-events:none}body.pre #fld{display:none}body.pre #top>*,body.pre #bot>*{pointer-events:none}
 /* a toast, Nano's */
 #tst{position:fixed;left:50%;translate:-50% 0;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:12;padding:8px 14px;border-radius:6px;background:rgba(0,0,0,.78);border:1px solid #fff3;font-size:13px;opacity:0;transition:opacity .3s;white-space:normal;width:max-content;max-width:min(92vw,420px);text-align:center;pointer-events:none}
 #tst.on{opacity:1}
@@ -66,16 +66,15 @@ body.pre #top,body.pre #bot,body.pre .rdx{opacity:0;pointer-events:none}body.pre
 </style>
 <div id=ring></div><canvas id=c></canvas><div id=fld></div>
 <div id=top><button class=ib id=mnb aria-label="menu" title="menu"></button><span></span></div>
-<div id=nt class=rdx aria-live=off></div>
-<div id=ce class="rdx wait" aria-live=off><b>listening</b></div>
-<div id=bot><p class=cap id=hint hidden></p><div class=grp id=tg hidden><button class=ib id=tdn aria-label="note down" title="note down"></button><button class=ib id=tsn aria-label="hear the test tone" title="hear the test tone"></button><button class=ib id=tup aria-label="note up" title="note up"></button></div></div>
+<canvas id=dsp></canvas><p id=sr class=vh aria-live=off></p>
+<div id=bot><canvas id=dial hidden aria-label="tuning dial: slide to change the note" role=slider></canvas><div class=grp id=tg hidden><button class=ib id=tdn aria-label="down an octave" title="down an octave"></button><button class=ib id=tsn aria-label="play or stop" title="play or stop"></button><button id=tvo aria-label="change the instrument" title="change the instrument"></button><button class=ib id=tup aria-label="up an octave" title="up an octave"></button></div></div>
 <div id=tst role=status></div>
-<div id=hlp hidden><div class=card role=dialog aria-modal=true aria-labelledby=hlt><b id=hlt>HOW TO READ IT</b><div class=hr id=h1></div><div class=hr id=h2></div><div class=hr id=h3></div><p style="margin:0 0 14px"><i>Sound is measured on this device. Nothing is recorded or sent.</i></p><button id=hok>got it</button></div></div>
+<div id=hlp hidden><div class=card role=dialog aria-modal=true aria-labelledby=hlt><b id=hlt>HOW TO READ IT</b><div class=hr id=h1></div><div class=hr id=h2></div><div class=hr id=h3></div><div class=hr id=h4></div><p style="margin:0 0 14px"><i>Sound is measured on this device. Nothing is recorded or sent.</i></p><button id=hok>got it</button></div></div>
 <div id=pm class=out hidden role=dialog aria-modal=true aria-labelledby=pmh><div id=pb><button id=pmx aria-label="close menu" title="close menu">&#10005;</button><p class=h id=pmh>menu</p><button id=pmic></button><button id=pton></button><div class=rw><span>reference A</span><span><button id=adn aria-label="lower the reference pitch">&#8722;</button><b id=aval>440 Hz</b><button id=aup aria-label="raise the reference pitch">+</button></span></div><button id=phl>help</button><button id=pt>return to title</button></div><div id=pl><p class=l>more scale space</p><div class=links><a href="https://setzstone.itch.io/scale-space" target=_blank rel=noopener>Scale Space<small>early access</small></a><a href="https://setzstone.itch.io/cymatist" target=_blank rel=noopener>Scale Space Cymatist<small>cymatics tools</small></a><a href="https://www.reddit.com/r/ScaleSpace/" target=_blank rel=noopener>r/ScaleSpace<small>finds, builds, and the dev log</small></a></div></div></div>
-<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 168" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></svg></div><p class=sub>tuner &#183; build 4</p><div class=row><button id=sgo>listen</button><button id=sto>test tone</button></div><p class=cap id=scp>Sound is measured on this device. Nothing is recorded or sent.</p></div></div>
+<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 168" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></svg></div><p class=sub>intunist &#183; build 5</p><div class=row><button id=sgo>listen</button><button id=sto>play</button></div><p class=cap id=scp>Sound is measured on this device. Nothing is recorded or sent.</p></div></div>
 <script>
 'use strict'
-const PREVIEW=false                        // the build sets this: a preview page cannot use the microphone, so it offers the test tone only
+const PREVIEW=false                        // the build sets this: a preview page cannot use the microphone, so it offers playing only
 const $=id=>document.getElementById(id)
 // ---- pitch: which note is sounding and how far off it is.
 // McLeod's method (a normalised autocorrelation, here taken through an FFT), then the period is measured again across
@@ -196,13 +195,14 @@ function makePlate(S, hz) {
 const IC={menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',note:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',chev:'<path d="M6 9l6 6 6-6"/>',
 fplate:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
 ay:'<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/>',wave:'<path d="M2.5 12c2.4-8 4.8-8 7.1 0s4.8 8 7.1 0 3.2-5.6 4.8-3"/>'}
-IC.mute=IC.note+'<path d="M3 3l18 18"/>'
+IC.mute=IC.note+'<path d="M3 3l18 18"/>',IC.oct='<path d="M6 6l6 6 6-6M6 13l6 6 6-6"/>'
 const SV=n=>'<svg viewBox="0 0 24 24">'+IC[n]+'</svg>'
-mnb.innerHTML=SV('menu'),tsn.innerHTML=SV('mute'),tdn.innerHTML='<svg viewBox="0 0 24 24" style="rotate:90deg">'+IC.chev+'</svg>',tup.innerHTML='<svg viewBox="0 0 24 24" style="rotate:-90deg">'+IC.chev+'</svg>'
-pmic.innerHTML=SV('mic')+'microphone',pton.innerHTML=SV('wave')+'test tone'
+mnb.innerHTML=SV('menu'),tsn.innerHTML=SV('mute'),tdn.innerHTML='<svg viewBox="0 0 24 24" style="rotate:90deg">'+IC.oct+'</svg>',tup.innerHTML='<svg viewBox="0 0 24 24" style="rotate:-90deg">'+IC.oct+'</svg>'
+pmic.innerHTML=SV('mic')+'microphone',pton.innerHTML=SV('wave')+'play'
 h1.innerHTML=SV('ay')+'<p>Off the note, the sand is shaken loose: its lines spread and soften, most on one side of the plate and around the rim. <b>Sharp</b>, the loose side is the <b>upper</b> one. <b>Flat</b>, the <b>lower</b> one.</p>'
 h2.innerHTML=SV('fplate')+'<p>The closer you get, the crisper the lines. <b>In tune</b>, the whole figure is crisp and comes to rest.</p>'
 h3.innerHTML=SV('note')+'<p>Low notes draw a broad figure, high notes a fine one.</p>'
+h4.innerHTML=SV('wave')+'<p>Playing: slide the <b>dial</b> to move through the notes. Let go near a note and it settles in tune. Drag the <b>plate</b> sideways to bend the note; it springs back. A tap on the plate plucks the guitar again.</p>'
 
 // ---------- the plate and the sand ----------
 // The plate is Nano's (S cells across, never seen directly). What shows is sand: NG grains, each a speck on a canvas KT pixels to the cell.
@@ -277,21 +277,55 @@ for(let i=0;i<NG;i++){const q=GQ[i];D32[q]=SCOL[CNT[q]+(i&3?0:5)]}
 RSD=z,PX.putImageData(IM,0,0)}
 SAND(1,0,4.5,0)                                      // the sand as it lies before any sound
 
+// ---------- the readout ----------
+// A dot-matrix display, DC dots by DR, like the frequency display of the tone generator that drives a real plate. Every dot is always
+// faintly there; a lit dot has one of three brightnesses. It shows the note (largest), the frequency, how far off the note is, and a row
+// of lights, one to a semitone, for where the note lies between the lowest note (E1) and the highest (G7).
+const DC=124,DR=36,DPAD=8,DTG=new Uint8Array(DC*DR),DNOW=new Uint8Array(DC*DR).fill(9),DX=$('dsp').getContext('2d'),GL={}
+// the letters, 5 dots by 7: after each character, seven rows as two hex digits each (10 is the left dot)
+'A0e11111f111111 B1e11111e11111e C0e11101010110e D1e11111111111e E1f10101e10101f F1f10101e101010 G0e11101711110e H1111111f111111 I0e04040404040e J0702020202120c K11121418141211 L1010101010101f M111b1515111111 N11111915131111 O0e11111111110e P1e11111e101010 Q0e11111115120d R1e11111e141211 S0f10100e01011e T1f040404040404 U1111111111110e V11111111110a04 W1111111515150a X11110a040a1111 Y1111110a040404 Z1f01020408101f 00e11131519110e 1040c040404040e 20e11010204081f 31f02040201110e 402060a121f0202 51f101e0101110e 60608101e11110e 71f010204080808 80e11110e11110e 90e11110f01020c #0a0a1f0a1f0a0a .00000000000c0c +0004041f040400 -0000001f000000'.split(' ').forEach(g=>{GL[g[0]]=[1,3,5,7,9,11,13].map(i=>parseInt(g.substr(i,2),16))})
+// one character at column x, row y, s dots to the dot, at brightness L
+const DCHR=(ch,x,y,s,L)=>{const g=GL[ch];if(!g)return;for(let r=0;r<7;r++)for(let c=0;c<5;c++)if(g[r]>>4-c&1)for(let a=0;a<s;a++)DTG.fill(L,(y+r*s+a)*DC+x+c*s,(y+r*s+a)*DC+x+c*s+s)}
+const DCLR=(x,y,w,h)=>{for(let r=y;r<y+h;r++)DTG.fill(0,r*DC+x,r*DC+x+w)}
+// a line of small letters ending at column xr
+const DTXT=(str,xr,y,L)=>{let x=xr-str.length*6+2;for(const ch of str)DCHR(ch,x,y,1,L),x+=6}
+// the row of lights. E1 is its left end and G7 its right; the ends and every C stand taller, so the octaves can be counted. The note is a
+// bright bar; between two semitones its light is shared between two columns
+const DBAR=(pos,L)=>{DCLR(24,26,76,9);for(let k=0;k<76;k++){const x=24+k,e=k==0||k==75,h=e?3:(28+k)%12?0:1;for(let r=30-h;r<=30+h;r++)DTG[r*DC+x]=e?2:1}
+if(pos<0)return;const q=pos-28,k=Math.floor(q),fr=q-k,lv=w=>w>.66?L:w>.33?2:w>.1?1:0
+for(const [kk,w] of [[k,1-fr],[k+1,fr]]){const v=lv(w);if(v&&kk>=0&&kk<76)for(let r=27;r<=33;r++)DTG[r*DC+24+kk]<v&&(DTG[r*DC+24+kk]=v)}}
+// everything at once: the note (name '' for none) and its octave, two lines of words, how bright (3 sounding, 2 held or silent), the place on the row of lights
+const DSHOW=(name,oct,l1,l2,L,pos)=>{DCLR(0,0,DC,24);if(name)DCHR(name[0],1,1,3,L),name[1]&&DCHR('#',19,1,1,L),DCHR(''+oct,19,15,1,L)
+DTXT(l1,122,2,L),DTXT(l2,122,13,L),DBAR(pos,L)}
+// only the dots that changed are drawn again. DPX = the distance from dot to dot on the screen
+const DCOL=['rgba(255,180,84,.055)','rgba(255,180,84,.22)','rgba(255,180,84,.5)','#ffb454']
+const DFLUSH=_=>{const k=DPR(),p=DPX*k,o=DPAD*k,rd=p*.38;for(let i=0;i<DC*DR;i++){const v=DTG[i];if(v==DNOW[i])continue;DNOW[i]=v;const x=o+(i%DC)*p,y=o+(i/DC|0)*p
+DX.clearRect(x,y,p,p);if(v==3)DX.fillStyle='rgba(255,180,84,.2)',DX.fillRect(x,y,p,p);DX.fillStyle=DCOL[v],DX.beginPath(),DX.arc(x+p/2,y+p/2,rd,0,6.2832),DX.fill()}}
+DTXT('E1',11,27,2),DTXT('G7',122,27,2),DBAR(-1,2)
+
 // ---------- layout ----------
-let VW=0,VH=0,CX=0,CY=0,RS=100
-// portrait: note, plate and distance stacked between the top bar and whatever the bottom strip holds; landscape: note left, plate middle, distance right
-const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,ns=Math.max(44,Math.min(96,pt?VH*.1:VH*.2));document.body.classList.toggle('land',!pt),CX=VW/2
-if(pt){const tp=48+(parseFloat(getComputedStyle($('top')).paddingTop)||0),B=tg.hidden?24:bot.offsetHeight+6,av=VH-tp-B;RS=Math.max(60,Math.min(VW*.46,(av-ns-76)/2));const y0=tp+Math.max(0,(av-ns-76-2*RS)*.45)
-CY=y0+ns+12+RS,nt.style.left=ce.style.left=CX+'px',nt.style.top=y0+ns/2+'px',ce.style.top=CY+RS+38+'px'}
-else RS=Math.min((VH-24)*.46,VW*.24),CY=VH/2,nt.style.left=(CX-RS)/2+'px',ce.style.left=(CX+RS+VW)/2+'px',nt.style.top=ce.style.top=CY+'px'
+// DPX = dot to dot on the readout; DLW, DLH = the dial's size; SPX = the dial's width for one semitone (all in screen pixels)
+let VW=0,VH=0,CX=0,CY=0,RS=100,DPX=3,DLW=300,DLH=54,SPX=36
+const DPR=_=>Math.min(3,window.devicePixelRatio||1)
+// portrait: the readout, the plate, then (playing) the dial and its buttons; landscape: readout left, plate middle, dial and buttons right
+const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,play=mode=='tone',tp=48+(parseFloat(getComputedStyle($('top')).paddingTop)||0),k=DPR();document.body.classList.toggle('land',!pt),CX=VW/2
+let dw,dh,dx,dy
+if(pt){dw=Math.min(VW-20,430),DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD,DLW=Math.min(VW-20,520),dial.style.width=DLW+'px'
+const B=play?bot.offsetHeight+6:20;RS=Math.max(60,Math.min(VW*.46,(VH-tp-dh-B-30)/2));const fr=VH-tp-dh-B-2*RS;dx=CX-dw/2,dy=tp+fr*.2,CY=dy+dh+fr*.4+RS}
+else{RS=Math.min((VH-24)*.46,VW*.22),CY=VH/2;const lw=CX-RS-28;dw=Math.min(lw,430),DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD,dx=14+(lw-dw)/2,dy=CY-dh/2,DLW=Math.max(120,lw),dial.style.width=DLW+'px',bot.style.setProperty('--lw',DLW+'px')}
+SPX=Math.max(24,Math.min(38,DLW/9.5))
 const sd=RS*S/P.R;C.style.width=C.style.height=sd+'px',C.style.left=CX-sd/2+'px',C.style.top=CY-sd/2+'px'
-ring.style.left=CX+'px',ring.style.top=CY+'px',ring.style.width=ring.style.height=2*RS+5+'px',nt.style.setProperty('--ns',ns+'px')}
-addEventListener('resize',FIT),FIT()
+ring.style.left=CX+'px',ring.style.top=CY+'px',ring.style.width=ring.style.height=2*RS+5+'px'
+dsp.style.left=dx+'px',dsp.style.top=dy+'px',dsp.style.width=dw+'px',dsp.style.height=dh+'px',dsp.width=Math.round(dw*k),dsp.height=Math.round(dh*k),DNOW.fill(9),DFLUSH()
+dial.width=Math.round(DLW*k),dial.height=Math.round(DLH*k),DIALDRAW()}
+addEventListener('resize',_=>FIT())
 
 // ---------- sound in ----------
-// mode: '' on the title card, 'mic' listening, 'tone' a test tone made here (bent by dragging the plate) and read by the same detector
+// mode: '' on the title card, 'mic' listening, 'tone' playing: a note made here, read by the same detector that reads the microphone
 let mode='',A4=440,AC=null,AN=null,MS=null,SIL=null,BUF=new Float32Array(4096),DET=makePitch(4096,48000),DFS=48000,RDG=makeReading(),R0={on:0,held:0},TD=0
-let TM=69,TB=-17,HEAR=0,OSC=null,OG=null,TPH=0
+// playing: TP = where the dial stands, as a note number (69 is A4; 69.1 is ten cents above it); BEND = how far the note is bent off that
+// just now, in cents; PLAYING = the instrument is sounding; ENV = how loud its note is at this moment, 0 to 1
+let TP=69,BEND=0,PLAYING=0,ENV=0,TPH=0
 const GATE=.004,FMIN=30,FMAX=4200
 try{const a=+localStorage.getItem('sst.a4');a>=400&&a<=480&&(A4=a)}catch(e){}
 const TOAST=(s,ms=3600)=>{tst.textContent=s,tst.classList.add('on'),clearTimeout(TOAST.t),TOAST.t=setTimeout(_=>tst.classList.remove('on'),ms)}
@@ -299,24 +333,81 @@ const CTX=_=>{if(!AC){const K=window.AudioContext||window.webkitAudioContext;if(
 const WAKE=async _=>{try{WAKE.l=await navigator.wakeLock.request('screen')}catch(e){}}
 const MICOFF=_=>{if(MS){for(const t of MS.getTracks())t.stop();MS=null}if(AN){try{AN.disconnect()}catch(e){}AN=null}}
 const MIC=async _=>{if(PREVIEW)return 0
-if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return TOAST('This browser gives pages no microphone. The test tone still works.'),0
+if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return TOAST('This browser gives pages no microphone. Playing still works.'),0
 try{const ac=CTX();if(!ac)throw 0;const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}})
 MICOFF(),MS=st;const src=ac.createMediaStreamSource(st);AN=ac.createAnalyser(),AN.fftSize=ac.sampleRate>60000?8192:4096,src.connect(AN)
 SIL||(SIL=ac.createGain(),SIL.gain.value=0,SIL.connect(ac.destination)),AN.connect(SIL)   // some browsers only run what reaches the speaker; this branch is silent
 BUF=new Float32Array(AN.fftSize),DFS=ac.sampleRate,DET=makePitch(AN.fftSize,DFS);return 1}
 catch(e){const n=e&&e.name;TOAST(n=='NotAllowedError'||n=='SecurityError'?'The microphone is blocked for this page. Allow it in the browser\'s site settings, then choose microphone again.':n=='NotFoundError'?'No microphone was found.':'The microphone could not be opened.',6000);return 0}}
-const TONEF=_=>A4*Math.pow(2,(TM-69)/12+TB/1200)
-const HEARSET=on=>{HEAR=on?1:0;tsn.innerHTML=SV(HEAR?'note':'mute'),tsn.classList.toggle('on',!!HEAR)
-if(HEAR){const ac=CTX();if(!ac)return;if(!OSC){OSC=ac.createOscillator(),OG=ac.createGain(),OSC.type='triangle',OG.gain.value=0,OSC.connect(OG),OG.connect(ac.destination),OSC.frequency.value=TONEF();try{OSC.start()}catch(e){}}
-OG.gain.setTargetAtTime(.07,ac.currentTime,.03)}else if(OG&&AC)OG.gain.setTargetAtTime(0,AC.currentTime,.03)}
-const SETMODE=async m=>{if(m=='mic'&&!(await MIC()))m=mode=='mic'?'tone':mode||'tone'
-if(m!='mic')MICOFF();if(m=='tone'){if(DFS!=48000||BUF.length!=4096)BUF=new Float32Array(4096),DFS=48000,DET=makePitch(4096,48000)}else HEARSET(0)
-mode=m,RDG=makeReading(),R0={on:0,held:0},tg.hidden=m!='tone',hint.hidden=m!='tone',hint.textContent='drag the plate sideways to bend the tone, up or down to change the note'
-pmic.classList.toggle('on',m=='mic'),pton.classList.toggle('on',m=='tone'),FIT(),WAKE()}
-// one reading: the newest samples from the microphone, or the same length of the test tone (a fundamental and two overtones, with a little hiss)
+const TONEF=_=>A4*Math.pow(2,(TP-69)/12+BEND/1200)
+
+// ---------- the instruments (playing) ----------
+// Three stringed voices. The bowed ones are a sawtooth (what a bowed string does) through the resonances of a body; the plucked one is a
+// string worked out sample by sample (a loop of noise that is averaged as it goes round) through a body.
+//   bow  1 bowed, 0 plucked     hp, lp  the body passes nothing below hp or above lp (Hz)     pk  its resonances: [Hz, dB, sharpness]
+//   lv   how loud               vr, vd  vibrato: beats a second, and how wide in cents (it comes in only once a note has been held)
+const VOICES=[{n:'violin',bow:1,hp:185,lp:5200,pk:[[290,5,4],[470,5,5],[1050,3,3],[2600,5,1.2]],lv:.11,vr:5.7,vd:15},
+{n:'cello',bow:1,hp:62,lp:3000,pk:[[98,5,4],[178,5,5],[290,4,4],[540,3,3],[1700,3,1.5]],lv:.14,vr:5.1,vd:11},
+{n:'guitar',bow:0,hp:70,lp:5600,pk:[[105,3,2],[215,3,2.5]],lv:1,vr:5.2,vd:9}]
+// VOICE = which one; VX = its sounding parts; TPL = when the string was last plucked, PP = at what note, TQ = how long that note rings;
+// TMOVE = when the note last moved (vibrato waits on it)
+let VOICE=0,VX=null,MOUT=null,TPL=-9,PP=69,TQ=2,TMOVE=0
+try{const v=+localStorage.getItem('sst.voice');v>=0&&v<VOICES.length&&(VOICE=v|0)}catch(e){}
+// how long a plucked note rings (seconds to fall 60 dB): long for low notes, short for high ones
+const T60=f=>{const t=3.4*Math.pow(82.4/f,.3466);return t<.8?.8:t>4.2?4.2:t}
+// a plucked string: one period of softened noise (softer for a low string), with the notch of a string plucked a fifth of the way along,
+// then round and round a loop that blends each sample with its neighbour (sh of the neighbour: half for low strings, which keeps them
+// from jangling; little for high ones, which would otherwise die at once), losing a little each time round so that it rings for t60.
+// The loop is a whole number of samples long, so the note comes out a hair off; rate puts it right
+const KS=(f,fs,t60)=>{let sh=.5*Math.pow(330/f,1.5);sh=sh>.5?.5:sh;const N=Math.max(2,Math.floor(fs/f-sh)),n=Math.ceil(fs*Math.min(4,t60*1.15)),y=new Float32Array(n),w=2*Math.PI*f/fs,
+fl=-10*Math.log10((1-sh)*(1-sh)+sh*sh+2*sh*(1-sh)*Math.cos(w))*f,rho=Math.min(.99999,Math.pow(10,-Math.max(0,60/t60-fl)/(20*f))),a=1-Math.exp(-2*Math.PI*Math.max(900,Math.min(6000,f*9))/fs)
+let z=0x9E3779B9^N,l1=0,l2=0,mean=0,pk=0
+for(let i=0;i<N;i++)z^=z<<13,z^=z>>>17,z^=z<<5,l1+=((z>>>0)/2147483648-1-l1)*a,l2+=(l1-l2)*a,y[i]=l2,mean+=l2/N
+for(let i=0;i<N;i++)y[i]-=mean
+const d=Math.max(1,N*.19|0);for(let i=N-1;i>=d;i--)y[i]-=y[i-d]*.7
+y[N]=rho*y[0];for(let i=N+1;i<n;i++)y[i]=rho*((1-sh)*y[i-N]+sh*y[i-N-1])
+for(let i=0;i<n;i++){const v=y[i]<0?-y[i]:y[i];v>pk&&(pk=v)}
+pk=.9/(pk||1);for(let i=0;i<n;i++)y[i]*=pk
+return{y,rate:f*(N+sh)/fs}}
+// everything goes out through one gentle limiter
+const AOUT=ac=>{MOUT=ac.createGain(),MOUT.gain.value=.85;const cp=ac.createDynamicsCompressor();cp.threshold.value=-16,cp.ratio.value=5,cp.attack.value=.004,cp.release.value=.2,MOUT.connect(cp),cp.connect(ac.destination)}
+// a voice's body: in at inp, out (and how loud) at out
+const BODY=(ac,v)=>{const inp=ac.createGain(),out=ac.createGain();let n=inp
+const add=(type,f,q,g)=>{const b=ac.createBiquadFilter();b.type=type,b.frequency.value=f,b.Q.value=q,g&&(b.gain.value=g),n.connect(b),n=b}
+add('highpass',v.hp,.7);const hpf=n;for(const [f,g,q] of v.pk)add('peaking',f,q,g);add('lowpass',v.lp,.7),n.connect(out),out.connect(MOUT);return{inp,out,hpf}}
+const VSTOP=_=>{const x=VX;if(!x||!AC)return;VX=null;const t=AC.currentTime;try{x.b.out.gain.cancelScheduledValues(t),x.b.out.gain.setTargetAtTime(0,t,.05)}catch(e){}
+setTimeout(_=>{try{x.osc&&x.osc.stop(),x.src&&x.src.stop(),x.lfo.stop(),x.b.out.disconnect()}catch(e){}},500)}
+const VSTART=_=>{const ac=CTX();if(!ac)return;MOUT||AOUT(ac),VSTOP();const v=VOICES[VOICE],b=BODY(ac,v),lfo=ac.createOscillator(),lg=ac.createGain(),ag=ac.createGain();lfo.frequency.value=v.vr,lg.gain.value=ag.gain.value=0,lfo.connect(lg),lfo.connect(ag),ag.connect(b.out.gain);try{lfo.start()}catch(e){}
+b.hpf.frequency.value=Math.min(v.hp,TONEF()*.85),VX={v,b,lfo,lg,ag,osc:null,src:null,sg:null,r0:1}
+if(v.bow){const o=ac.createOscillator();o.type='sawtooth',o.frequency.value=TONEF(),lg.connect(o.detune),o.connect(b.inp),b.out.gain.value=0,b.out.gain.setTargetAtTime(v.lv,ac.currentTime,.07);try{o.start()}catch(e){}VX.osc=o}
+else b.out.gain.value=v.lv}
+// pluck the string (plucked voices only). Not more often than every 70 ms unless made to
+const PLUCK=(t,must)=>{if(!PLAYING||VOICES[VOICE].bow||!must&&t-TPL<.07)return;const f=TONEF();TPL=t,PP=TP+BEND/100,TQ=T60(f)
+const x=VX,ac=AC;if(!x||!ac)return;const k=KS(f,ac.sampleRate,TQ),bf=ac.createBuffer(1,k.y.length,ac.sampleRate);bf.getChannelData(0).set(k.y)
+const s=ac.createBufferSource(),g=ac.createGain(),vg=ac.createGain();s.buffer=bf,s.playbackRate.value=k.rate,vg.gain.value=k.rate*5.776e-4,x.lg.connect(vg),vg.connect(s.playbackRate),s.connect(g),g.connect(x.b.inp)
+if(x.src){const os=x.src;try{x.sg.gain.setTargetAtTime(0,ac.currentTime,.012)}catch(e){}setTimeout(_=>{try{os.stop()}catch(e){}},200)}
+x.src=s,x.sg=g,x.r0=k.rate;try{s.start()}catch(e){}}
+// about thirty times a second the sounding voice is brought up to the dial: its pitch, and its vibrato, which comes in over a few tenths of
+// a second once the note has stood still for .45 s and goes at once when the note moves. The vibrato is only in what is heard: the plate is
+// driven by the note itself (READ), so it never makes a note read out of tune. (A note below an instrument's own lowest is let through
+// its body rather than thinned to nothing.)
+const VTICK=t=>{const x=VX,ac=AC;if(!x||!ac)return;const now=ac.currentTime,still=t-TMOVE>.45,f=TONEF();try{x.lg.gain.setTargetAtTime(still?x.v.vd:0,now,still?.3:.03),x.ag.gain.setTargetAtTime(still?x.v.lv*.07:0,now,still?.3:.03)
+x.b.hpf.frequency.setTargetAtTime(Math.min(x.v.hp,f*.85),now,.05)
+if(x.osc)x.osc.frequency.setTargetAtTime(f,now,.012);else if(x.src)x.src.playbackRate.setTargetAtTime(x.r0*Math.pow(2,(TP+BEND/100-PP)/12),now,.012)}catch(e){}}
+const PLAYSET=on=>{PLAYING=on?1:0,tsn.innerHTML=SV(PLAYING?'note':'mute'),tsn.classList.toggle('on',!!PLAYING);if(PLAYING)VSTART(),PLUCK(performance.now()/1000,1);else VSTOP()}
+const VOICESET=v=>{VOICE=(v%VOICES.length+VOICES.length)%VOICES.length,tvo.textContent=VOICES[VOICE].n;try{localStorage.setItem('sst.voice',VOICE)}catch(e){}PLAYING&&PLAYSET(1)}
+// (if the microphone was asked for and could not be had, the page falls back to playing, but silent, and without talking over the message that said why)
+const SETMODE=async m=>{const asked=m;if(m=='mic'&&!(await MIC()))m=mode=='mic'?'tone':mode||'tone'
+if(m!='mic')MICOFF();if(m=='tone'){if(DFS!=48000||BUF.length!=4096)BUF=new Float32Array(4096),DFS=48000,DET=makePitch(4096,48000)}
+mode=m,RDG=makeReading(),R0={on:0,held:0},ENV=0,tg.hidden=dial.hidden=m!='tone',PLAYSET(m=='tone'&&asked=='tone')
+pmic.classList.toggle('on',m=='mic'),pton.classList.toggle('on',m=='tone'),FIT(),WAKE()
+if(m=='tone'&&asked=='tone'&&!SETMODE.told)SETMODE.told=1,TOAST('Slide the dial for other notes. Drag the plate sideways to bend one.',3400)}
+// one reading: the newest samples from the microphone; or, playing, the same length of the note the dial stands on (a fundamental and two
+// overtones, with a little hiss), as loud as the instrument is at this moment: a bowed note holds, a plucked one dies away
 const READ=t=>{if(mode=='mic'){if(!AN)return;AN.getFloatTimeDomainData(BUF)}
-else{const w=2*Math.PI*TONEF()/DFS;for(let i=0;i<BUF.length;i++){TPH+=w;BUF[i]=.22*(Math.sin(TPH)+.3*Math.sin(2*TPH)+.12*Math.sin(3*TPH))+.002*(Math.random()-.5)}TPH%=2*Math.PI
-OSC&&AC&&OSC.frequency.setTargetAtTime(TONEF(),AC.currentTime,.015)}
+else{ENV=VOICES[VOICE].bow?ENV+((PLAYING?1:0)-ENV)*(PLAYING?.35:.25):PLAYING?Math.exp(-6.91*(t-TPL)/TQ):0
+const w=2*Math.PI*TONEF()/DFS,a=.22*ENV;for(let i=0;i<BUF.length;i++){TPH+=w;BUF[i]=a*(Math.sin(TPH)+.3*Math.sin(2*TPH)+.12*Math.sin(3*TPH))+.002*(Math.random()-.5)}TPH%=2*Math.PI
+VTICK(t)}
 R0=RDG.push(DET(BUF,FMIN,FMAX),t,A4,GATE)}
 
 // ---------- the loop ----------
@@ -324,7 +415,7 @@ R0=RDG.push(DET(BUF,FMIN,FMAX),t,A4,GATE)}
 // in its wandering; TW = a clock that only runs while sand is being moved; LIVE = how much the sand is being moved (it eases to nothing
 // when the sound stops); LAMP = the spacing the standing figure was grown at; IN = the note counts as in tune; M2 = how far out the note
 // has been over the last quarter second or so (the mean of its cents squared); LH = when a note was last held
-let LAST=0,OFF=0,LX=0,LY=-1,W1=0,W2=0,TW=0,LIVE=0,LAMP=9,GROW=-9,SHOWN='',SHK='',SHT=0,IN=0,M2=36,LH=0
+let LAST=0,OFF=0,LX=0,LY=-1,W1=0,W2=0,TW=0,LIVE=0,LAMP=9,GROW=-9,SHOWN='',SHK='',SHT=0,BARP=-9,BARL=0,INW=-1,IN=0,M2=36,LH=0
 const LAMF=m=>{const l=13.5-(m-36)*8.5/60;return l<5?5:l>13.5?13.5:l}
 // Where the sand is loose, for a note this far off (OFF). Several small things together, none of them an edge:
 //   everywhere, a little: every line softens slightly
@@ -341,6 +432,7 @@ P.init(.02)
 // Each frame the plate takes its small steps (as many as the time since the last frame calls for, so it runs at one pace on any screen),
 // then the sand is moved and drawn. The sound is read about thirty times a second.
 const FRAME=now=>{requestAnimationFrame(FRAME);const t=now/1000,dt=Math.min(.05,Math.max(.001,t-LAST));LAST=t
+mode=='tone'&&DIALSTEP(dt,t)
 if(mode&&t-TD>=.028)TD=t,READ(t)
 const r=R0,c=r.held?r.cents:0,ac=c<0?-c:c,fresh=LIVE<.3
 // the sand moves only while a note sounds; when the sound stops it comes to rest over a moment, like sand, and stays as it lies
@@ -364,39 +456,75 @@ if(ac>2){const th=(c>0?-1:1)*1.5708+.5*Math.sin(.25*TW+W1)+.25*Math.sin(.11*TW+W
 TW+=dt*LIVE,TK+=dt*LIVE*400
 if(LIVE>.004)DISTURB(),SAND(dt*60,LIVE,LAMP*.5,.03)
 SHOW(r,ac,t)}
-// the words: the note, then how far off in whole cents and which way. Nothing is rewritten unless it changed, and the figures change at most
-// about seven times a second so that a wavering note does not make them flutter
-const SHOW=(r,ac,t)=>{let s,k
-if(!r.held)s=k=mode?'w':'';else{const n=Math.round(ac);k=r.name+'|'+r.oct+'|'+IN+'|'+r.on,s=k+'|'+(IN?'':n+(r.cents<0?'f':'s'))+'|'+r.f.toFixed(1)}
-if(s==SHOWN||k==SHK&&t-SHT<.15)return;SHOWN=s,SHK=k,SHT=t,ring.classList.toggle('in',!!(IN&&r.held))
-if(!r.held){nt.innerHTML='',ce.className='rdx wait',ce.innerHTML=mode?'<b>listening</b>':'';return}
-const n=Math.max(1,Math.round(ac))
-nt.innerHTML=r.name[0]+'<sup>'+(r.name[1]||'')+'</sup><sub>'+r.oct+'</sub>',nt.className='rdx'+(IN?' in':'')+(r.on?'':' dim')
-ce.className='rdx'+(IN?' in':'')+(r.on?'':' dim'),ce.innerHTML='<b>'+(IN?'in tune':n+(n==1?' cent ':' cents ')+(r.cents<0?'flat':'sharp'))+'</b><small>'+r.f.toFixed(1)+' Hz</small>'}
+// the readout. Playing, it shows what the dial is set to, as a tone generator's display does; listening, the note that is heard. The
+// note and the lights follow at once; the figures change at most about eight times a second, like a counter's
+const SHOW=(r,ac,t)=>{let nm='',oc=0,ce=0,f=0,on=0,pos=-1
+if(mode=='tone'){const p=TP+BEND/100,m=Math.round(p);nm=NOTES[(m%12+12)%12],oc=Math.floor(m/12)-1,ce=(p-m)*100,f=TONEF(),on=ENV>.03?1:0,pos=p}
+else if(r.held)nm=r.name,oc=r.oct,ce=r.cents,f=r.f,on=r.on,pos=r.midi+r.cents/100
+const inn=IN&&r.held?1:0,L=on?3:2,a=ce<0?-ce:ce,n=Math.round(a),k=nm+'|'+oc+'|'+inn+'|'+on+'|'+mode,s=k+'|'+n+(ce<0?'f':'s')+'|'+f.toFixed(1)
+if(inn!=INW)INW=inn,ring.classList.toggle('in',!!inn)
+if(pos!=BARP||L!=BARL)BARP=pos,BARL=L,DBAR(pos,L)
+if(s!=SHOWN&&(k!=SHK||t-SHT>=.12)){SHOWN=s,SHK=k,SHT=t
+const l1=nm?f.toFixed(1)+' HZ':'',l2=!nm?mode=='mic'?'LISTENING':'':mode=='tone'&&!on?'':inn||n==0?'IN TUNE':n+(n==1?' CENT ':' CENTS ')+(ce<0?'FLAT':'SHARP')
+DSHOW(nm.replace('♯','#'),oc,l1,l2,L,pos),sr.textContent=nm?nm+oc+' | '+(l2||'silent').toLowerCase()+' | '+f.toFixed(1)+' Hz':mode=='mic'?'listening':''}
+DFLUSH()}
 
-// ---------- touch: in test tone, dragging the plate bends the tone (its full width is a semitone) and steps the note ----------
-let DG=null
-fld.addEventListener('pointerdown',ev=>{if(mode!='tone')return;DG={x:ev.clientX,y:ev.clientY,b:TB,m:TM};try{fld.setPointerCapture(ev.pointerId)}catch(e){}})
-fld.addEventListener('pointermove',ev=>{if(!DG)return;const b=DG.b+(ev.clientX-DG.x)/(2*RS)*100,m=DG.m-Math.round((ev.clientY-DG.y)/26);TB=b<-65?-65:b>65?65:b,TM=m<28?28:m>103?103:m})
-const DGE=_=>{DG=null};fld.addEventListener('pointerup',DGE),fld.addEventListener('pointercancel',DGE)
-tdn.onclick=_=>{TM=Math.max(28,TM-1)},tup.onclick=_=>{TM=Math.min(103,TM+1)},tsn.onclick=_=>HEARSET(!HEAR)
+// ---------- the dial (playing) ----------
+// One strip under a fixed pointer, every note from E1 to G7 along it. Sliding it moves the note, as far and as finely as the finger moves,
+// and it can never be left stuck: at either end it simply stops, and the way back answers at once. A tap on a note goes to it. A flick
+// lets it coast and settle on a note. Let go within 12 cents of a note and it settles on the note, in tune; further off, it stays where
+// it was put.
+// DLD = the finger on the dial; VEL, COAST = how fast it is coasting; TGT = the note it is settling on; DLP = the place last drawn
+const DLX=$('dial').getContext('2d');let DLD=null,VEL=0,COAST=0,TGT=null,DLP=-1,LASTN=69
+const PCLAMP=p=>p<28?28:p>103?103:p
+const SETP=p=>{if(p==TP)return;TP=p,TMOVE=performance.now()/1000;const n=Math.round(p);n!=LASTN&&(LASTN=n,PLUCK(TMOVE),dial.setAttribute('aria-valuetext',NOTES[n%12]+(Math.floor(n/12)-1)))}
+const DIALDRAW=_=>{DLP=TP;const k=DPR(),w=DLW,h=DLH,x=DLX,c=w/2,half=c/SPX+1;x.setTransform(k,0,0,k,0,0),x.clearRect(0,0,w,h),x.textAlign='center',x.font='12px monospace'
+for(let m=Math.max(28,Math.ceil(TP-half));m<=Math.min(103,Math.floor(TP+half));m++){const X=c+(m-TP)*SPX,nm=NOTES[m%12],nat=nm.length==1,isC=m%12==0
+x.fillStyle=nat?isC?'#fff':'rgba(223,228,236,.72)':'rgba(223,228,236,.3)',x.fillRect(X-.75,nat?h-21:h-13,1.5,nat?15:7),nat&&x.fillText(isC?'C'+(m/12-1):nm,X,h-28)}
+for(const [m,sg] of [[28,-1],[103,1]]){const X=c+(m-TP)*SPX+sg*13;X>-4&&X<w+4&&(x.fillStyle='rgba(255,180,84,.55)',x.fillRect(X-1,7,2,h-13))}                      // the two ends of the range
+x.fillStyle='#ffb454',x.fillRect(c-1,h-23,2,23),x.beginPath(),x.moveTo(c-5,0),x.lineTo(c+5,0),x.lineTo(c,7),x.fill()                                                   // the pointer
+const g=x.createLinearGradient(0,0,w,0);g.addColorStop(0,'#040506'),g.addColorStop(.13,'rgba(4,5,6,0)'),g.addColorStop(.87,'rgba(4,5,6,0)'),g.addColorStop(1,'#040506'),x.fillStyle=g,x.fillRect(0,0,w,h)}
+const SETTLE=must=>{const n=Math.round(TP);(must||Math.abs(TP-n)<=.12)&&(TGT=n)}
+dial.addEventListener('pointerdown',ev=>{DLD={x:ev.clientX,t:performance.now(),mv:0,v:0},VEL=0,COAST=0,TGT=null;try{dial.setPointerCapture(ev.pointerId)}catch(e){}})
+dial.addEventListener('pointermove',ev=>{const d=DLD;if(!d)return;const now=performance.now(),dx=ev.clientX-d.x,p=PCLAMP(TP-dx/SPX);d.v+=((p-TP)/Math.max(1,now-d.t)*1000-d.v)*.4,d.x=ev.clientX,d.t=now,d.mv+=dx<0?-dx:dx,SETP(p)})
+const DLUP=ev=>{const d=DLD;if(!d)return;DLD=null;const r=dial.getBoundingClientRect()
+if(d.mv<6)TGT=PCLAMP(Math.round(TP+(ev.clientX-r.left-r.width/2)/SPX));else if(performance.now()-d.t<90&&Math.abs(d.v)>3)VEL=d.v<-70?-70:d.v>70?70:d.v,COAST=1;else SETTLE(0)}
+dial.addEventListener('pointerup',DLUP),dial.addEventListener('pointercancel',DLUP)
+// each frame: the dial coasts or settles, and a bend lets go
+const DIALSTEP=(dt,t)=>{if(!DLD){if(COAST){SETP(PCLAMP(TP+VEL*dt)),VEL*=Math.exp(-dt/.32);if(TP<=28||TP>=103||Math.abs(VEL)<1.2)COAST=0,VEL=0,SETTLE(1)}
+else if(TGT!=null){const d=TGT-TP;if(Math.abs(d)<.004)SETP(TGT),TGT=null,PLUCK(t);else SETP(TP+d*(1-Math.exp(-dt/.06)))}}
+if(!BND&&BEND)BEND=Math.abs(BEND)<.4?0:BEND*Math.exp(-dt/.09),TMOVE=t
+TP!=DLP&&DIALDRAW()}
+// go by so many notes from where the dial stands, or from where it is already heading
+const STEP=d=>{TGT=PCLAMP(Math.round(TGT!=null?TGT:TP)+d),COAST=0,VEL=0}
+
+// ---------- the plate under the finger (playing) ----------
+// Dragging the plate sideways bends the note, up to half a semitone either way; let go and it springs back. A tap plucks a plucked string again.
+let BND=null
+fld.addEventListener('pointerdown',ev=>{if(mode!='tone'||Math.hypot(ev.clientX-CX,ev.clientY-CY)>RS+12)return;BND={x:ev.clientX,mv:0};try{fld.setPointerCapture(ev.pointerId)}catch(e){}})
+fld.addEventListener('pointermove',ev=>{const d=BND;if(!d)return;const dx=ev.clientX-d.x,b=BEND+dx/(2*RS)*110;d.x=ev.clientX,d.mv+=dx<0?-dx:dx,BEND=b<-49?-49:b>49?49:b,TMOVE=performance.now()/1000})
+const BNE=_=>{BND&&BND.mv<6&&PLUCK(performance.now()/1000,1),BND=null};fld.addEventListener('pointerup',BNE),fld.addEventListener('pointercancel',BNE)
+tdn.onclick=_=>STEP(-12),tup.onclick=_=>STEP(12),tsn.onclick=_=>PLAYSET(!PLAYING),tvo.onclick=_=>VOICESET(VOICE+1)
 addEventListener('keydown',ev=>{const k=ev.key;if(k=='Escape')return hlp.hidden?PM(pm.hidden):(hlp.hidden=true);if(mode!='tone')return
-k=='ArrowLeft'?TB=Math.max(-65,TB-1):k=='ArrowRight'?TB=Math.min(65,TB+1):k=='ArrowUp'?TM=Math.min(103,TM+1):k=='ArrowDown'?TM=Math.max(28,TM-1):k==' '&&HEARSET(!HEAR)})
+k=='ArrowLeft'?(TGT=null,SETP(PCLAMP(TP-.01))):k=='ArrowRight'?(TGT=null,SETP(PCLAMP(TP+.01))):k=='ArrowUp'?STEP(1):k=='ArrowDown'?STEP(-1):k=='PageUp'?STEP(12):k=='PageDown'?STEP(-12):k==' '&&PLAYSET(!PLAYING)})
 
 // ---------- title, menu, help ----------
 const PM=on=>{if(on)pm.hidden=false,requestAnimationFrame(_=>pm.classList.remove('out'));else pm.classList.add('out'),setTimeout(_=>pm.classList.contains('out')&&(pm.hidden=true),160)}
 const ASET=a=>{A4=a<415?415:a>466?466:a,aval.textContent=A4+' Hz';try{localStorage.setItem('sst.a4',A4)}catch(e){}}
 const BEGIN=async m=>{await SETMODE(m);document.body.classList.remove('pre'),st.classList.add('out'),setTimeout(_=>st.hidden=true,560)}
 document.body.classList.add('pre'),ASET(A4)
-if(PREVIEW)sgo.hidden=pmic.hidden=true,scp.textContent='This preview page cannot use the microphone, so it plays a test tone you bend by hand. The full page listens.'
+if(PREVIEW)sgo.hidden=pmic.hidden=true,scp.textContent='This preview page cannot use the microphone, so it only plays. The full page also listens.'
 else sgo.onclick=_=>BEGIN('mic'),pmic.onclick=_=>{PM(0),SETMODE('mic')}
 sto.onclick=_=>BEGIN('tone'),pton.onclick=_=>{PM(0),SETMODE('tone')}
 mnb.onclick=_=>PM(1),pmx.onclick=_=>PM(0),pm.onclick=ev=>{ev.target==pm&&PM(0)}
 adn.onclick=_=>ASET(A4-1),aup.onclick=_=>ASET(A4+1)
 phl.onclick=_=>{PM(0),hlp.hidden=false},hok.onclick=_=>{hlp.hidden=true},hlp.onclick=ev=>{ev.target==hlp&&(hlp.hidden=true)}
-pt.onclick=_=>{PM(0),MICOFF(),HEARSET(0),mode='',R0={on:0,held:0},tg.hidden=hint.hidden=true,FIT(),st.hidden=false,document.body.classList.add('pre'),requestAnimationFrame(_=>st.classList.remove('out'))}
+pt.onclick=_=>{PM(0),MICOFF(),PLAYSET(0),mode='',R0={on:0,held:0},tg.hidden=dial.hidden=true,FIT(),st.hidden=false,document.body.classList.add('pre'),requestAnimationFrame(_=>st.classList.remove('out'))}
 // the page gives the microphone back while it is out of sight and takes it up again on return
 document.addEventListener('visibilitychange',_=>{try{if(document.hidden){AC&&AC.state=='running'&&AC.suspend()}else{AC&&AC.resume().catch(_=>{}),mode&&WAKE()}}catch(e){}})
-window.__T=_=>({mode,r:R0,inn:IN,off:OFF,lx:LX,ly:LY,live:LIVE,amp:P.amp(),lam:LAMP,a4:A4,tb:TB,tm:TM,fs:DFS})
-requestAnimationFrame(FRAME)
+VOICESET(VOICE)
+// for the tests: the page's state; and the dial as two numbers, a note (TM) and cents off it (TB)
+window.__T=_=>({mode,r:R0,inn:IN,off:OFF,lx:LX,ly:LY,live:LIVE,amp:P.amp(),lam:LAMP,a4:A4,tp:TP,bend:BEND,tb:(TP-Math.round(TP))*100+BEND,tm:Math.round(TP),playing:PLAYING,env:ENV,voice:VOICES[VOICE].n,fs:DFS})
+let TMX=69,TBX=0;Object.defineProperty(window,'TM',{get:_=>TMX,set:v=>{TMX=v,TP=v+TBX/100,TGT=null,COAST=0,TMOVE=performance.now()/1000}}),Object.defineProperty(window,'TB',{get:_=>TBX,set:v=>{TBX=v,TP=TMX+v/100,TGT=null,COAST=0,TMOVE=performance.now()/1000}})
+FIT(),requestAnimationFrame(FRAME)
 </script>
