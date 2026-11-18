@@ -4,17 +4,18 @@
 body{margin:0;background:#000;overflow:hidden;color:#fff;font:12px/1.4 monospace}
 button{font:inherit;color:#fff;background:none;border:0;padding:0;cursor:pointer}
 [hidden]{display:none!important}
-/* the plate is its own small canvas; the page turns and scales it, so turning costs no drawing. #fld takes the touches */
-#c{position:fixed;left:0;top:0;will-change:transform;pointer-events:none}
-#ring{position:fixed;translate:-50% -50%;border-radius:50%;border:1.5px solid rgba(160,185,220,.16);pointer-events:none}
+/* the plate: a dark disc (#ring) with the sand drawn on its own canvas above it. #fld takes the touches */
+#c{position:fixed;left:0;top:0;pointer-events:none}
+#ring{position:fixed;translate:-50% -50%;border-radius:50%;border:1.5px solid rgba(160,185,220,.2);background:radial-gradient(circle at 36% 30%,#17191e,#0b0c0f 62%,#060709);box-shadow:inset 0 0 22px rgba(0,0,0,.8);pointer-events:none;transition:border-color .35s}
+#ring.in{border-color:var(--ac)}
 #fld{position:fixed;inset:0;z-index:1}
 @keyframes pop{from{opacity:0;translate:0 10px;scale:.97}}@keyframes fin{from{opacity:0}}@keyframes bin{from{opacity:0;filter:blur(14px);scale:1.06}}
 :where(button,.ib){transition:background-color .18s,border-color .18s,color .18s,scale .12s}:where(button,.ib):active{scale:.93}
 /* the reading: the note above the plate, how far off beneath it. Both sit where the layout puts them (portrait: over and under; landscape: left and right) */
-.rdx{position:fixed;z-index:2;translate:-50% -50%;pointer-events:none;text-align:center;text-shadow:0 0 6px #000,0 0 2px #000;white-space:nowrap;transition:opacity .25s,color .2s}
+.rdx{position:fixed;z-index:2;translate:-50% -50%;pointer-events:none;text-align:center;text-shadow:0 0 6px #000,0 0 2px #000;white-space:nowrap;transition:opacity .25s,color .35s}
 #nt{font-size:var(--ns,72px);line-height:1;letter-spacing:-.02em;display:flex;align-items:flex-start;justify-content:center}
 #nt sup{font-size:.42em;line-height:1.1;margin-left:.04em;min-width:.62em;text-align:left}#nt sub{font-size:.34em;line-height:1;align-self:flex-end;margin:0 0 .12em -.62em;min-width:.62em;text-align:left;opacity:.7}
-#nt.dim,#ce.dim{opacity:.38}#nt.in,#ce.in b{color:var(--ac)}
+#nt.dim,#ce.dim{opacity:.38}#nt.in,#ce.in b{color:var(--ac)}#ce b{transition:color .35s}
 #ce{font-size:15px;letter-spacing:.06em;line-height:1.5}#ce b{font-weight:400;font-size:17px;font-variant-numeric:tabular-nums}#ce small{display:block;font-size:12px;opacity:.5;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 #ce.wait b{font-size:13px;letter-spacing:.22em;opacity:.55}
 /* chrome, as on Nano: 44 px icon buttons, a pill for a group, amber for what is on */
@@ -63,7 +64,7 @@ body.pre #top,body.pre #bot,body.pre .rdx{opacity:0;pointer-events:none}body.pre
 #st .cap{margin-top:18px;max-width:300px;line-height:1.5}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
-<canvas id=c></canvas><div id=ring></div><div id=fld></div>
+<div id=ring></div><canvas id=c></canvas><div id=fld></div>
 <div id=top><button class=ib id=mnb aria-label="menu" title="menu"></button><span></span></div>
 <div id=nt class=rdx aria-live=off></div>
 <div id=ce class="rdx wait" aria-live=off><b>listening</b></div>
@@ -71,7 +72,7 @@ body.pre #top,body.pre #bot,body.pre .rdx{opacity:0;pointer-events:none}body.pre
 <div id=tst role=status></div>
 <div id=hlp hidden><div class=card role=dialog aria-modal=true aria-labelledby=hlt><b id=hlt>HOW TO READ IT</b><div class=hr id=h1></div><div class=hr id=h2></div><div class=hr id=h3></div><p style="margin:0 0 14px"><i>Sound is measured on this device. Nothing is recorded or sent.</i></p><button id=hok>got it</button></div></div>
 <div id=pm class=out hidden role=dialog aria-modal=true aria-labelledby=pmh><div id=pb><button id=pmx aria-label="close menu" title="close menu">&#10005;</button><p class=h id=pmh>menu</p><button id=pmic></button><button id=pton></button><div class=rw><span>reference A</span><span><button id=adn aria-label="lower the reference pitch">&#8722;</button><b id=aval>440 Hz</b><button id=aup aria-label="raise the reference pitch">+</button></span></div><button id=phl>help</button><button id=pt>return to title</button></div><div id=pl><p class=l>more scale space</p><div class=links><a href="https://setzstone.itch.io/scale-space" target=_blank rel=noopener>Scale Space<small>early access</small></a><a href="https://setzstone.itch.io/cymatist" target=_blank rel=noopener>Scale Space Cymatist<small>cymatics tools</small></a><a href="https://www.reddit.com/r/ScaleSpace/" target=_blank rel=noopener>r/ScaleSpace<small>finds, builds, and the dev log</small></a></div></div></div>
-<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 168" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></svg></div><p class=sub>tuner &#183; build 1</p><div class=row><button id=sgo>listen</button><button id=sto>test tone</button></div><p class=cap id=scp>Sound is measured on this device. Nothing is recorded or sent.</p></div></div>
+<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 168" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></svg></div><p class=sub>tuner &#183; build 2</p><div class=row><button id=sgo>listen</button><button id=sto>test tone</button></div><p class=cap id=scp>Sound is measured on this device. Nothing is recorded or sent.</p></div></div>
 <script>
 'use strict'
 const PREVIEW=false                        // the build sets this: a preview page cannot use the microphone, so it offers the test tone only
@@ -190,43 +191,61 @@ function makePlate(S, hz) {
   }
   return P
 }
-// Nano's colour table: 1024 steps, dark through blue and green to yellow
-const LUT = new Float32Array(3072); for (let n = 0; n < 1024; n++) for (let j = 0; j < 3; j++) LUT[n * 3 + j] = 255 * (.15 + .85 * (.5 + .5 * Math.cos(6.28 * (n / 1023 * .85 + j / 3)))) * Math.sqrt(n / 1023)
 
 // ---------- icons: Nano's set, plus a microphone ----------
 const IC={menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',note:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',chev:'<path d="M6 9l6 6 6-6"/>',
-fplate:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',seed:'<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>',
-drag:'<path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/>',wave:'<path d="M2.5 12c2.4-8 4.8-8 7.1 0s4.8 8 7.1 0 3.2-5.6 4.8-3"/>'}
+fplate:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
+ay:'<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/>',wave:'<path d="M2.5 12c2.4-8 4.8-8 7.1 0s4.8 8 7.1 0 3.2-5.6 4.8-3"/>'}
 IC.mute=IC.note+'<path d="M3 3l18 18"/>'
 const SV=n=>'<svg viewBox="0 0 24 24">'+IC[n]+'</svg>'
 mnb.innerHTML=SV('menu'),tsn.innerHTML=SV('mute'),tdn.innerHTML='<svg viewBox="0 0 24 24" style="rotate:90deg">'+IC.chev+'</svg>',tup.innerHTML='<svg viewBox="0 0 24 24" style="rotate:-90deg">'+IC.chev+'</svg>'
 pmic.innerHTML=SV('mic')+'microphone',pton.innerHTML=SV('wave')+'test tone'
-h1.innerHTML=SV('seed')+'<p>The figure turns <b>left</b> when the note is <b>flat</b> and <b>right</b> when it is <b>sharp</b>. The closer the note, the slower it turns.</p>'
-h2.innerHTML=SV('fplate')+'<p><b>In tune</b>, it holds still and the sand turns gold.</p>'
+h1.innerHTML=SV('ay')+'<p>The sand slides <b>down</b> the plate when the note is <b>flat</b> and <b>up</b> when it is <b>sharp</b>. The further off, the further it slides.</p>'
+h2.innerHTML=SV('fplate')+'<p><b>In tune</b>, it lies over the whole plate.</p>'
 h3.innerHTML=SV('note')+'<p>Low notes draw a broad figure, high notes a fine one.</p>'
 
-// ---------- the plate and its picture ----------
-// S cells across; the picture is worked out at Z times that, the field read between cells (so a line of sand is a line, not a run of squares)
-const S=96,HZN=.92,G=0,P=makePlate(S,HZN),Z=3,T=S*Z,TT=T*T
+// ---------- the plate and the sand ----------
+// The plate is Nano's (S cells across, never seen directly). What shows is sand: NG grains, each a speck on a canvas KT pixels to the cell.
+// A grain is shaken about wherever the plate under it moves and left alone where the plate is still, so the sand gathers on the still
+// lines, which is what sand does on a real plate.
+// Every grain has a home on the plate and is tethered to it: it can roam as far as the nearest still line, no further, so the sand stays
+// evenly spread however long a note lasts.
+// The tilt slides the homes. At 0 they lie where they were dealt, all over the plate. Towards 1 they crowd down to the bottom, towards -1
+// up to the top: each row of homes moves to a lower (or higher) row and narrows or widens to fit the plate there. The sand follows its
+// homes, so it slides down the plate when the note is flat and up when it is sharp, and where it crowds, its lines grow broad.
+const S=96,HZN=.92,G=0,P=makePlate(S,HZN),KT=5,T=S*KT,TT=T*T,NG=22000,RP=P.R-1.3
 const C=$('c');C.width=C.height=T
-const PX=C.getContext('2d'),IM=PX.createImageData(T,T),D32=new Uint32Array(IM.data.buffer)
-const PXI=new Int32Array(TT),PFX=new Float32Array(TT),PFY=new Float32Array(TT),PAL=new Float32Array(TT),GRN=new Float32Array(TT)
-for(let y=0;y<T;y++)for(let x=0;x<T;x++){const p=y*T+x,gx=(x+.5)/Z-.5,gy=(y+.5)/Z-.5,x0=Math.max(0,Math.min(S-2,Math.floor(gx))),y0=Math.max(0,Math.min(S-2,Math.floor(gy)))
-PXI[p]=y0*S+x0,PFX[p]=Math.max(0,Math.min(1,gx-x0)),PFY[p]=Math.max(0,Math.min(1,gy-y0))
-const d=P.R*Z-1-Math.hypot(x+.5-T/2,y+.5-T/2);PAL[p]=d<0?0:d>1?1:d                    // a soft rim, one picture cell wide
-GRN[p]=.24*(Math.random()-.5)}                                                      // grain: no two specks of sand alike
-const ET=new Float32Array(1026);for(let i=0;i<1026;i++){const x=i/256;ET[i]=Math.exp(-x*x)}
-// Sand gathers where the plate is still: the lines where the field crosses zero. The same amount of sand is always on the plate (the
-// picture is divided by its own mean), so at rest it lies thin and even, and as a figure forms it leaves the moving parts for the lines.
-// lk = the lock, 0 to 1: far from the note the sand lies loose and wide in the palette's blues, in tune it draws fine and gold
-const PAINT=lk=>{const U=P.U,WM=P.WM,a=P.amp(),sg=Math.max(.035,a*(.4+.5*(1-lk))),inv=256/sg,cap=.4+.6*lk,gr=1-.75*lk;let mean=0
-for(let i=0;i<P.N;i++)if(WM[i]){const k=(U[i]<0?-U[i]:U[i])*inv;k<1024&&(mean+=ET[k|0])}
-mean/=P.cells;const gain=(.17+.14*lk)/(mean>.03?mean:.03)
-for(let p=0;p<TT;p++){const al=PAL[p];if(!al)continue
-const i=PXI[p],fx=PFX[p],fy=PFY[p],u0=U[i],u1=U[i+S],u=(u0+(U[i+1]-u0)*fx)*(1-fy)+(u1+(U[i+S+1]-u1)*fx)*fy,k=(u<0?-u:u)*inv
-let b=(k<1024?ET[k|0]:0)*gain*(1+GRN[p]*gr);b>cap&&(b=cap);const l=(b*1023|0)*3
-D32[p]=al*255<<24|LUT[l+2]<<16|LUT[l+1]<<8|LUT[l]}
-PX.putImageData(IM,0,0)}
+const PX=C.getContext('2d'),IM=PX.createImageData(T,T),D32=new Uint32Array(IM.data.buffer),CNT=new Uint8Array(TT),GQ=new Int32Array(NG).fill(-1),
+GX=new Float32Array(NG),GY=new Float32Array(NG),HY=new Float32Array(NG),HC=new Float32Array(NG),HT=new Float32Array(NG)
+let RSD=0x2545F491;const RND=_=>{RSD^=RSD<<13,RSD^=RSD>>>17,RSD^=RSD<<5;return(RSD>>>0)/4294967296}
+// homes, dealt evenly over the plate. HY = height (-1 top, 1 bottom), HC = half the plate's width at that height, HT = place along that width (-1 to 1)
+for(let i=0;i<NG;i++){let x,y;do x=RND()*2-1,y=RND()*2-1;while(x*x+y*y>1);const ch=Math.sqrt(1-y*y);HY[i]=y,HC[i]=ch,HT[i]=ch>1e-4?x/ch:0,GX[i]=S/2+x*RP,GY[i]=S/2+y*RP}
+// sand colours by how many grains share a pixel: one grain is dull, a heap is pale (little-endian ABGR). One grain in four is a darker
+// grain, as in real sand (the second row)
+const RGB=(r,g,b)=>(255<<24|b<<16|g<<8|r)>>>0,SCOL=new Uint32Array([0,RGB(178,162,132),RGB(216,200,164),RGB(240,227,196),RGB(252,244,222),
+0,RGB(140,118,90),RGB(190,168,132),RGB(228,210,176),RGB(246,236,212)])
+const VP=80                                        // fastest a tether drags its grain, cells a second: sand crosses the plate in about a second
+// f = this frame's length in sixtieths of a second; loose = extra shake everywhere, in cells; tilt as above; w = the tether's length in cells
+// (half the figure's spacing; the shake is scaled to it too, so a broad figure gathers as quickly as a fine one);
+// hop = the chance per second that a grain is thrown and lands somewhere else within reach of its home
+// (only the pixels that held sand last frame are wiped, and only those that hold it now are painted)
+// (z is the random number: one a grain, its low half for one way and its high half for the other)
+const SAND=(f,loose,tilt,w,hop)=>{const U=P.U,sq=Math.sqrt(f)/32768,sh=.2*w,sc=1-(tilt<0?-tilt:tilt),hp=hop*f/60*4294967296,pm=VP*f/60,w2=w*w,c=S/2,r2=RP*RP,m=S-2;let z=RSD
+for(let i=0;i<NG;i++){const q=GQ[i];q>=0&&(D32[q]=0,CNT[q]=0)}
+for(let i=0;i<NG;i++){const ty=HY[i]*sc+tilt,k=1-ty*ty,ch=k>0?Math.sqrt(k):0,X=c+RP*HT[i]*ch,Y=c+RP*ty;let x=GX[i],y=GY[i]
+z^=z<<13,z^=z>>>17,z^=z<<5
+if((z>>>0)<hp){z^=z<<13,z^=z>>>17,z^=z<<5;const an=(z&65535)*9.5874e-5,rr=Math.sqrt((z>>>16)/65536)*w;x=X+Math.cos(an)*rr,y=Y+Math.sin(an)*rr}
+else{const ix=x<0?0:x>m?m:x|0,iy=y<0?0:y>m?m:y|0,j=iy*S+ix,fx=x-ix,fy=y-iy,u0=U[j],u1=U[j+S],u=(u0+(U[j+1]-u0)*fx)*(1-fy)+(u1+(U[j+S+1]-u1)*fx)*fy
+// the plate counts as still within a band about each still line. Where the sand lies as it was dealt the band is .13 deep, the width of a
+// line of sand; where it is crowded the band is as much deeper, so a crowd makes a broad line rather than a brighter one
+let bd=.13*HC[i]/(ch*sc+.001);bd=bd<.04?.04:bd>.56?.56:bd
+let a=((u<0?-u:u)-bd)*3.5;a=a<0?0:a>1?1:a
+const st=(a*sh+loose)*sq;x+=((z&65535)-32768)*st,y+=((z>>>16)-32768)*st
+const dx=x-X,dy=y-Y;let d=dx*dx+dy*dy;if(d>w2){d=Math.sqrt(d);const p=(d-w>pm?pm:d-w)/d;x-=dx*p,y-=dy*p}}
+const dx=x-c,dy=y-c;let d=dx*dx+dy*dy;d>r2&&(d=RP*(1-(z&255)*1.2e-4)/Math.sqrt(d),x=c+dx*d,y=c+dy*d)
+GX[i]=x,GY[i]=y;const q=GQ[i]=(y*KT|0)*T+(x*KT|0);CNT[q]<4&&CNT[q]++}
+for(let i=0;i<NG;i++){const q=GQ[i];D32[q]=SCOL[CNT[q]+(i&3?0:5)]}
+RSD=z,PX.putImageData(IM,0,0)}
 
 // ---------- layout ----------
 let VW=0,VH=0,CX=0,CY=0,RS=100
@@ -235,8 +254,8 @@ const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,ns=Math.max(44,Math.m
 if(pt){const tp=48+(parseFloat(getComputedStyle($('top')).paddingTop)||0),B=tg.hidden?24:bot.offsetHeight+6,av=VH-tp-B;RS=Math.max(60,Math.min(VW*.46,(av-ns-76)/2));const y0=tp+Math.max(0,(av-ns-76-2*RS)*.45)
 CY=y0+ns+12+RS,nt.style.left=ce.style.left=CX+'px',nt.style.top=y0+ns/2+'px',ce.style.top=CY+RS+38+'px'}
 else RS=Math.min((VH-24)*.46,VW*.24),CY=VH/2,nt.style.left=(CX-RS)/2+'px',ce.style.left=(CX+RS+VW)/2+'px',nt.style.top=ce.style.top=CY+'px'
-const sd=RS*T/(P.R*Z);C.style.width=C.style.height=sd+'px',C.style.left=CX-sd/2+'px',C.style.top=CY-sd/2+'px'
-ring.style.left=CX+'px',ring.style.top=CY+'px',ring.style.width=ring.style.height=2*RS+7+'px',nt.style.setProperty('--ns',ns+'px')}
+const sd=RS*S/P.R;C.style.width=C.style.height=sd+'px',C.style.left=CX-sd/2+'px',C.style.top=CY-sd/2+'px'
+ring.style.left=CX+'px',ring.style.top=CY+'px',ring.style.width=ring.style.height=2*RS+5+'px',nt.style.setProperty('--ns',ns+'px')}
 addEventListener('resize',FIT),FIT()
 
 // ---------- sound in ----------
@@ -271,36 +290,44 @@ OSC&&AC&&OSC.frequency.setTargetAtTime(TONEF(),AC.currentTime,.015)}
 R0=RDG.push(DET(BUF,FMIN,FMAX),t,A4,GATE)}
 
 // ---------- the loop ----------
-// TH = how far the plate has turned, OM = how fast it turns, LK = the lock (0 loose, 1 in tune), LAMP = the spacing the standing figure was grown at
-let LAST=0,FN=0,TH=0,OM=0,LK=0,LAMP=9,SHOWN='',RNG='',RM=matchMedia('(prefers-reduced-motion:reduce)').matches
-const WMAX=.52                                     // fastest turn, radians a second, for a figure spaced 9 cells (a finer one turns slower in step, so its lines
-// pass any point at the same rate): while the sand is bright a line passes less than three times a second, and faster only once it has dimmed
+// TILT = how far the sand has slid (see the sand), LAMP = the spacing the standing figure was grown at, IN = the note counts as in tune,
+// M2 = how far out the note has been over the last quarter second or so (the mean of its cents squared), LH = when a note was last held
+let LAST=0,FN=0,TILT=0,LAMP=9,GROW=-9,SHOWN='',SHK='',SHT=0,IN=0,M2=36,LH=0
 const LAMF=m=>{const l=13.5-(m-36)*8.5/60;return l<5?5:l>13.5?13.5:l}
-const SS=x=>x<=0?0:x>=1?1:x*x*(3-2*x)
+// how far the sand slides for a note so many cents out: none within 2 cents, then about a tenth of the plate's width laid bare at 5 cents,
+// three tenths at 10, half at 20, and never more than seven tenths
+const TILTF=ac=>.7*Math.tanh((ac>2?ac-2:0)/18)
 P.init(.02)
-// Each frame the plate takes its small steps (as many as the time since the last frame calls for, so it runs at one pace on any screen)
-// and the page turns it. The two heavier jobs take turns: the picture is redrawn on odd frames, the sound is read on even ones.
+// Each frame the plate takes its small steps (as many as the time since the last frame calls for, so it runs at one pace on any screen),
+// then the sand is moved and drawn. The sound is read about thirty times a second.
 const FRAME=now=>{requestAnimationFrame(FRAME);const t=now/1000,dt=Math.min(.05,Math.max(.001,t-LAST));LAST=t,FN++
-if(mode&&!(FN&1)&&t-TD>=.028)TD=t,READ(t)
+if(mode&&t-TD>=.028)TD=t,READ(t)
 const r=R0,c=r.held?r.cents:0,ac=c<0?-c:c
+// nothing has sounded for a few seconds: the plate has fallen still and no grain can move, so the picture is left as it is and costs nothing
+if(r.held)LH=t;else if(t-LH>4&&FN>3)return SHOW(r,ac,t)
 // a new note well away from the last one: most of the old figure is shaken off and the new spacing grows in its place
-if(r.held){const l=LAMF(r.midi);if(Math.abs(l-LAMP)>.7){const U=P.U;for(let i=0;i<P.N;i++)U[i]*=.06;LAMP=l}}
-// drive: a note that has just started pushes hard for a moment (a struck plate), a sounding note holds the figure, silence lets it settle out
-const e=r.on?.3+.75*Math.exp(-r.since/.22):r.held?.08:-.1,n=Math.round(dt*(r.on&&r.since<.7?720:480))
-P.step(e,LAMP,G,n<3?3:n>12?12:n)
-const lt=r.held?SS(1-(ac-3)/7):0;LK+=(lt-LK)*(1-Math.exp(-dt/.09))
-const om=r.on?Math.sign(c)*WMAX*LAMP/9*Math.tanh(Math.max(0,ac-1.5)/12):0;OM+=(om-OM)*(1-Math.exp(-dt/.1));RM||(TH+=OM*dt)
-if(FN&1){PAINT(LK);const k=LK>.02?'rgba(255,180,84,'+(.15+.75*LK).toFixed(2)+')':'';k!=RNG&&(ring.style.borderColor=RNG=k)}
-C.style.transform='rotate('+TH.toFixed(4)+'rad)'
-SHOW(r,ac)}
-// the words: the note, then how far off in whole cents and which way; nothing is rewritten unless it changed
-const SHOW=(r,ac)=>{let s
-if(!r.held)s=mode?'w':'';else{const n=Math.round(ac),tn=ac<=3;s=r.name+'|'+r.oct+'|'+(tn?'in':n+(r.cents<0?'f':'s'))+'|'+r.on+'|'+r.f.toFixed(1)}
-if(s==SHOWN)return;SHOWN=s
+if(r.held){const l=LAMF(r.midi);if(Math.abs(l-LAMP)>.7){const U=P.U;for(let i=0;i<P.N;i++)U[i]*=.06;LAMP=l,GROW=t}}
+// drive: a note that has just started pushes hard for a moment (a struck plate), a sounding note holds the figure, silence lets the plate fall still
+// (the plate hurries while a figure is growing and idles along once it stands)
+const e=r.on?.3+.75*Math.exp(-r.since/.22):r.held?.08:-.1,n=Math.round(dt*(r.on&&(r.since<1||t-GROW<1)?720:r.on?240:300))
+P.step(e,LAMP,G,n<2?2:n>12?12:n)
+// in tune: over the last quarter second or so the note has been within about 3 cents. Once in, it takes about 5 to fall out, so a note
+// that wavers a little does not blink in and out, and one that wavers a lot is never called in tune. A note takes a third of a second to
+// earn it; one that jumps far out loses it at once. After the sound stops the verdict stays with the held reading.
+if(!r.held)IN=0,M2=36;else if(r.on)M2+=(c*c-M2)*(1-Math.exp(-dt/.25)),IN=M2<=(IN?25:9)?1:0
+// the sand slides down for a flat note and up for a sharp one, easing after the note; when the sound stops it stays where it lies
+if(r.on)TILT+=(-Math.sign(c)*TILTF(ac)-TILT)*(1-Math.exp(-dt/.16))
+SAND(dt*60,r.on?.02:0,TILT,LAMP*.5,r.on?.07:0)
+SHOW(r,ac,t)}
+// the words: the note, then how far off in whole cents and which way. Nothing is rewritten unless it changed, and the figures change at most
+// about seven times a second so that a wavering note does not make them flutter
+const SHOW=(r,ac,t)=>{let s,k
+if(!r.held)s=k=mode?'w':'';else{const n=Math.round(ac);k=r.name+'|'+r.oct+'|'+IN+'|'+r.on,s=k+'|'+(IN?'':n+(r.cents<0?'f':'s'))+'|'+r.f.toFixed(1)}
+if(s==SHOWN||k==SHK&&t-SHT<.15)return;SHOWN=s,SHK=k,SHT=t,ring.classList.toggle('in',!!(IN&&r.held))
 if(!r.held){nt.innerHTML='',ce.className='rdx wait',ce.innerHTML=mode?'<b>listening</b>':'';return}
-const tn=ac<=3,n=Math.round(ac)
-nt.innerHTML=r.name[0]+'<sup>'+(r.name[1]||'')+'</sup><sub>'+r.oct+'</sub>',nt.className='rdx'+(tn?' in':'')+(r.on?'':' dim')
-ce.className='rdx'+(tn?' in':'')+(r.on?'':' dim'),ce.innerHTML='<b>'+(tn?'in tune':n+(n==1?' cent ':' cents ')+(r.cents<0?'flat':'sharp'))+'</b><small>'+r.f.toFixed(1)+' Hz</small>'}
+const n=Math.max(1,Math.round(ac))
+nt.innerHTML=r.name[0]+'<sup>'+(r.name[1]||'')+'</sup><sub>'+r.oct+'</sub>',nt.className='rdx'+(IN?' in':'')+(r.on?'':' dim')
+ce.className='rdx'+(IN?' in':'')+(r.on?'':' dim'),ce.innerHTML='<b>'+(IN?'in tune':n+(n==1?' cent ':' cents ')+(r.cents<0?'flat':'sharp'))+'</b><small>'+r.f.toFixed(1)+' Hz</small>'}
 
 // ---------- touch: in test tone, dragging the plate bends the tone (its full width is a semitone) and steps the note ----------
 let DG=null
@@ -325,6 +352,6 @@ phl.onclick=_=>{PM(0),hlp.hidden=false},hok.onclick=_=>{hlp.hidden=true},hlp.onc
 pt.onclick=_=>{PM(0),MICOFF(),HEARSET(0),mode='',R0={on:0,held:0},tg.hidden=hint.hidden=true,FIT(),st.hidden=false,document.body.classList.add('pre'),requestAnimationFrame(_=>st.classList.remove('out'))}
 // the page gives the microphone back while it is out of sight and takes it up again on return
 document.addEventListener('visibilitychange',_=>{try{if(document.hidden){AC&&AC.state=='running'&&AC.suspend()}else{AC&&AC.resume().catch(_=>{}),mode&&WAKE()}}catch(e){}})
-window.__T=_=>({mode,r:R0,lk:LK,om:OM,th:TH,amp:P.amp(),lam:LAMP,a4:A4,tb:TB,tm:TM,fs:DFS})
+window.__T=_=>({mode,r:R0,inn:IN,tilt:TILT,amp:P.amp(),lam:LAMP,a4:A4,tb:TB,tm:TM,fs:DFS})
 requestAnimationFrame(FRAME)
 </script>
