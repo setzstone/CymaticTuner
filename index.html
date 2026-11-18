@@ -1,0 +1,330 @@
+<!DOCTYPE html><html lang=en><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover"><title>Scale Space Tuner</title><link rel=icon href="data:,"><style>
+:root{--ac:#ffb454;--ach:#ff8f00}
+*{box-sizing:border-box;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#000;overflow:hidden;color:#fff;font:12px/1.4 monospace}
+button{font:inherit;color:#fff;background:none;border:0;padding:0;cursor:pointer}
+[hidden]{display:none!important}
+/* the plate is its own small canvas; the page turns and scales it, so turning costs no drawing. #fld takes the touches */
+#c{position:fixed;left:0;top:0;will-change:transform;pointer-events:none}
+#ring{position:fixed;translate:-50% -50%;border-radius:50%;border:1.5px solid rgba(160,185,220,.16);pointer-events:none}
+#fld{position:fixed;inset:0;z-index:1}
+@keyframes pop{from{opacity:0;translate:0 10px;scale:.97}}@keyframes fin{from{opacity:0}}@keyframes bin{from{opacity:0;filter:blur(14px);scale:1.06}}
+:where(button,.ib){transition:background-color .18s,border-color .18s,color .18s,scale .12s}:where(button,.ib):active{scale:.93}
+/* the reading: the note above the plate, how far off beneath it. Both sit where the layout puts them (portrait: over and under; landscape: left and right) */
+.rdx{position:fixed;z-index:2;translate:-50% -50%;pointer-events:none;text-align:center;text-shadow:0 0 6px #000,0 0 2px #000;white-space:nowrap;transition:opacity .25s,color .2s}
+#nt{font-size:var(--ns,72px);line-height:1;letter-spacing:-.02em;display:flex;align-items:flex-start;justify-content:center}
+#nt sup{font-size:.42em;line-height:1.1;margin-left:.04em;min-width:.62em;text-align:left}#nt sub{font-size:.34em;line-height:1;align-self:flex-end;margin:0 0 .12em -.62em;min-width:.62em;text-align:left;opacity:.7}
+#nt.dim,#ce.dim{opacity:.38}#nt.in,#ce.in b{color:var(--ac)}
+#ce{font-size:15px;letter-spacing:.06em;line-height:1.5}#ce b{font-weight:400;font-size:17px;font-variant-numeric:tabular-nums}#ce small{display:block;font-size:12px;opacity:.5;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+#ce.wait b{font-size:13px;letter-spacing:.22em;opacity:.55}
+/* chrome, as on Nano: 44 px icon buttons, a pill for a group, amber for what is on */
+.ib{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 2px #000)}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ib.on{color:var(--ac)}
+#top{position:fixed;left:0;right:0;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 2px) 6px 0;pointer-events:none}#top>*{pointer-events:auto}
+#bot{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 8px calc(env(safe-area-inset-bottom,0px) + 14px);pointer-events:none}#bot>*{pointer-events:auto}
+.grp{display:flex;gap:2px;padding:0 3px;border-radius:24px;background:rgba(20,24,30,.55);box-shadow:inset 0 0 0 1px rgba(160,185,220,.12)}
+.cap{margin:0;font-size:12px;opacity:.75;text-align:center;pointer-events:none;text-shadow:0 0 4px #000}
+.land #bot{align-items:flex-end;padding-right:calc(env(safe-area-inset-right,0px) + 14px)}.land #hint{max-width:calc(50vw - 46vh - 16px);text-align:right}
+body.pre #top,body.pre #bot,body.pre .rdx{opacity:0;pointer-events:none}body.pre #fld{display:none}body.pre #top>*,body.pre #bot>*{pointer-events:none}
+/* a toast, Nano's */
+#tst{position:fixed;left:50%;translate:-50% 0;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:12;padding:8px 14px;border-radius:6px;background:rgba(0,0,0,.78);border:1px solid #fff3;font-size:13px;opacity:0;transition:opacity .3s;white-space:normal;width:max-content;max-width:min(92vw,420px);text-align:center;pointer-events:none}
+#tst.on{opacity:1}
+/* help: a plain modal; it closes on "got it" or the scrim */
+#hlp{position:fixed;z-index:12;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5)}
+#hlp .card{max-width:min(360px,92vw);max-height:92vh;max-height:92dvh;overflow-y:auto;background:rgba(0,0,0,.92);border:1px solid #fff3;border-radius:10px;padding:18px;font-size:14px;line-height:1.5;white-space:normal}
+#hlp .card,#hlp .card *{touch-action:pan-y}
+#hlp b#hlt{display:block;font-size:16px;letter-spacing:.2em;margin-bottom:10px}
+#hlp p{margin:0}#hlp p b{color:var(--ac);font-weight:400}#hlp i{opacity:.75}
+.hr{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;margin:0 0 12px}.hr svg{width:24px;height:24px;margin-top:2px}
+#hok{width:100%;min-height:44px;border:1px solid #fff3;border-radius:6px;font-size:14px;letter-spacing:.1em}
+#hlp:not([hidden]),#pm:not([hidden]){animation:fin .22s}#hlp:not([hidden])>*,#pm:not([hidden])>*{animation:pop .28s cubic-bezier(.2,.8,.2,1)}
+/* menu and title card share one panel look, as on Nano */
+#pm,#st{position:fixed;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;transition:opacity .15s}
+#pm,#pm *,#st,#st *{touch-action:pan-x pan-y}
+#pm{background:rgba(0,0,0,.45);flex-direction:column;justify-content:flex-start;gap:10px;overflow-y:auto;padding:12px 0}
+#pb,#pl{flex-shrink:0;display:flex;flex-direction:column;width:min(340px,90vw);padding:4px 0 6px;background:rgba(20,24,30,.58);-webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3);border:1px solid #04060a;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.7),inset 1px 1px 0 rgba(160,185,220,.18),inset -1px -1px 0 rgba(0,0,0,.85)}
+#pb{position:relative;margin-top:auto}#pl{margin-bottom:auto}
+#pm .h,#pm .l{font-size:10px;font-weight:600;line-height:1.2;letter-spacing:.16em;text-transform:uppercase;text-align:left;color:rgba(223,228,236,.85);padding:9px 18px 8px;margin:0 0 4px;border-bottom:1px solid #04060a;box-shadow:0 1px 0 rgba(160,185,220,.16)}
+#pm button,#pm .links a,#pm .rw{font:15px/1.2 monospace;letter-spacing:.04em;color:#dfe4ec;border:0;border-radius:0;background:none;padding:12px 18px;text-align:left;display:flex;align-items:center;gap:12px;text-decoration:none}
+#pm button>svg,#pm .links a>svg{width:18px;height:18px;flex:0 0 auto;stroke-width:1.8;opacity:.8}
+#pm button:active,#pm .links a:active{background:color-mix(in srgb,var(--ac) 16%,transparent)}#pm button.on{color:var(--ac)}
+#pb>*+button,#pb>*+.rw,#pl .links a+a{border-top:1px solid rgba(255,255,255,.06)}
+#pm .links{display:flex;flex-direction:column}#pm .links a{display:block}#pm .links a small{display:block;font-size:11px;letter-spacing:.02em;color:#8a93a3;margin-top:3px}
+#pm #pmx{position:absolute;right:2px;top:-3px;z-index:1;justify-content:center;font-size:16px;padding:12px 14px;gap:0}
+#pm .rw{justify-content:space-between;padding:4px 8px 4px 18px}#pm .rw span{display:flex;align-items:center;gap:2px}#pm .rw b{font-weight:400;min-width:64px;text-align:center;font-variant-numeric:tabular-nums}#pm .rw button{padding:0;width:44px;height:44px;justify-content:center;font-size:20px}
+#st{z-index:10;background:rgba(8,10,14,.86);transition:opacity .55s;cursor:default}#st.out,#pm.out{opacity:0;pointer-events:none}
+#stb{display:flex;flex-direction:column;align-items:center;gap:9px;width:min(360px,90vw);max-height:94vh;overflow-y:auto;padding:4px 2px;animation:bin .8s both}
+.logo{width:min(320px,84vw)}.logo svg{width:100%;height:auto;stroke:none;display:block}
+.sub{margin:0 0 22px;font-size:13px;letter-spacing:.22em;opacity:.55;text-align:center}
+#st .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+#st button{font:15px/1.3 monospace;border:1px solid #fff3;border-radius:8px;text-align:center;min-width:128px;padding:14px 12px;background:rgba(20,24,30,.5)}#st #sgo{border-color:var(--ac)}
+#st button:focus-visible,#pm button:focus-visible{outline:1px solid #fff}
+#st .cap{margin-top:18px;max-width:300px;line-height:1.5}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<canvas id=c></canvas><div id=ring></div><div id=fld></div>
+<div id=top><button class=ib id=mnb aria-label="menu" title="menu"></button><span></span></div>
+<div id=nt class=rdx aria-live=off></div>
+<div id=ce class="rdx wait" aria-live=off><b>listening</b></div>
+<div id=bot><p class=cap id=hint hidden></p><div class=grp id=tg hidden><button class=ib id=tdn aria-label="note down" title="note down"></button><button class=ib id=tsn aria-label="hear the test tone" title="hear the test tone"></button><button class=ib id=tup aria-label="note up" title="note up"></button></div></div>
+<div id=tst role=status></div>
+<div id=hlp hidden><div class=card role=dialog aria-modal=true aria-labelledby=hlt><b id=hlt>HOW TO READ IT</b><div class=hr id=h1></div><div class=hr id=h2></div><div class=hr id=h3></div><p style="margin:0 0 14px"><i>Sound is measured on this device. Nothing is recorded or sent.</i></p><button id=hok>got it</button></div></div>
+<div id=pm class=out hidden role=dialog aria-modal=true aria-labelledby=pmh><div id=pb><button id=pmx aria-label="close menu" title="close menu">&#10005;</button><p class=h id=pmh>menu</p><button id=pmic></button><button id=pton></button><div class=rw><span>reference A</span><span><button id=adn aria-label="lower the reference pitch">&#8722;</button><b id=aval>440 Hz</b><button id=aup aria-label="raise the reference pitch">+</button></span></div><button id=phl>help</button><button id=pt>return to title</button></div><div id=pl><p class=l>more scale space</p><div class=links><a href="https://setzstone.itch.io/scale-space" target=_blank rel=noopener>Scale Space<small>early access</small></a><a href="https://setzstone.itch.io/cymatist" target=_blank rel=noopener>Scale Space Cymatist<small>cymatics tools</small></a><a href="https://www.reddit.com/r/ScaleSpace/" target=_blank rel=noopener>r/ScaleSpace<small>finds, builds, and the dev log</small></a></div></div></div>
+<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 168" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></svg></div><p class=sub>tuner &#183; build 1</p><div class=row><button id=sgo>listen</button><button id=sto>test tone</button></div><p class=cap id=scp>Sound is measured on this device. Nothing is recorded or sent.</p></div></div>
+<script>
+'use strict'
+const PREVIEW=false                        // the build sets this: a preview page cannot use the microphone, so it offers the test tone only
+const $=id=>document.getElementById(id)
+// ---- pitch: which note is sounding and how far off it is.
+// McLeod's method (a normalised autocorrelation, here taken through an FFT), then the period is measured again across
+// many cycles at once, which is what takes the reading from "about right" to a fraction of a cent on a steady tone.
+// W = samples looked at each time (a power of two), fs = samples a second.
+function makePitch(W, fs) {
+  const M = W * 2, H = W >> 1, re = new Float64Array(M), im = new Float64Array(M), rv = new Uint32Array(M),
+    co = new Float64Array(W), si = new Float64Array(W), nd = new Float64Array(H + 2), cu = new Float64Array(W + 1)
+  let bits = 0; while (1 << bits < M) bits++
+  for (let i = 0; i < M; i++) { let r = 0; for (let b = 0; b < bits; b++) r |= (i >> b & 1) << bits - 1 - b; rv[i] = r }
+  for (let i = 0; i < W; i++) co[i] = Math.cos(Math.PI * i / W), si[i] = Math.sin(Math.PI * i / W)
+  const fft = _ => {
+    for (let i = 0; i < M; i++) { const j = rv[i]; if (j > i) { let t = re[i]; re[i] = re[j], re[j] = t, t = im[i], im[i] = im[j], im[j] = t } }
+    for (let n = 2; n <= M; n <<= 1) {
+      const h = n >> 1, st = M / n
+      for (let s = 0; s < M; s += n) for (let k = 0; k < h; k++) {
+        const c = co[k * st], d = -si[k * st], a = s + k, b = a + h, xr = re[b] * c - im[b] * d, xi = re[b] * d + im[b] * c
+        re[b] = re[a] - xr, im[b] = im[a] - xi, re[a] += xr, im[a] += xi
+      }
+    }
+  }
+  // the top of a peak between samples: a parabola through the highest sample and its two neighbours
+  const top = t => { const a = nd[t - 1], b = nd[t], c = nd[t + 1], d = a - 2 * b + c; return d ? [t + .5 * (a - c) / d, b - .25 * (a - c) * (a - c) / d] : [t, b] }
+  // x: the newest W samples. Returns {f: hertz (0 when nothing periodic was found), cl: clarity 0..1, rms: loudness}
+  return (x, fmin, fmax) => {
+    let mean = 0; for (let i = 0; i < W; i++) mean += x[i]; mean /= W
+    cu[0] = 0; for (let i = 0; i < W; i++) { const v = x[i] - mean; re[i] = v, im[i] = 0, cu[i + 1] = cu[i] + v * v }
+    for (let i = W; i < M; i++) re[i] = im[i] = 0
+    const rms = Math.sqrt(cu[W] / W); if (!(rms > 1e-7)) return { f: 0, cl: 0, rms: 0 }
+    fft(); for (let i = 0; i < M; i++) re[i] = re[i] * re[i] + im[i] * im[i], im[i] = 0
+    fft()                                                   // a forward transform of an even, real spectrum is its inverse, times M
+    for (let t = 0; t <= H + 1; t++) { const m = cu[W - t] + cu[W] - cu[t]; nd[t] = m > 0 ? 2 * re[t] / M / m : 0 }
+    const lo = Math.max(2, Math.floor(fs / fmax)), hi = Math.min(H, Math.ceil(fs / fmin))
+    // key maxima: the highest point of each positive lobe after the first fall through zero
+    let t = 1; while (t < hi && nd[t] > 0) t++
+    let best = 0, pk = [], cur = -1
+    for (; t <= hi; t++) {
+      if (nd[t] > 0) { if (cur < 0 || nd[t] > nd[cur]) cur = t }
+      else if (cur >= 0) { cur >= lo && cur < H && (pk.push(cur), nd[cur] > best && (best = nd[cur])); cur = -1 }
+    }
+    cur >= lo && cur < H && nd[cur] > nd[cur + 1] && (pk.push(cur), nd[cur] > best && (best = nd[cur]))
+    if (!pk.length) return { f: 0, cl: 0, rms }
+    let p = pk[0]; for (const q of pk) if (nd[q] >= .93 * best) { p = q; break }
+    let [tau, cl] = top(p)
+    // the same period, counted over 2, 4, 8... cycles: each doubling halves the error, while the tone stays periodic that far
+    for (let m = 2; m * tau < H - 2; m *= 2) {
+      const c = m * tau, w = Math.max(1, tau * .25); let b = -1
+      for (let q = Math.max(lo, Math.ceil(c - w)), e = Math.min(H - 1, Math.floor(c + w)); q <= e; q++) if (b < 0 || nd[q] > nd[b]) b = q
+      if (b < 1 || !(nd[b] >= nd[b - 1] && nd[b] >= nd[b + 1]) || nd[b] < .8 * cl) break
+      tau = top(b)[0] / m
+    }
+    return { f: fs / tau, cl: cl > 1 ? 1 : cl, rms }
+  }
+}
+// ---- the note: nearest semitone to a frequency, and the distance from it in cents (hundredths of a semitone)
+const NOTES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B']
+const NOTE = (f, a4) => { const n = 69 + 12 * Math.log2(f / a4), m = Math.round(n); return { midi: m, cents: (n - m) * 100, name: NOTES[(m % 12 + 12) % 12], oct: Math.floor(m / 12) - 1 } }
+// ---- the reading: turns a stream of raw detections into what the tuner shows. A lone stray reading is ignored (a jump of
+// most of a semitone has to be seen twice), the note changes only once the pitch is well past the halfway line (so a note
+// held on the border does not flicker between two names), and the last reading stays up for a moment after the sound stops.
+function makeReading() {
+  let hist = [], pend = null, m = null, sm = 0, last = -9, on = -9
+  const med = a => { const s = [...a].sort((x, y) => x - y); return s[s.length >> 1] }
+  return {
+    // d = a detection, t = seconds, a4 = reference pitch, gate = loudness below which nothing counts
+    push(d, t, a4, gate) {
+      const live = t - last < .25, ok = d.f > 0 && d.rms >= gate && d.cl >= (live ? .7 : .82)
+      if (ok) {
+        const n = 69 + 12 * Math.log2(d.f / a4)
+        if (hist.length && live && Math.abs(n - med(hist)) > .7) {
+          if (pend != null && Math.abs(n - pend) < .7) hist = [pend, n], pend = null, last = t
+          else pend = n
+        } else { if (!live) hist = [], on = t; hist.push(n), hist.length > 5 && hist.shift(), pend = null, last = t }
+      } else if (t - last > .12) pend = null
+      if (!hist.length || t - last > 1.6) return hist = [], m = null, { on: 0, held: 0 }
+      const nf = med(hist.slice(-3)), fresh = m == null || Math.abs(nf - m) > .6
+      if (fresh) m = Math.round(nf), sm = (nf - m) * 100
+      else if (t - last < .05) sm += ((nf - m) * 100 - sm) * .45
+      return { on: t - last < .25 ? 1 : 0, held: 1, midi: m, cents: sm, name: NOTES[(m % 12 + 12) % 12], oct: Math.floor(m / 12) - 1, f: a4 * Math.pow(2, (nf - 69) / 12), cl: d.cl, age: t - last, since: t - on }
+    }
+  }
+}
+
+// ---- plate: Nano's plate rule (Swift-Hohenberg, the amplitude model behind Faraday's and Chladni's patterns), unchanged in its
+// arithmetic: e = drive (how far past the onset of pattern), lam = wavelength in cells, g = asymmetry (stripes toward hexagons).
+// S = cells along one side of the square the round plate sits in; hz = horizon (the plate's radius as a share of half the side).
+function makePlate(S, hz) {
+  const N = S * S, K = 4, nb = new Int32Array(N * K), WM = new Float32Array(N), R = hz * S / 2
+  let U = new Float32Array(N), U2 = new Float32Array(N), Wk = new Float32Array(N), cells = 0
+  for (let i = 0; i < N; i++) {
+    nb.set([(i + 1) % N, (i + N - 1) % N, (i + S) % N, (i + N - S) % N], i * 4)
+    const y = i / S | 0, xx = i % S + .5 - S / 2, yy = y + .5 - S / 2; WM[i] = Math.hypot(xx, yy) < R ? 1 : 0, cells += WM[i]
+  }
+  const P = {
+    S, N, R, WM, cells, get U() { return U },
+    init(a = .1) { for (let i = 0; i < N; i++) U[i] = WM[i] * (Math.random() - .5) * a },
+    // n small steps of dt = .03, as in Nano, then Nano's rain (one cell in 400 nudged by up to a thousandth)
+    step(e, lam, g, n) {
+      const k0 = 2 * Math.PI / Math.max(2.5, lam), k2 = k0 * k0, dt = .03
+      for (let s = 0; s < n; s++) {
+        for (let i = 0; i < N; i++) { let sm = 0; for (let j = i * K, je = j + K; j < je; j++) sm += U[nb[j]]; Wk[i] = k2 * U[i] + 4 * (sm / K - U[i]) }
+        for (let i = 0; i < N; i++) {
+          let sm = 0; for (let j = i * K, je = j + K; j < je; j++) sm += Wk[nb[j]]
+          const q = U[i], L = k2 * Wk[i] + 4 * (sm / K - Wk[i]), nq = (q + dt * (e * q - L + g * q * q - q * q * q)) * WM[i]
+          U2[i] = nq == nq ? nq > 3 ? 3 : nq < -3 ? -3 : nq : 0
+        }
+        const t = U; U = U2, U2 = t
+      }
+      for (let j = N / 400 | 0; j--;) { const i = Math.random() * N | 0; WM[i] && (U[i] += (Math.random() - .5) * 2e-3) }
+    },
+    // how strongly the pattern stands: root mean square of the field inside the horizon
+    amp() { let s = 0; for (let i = 0; i < N; i++) s += U[i] * U[i]; return Math.sqrt(s / cells) }
+  }
+  return P
+}
+// Nano's colour table: 1024 steps, dark through blue and green to yellow
+const LUT = new Float32Array(3072); for (let n = 0; n < 1024; n++) for (let j = 0; j < 3; j++) LUT[n * 3 + j] = 255 * (.15 + .85 * (.5 + .5 * Math.cos(6.28 * (n / 1023 * .85 + j / 3)))) * Math.sqrt(n / 1023)
+
+// ---------- icons: Nano's set, plus a microphone ----------
+const IC={menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',note:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',chev:'<path d="M6 9l6 6 6-6"/>',
+fplate:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',seed:'<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/>',
+drag:'<path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/>',wave:'<path d="M2.5 12c2.4-8 4.8-8 7.1 0s4.8 8 7.1 0 3.2-5.6 4.8-3"/>'}
+IC.mute=IC.note+'<path d="M3 3l18 18"/>'
+const SV=n=>'<svg viewBox="0 0 24 24">'+IC[n]+'</svg>'
+mnb.innerHTML=SV('menu'),tsn.innerHTML=SV('mute'),tdn.innerHTML='<svg viewBox="0 0 24 24" style="rotate:90deg">'+IC.chev+'</svg>',tup.innerHTML='<svg viewBox="0 0 24 24" style="rotate:-90deg">'+IC.chev+'</svg>'
+pmic.innerHTML=SV('mic')+'microphone',pton.innerHTML=SV('wave')+'test tone'
+h1.innerHTML=SV('seed')+'<p>The figure turns <b>left</b> when the note is <b>flat</b> and <b>right</b> when it is <b>sharp</b>. The closer the note, the slower it turns.</p>'
+h2.innerHTML=SV('fplate')+'<p><b>In tune</b>, it holds still and the sand turns gold.</p>'
+h3.innerHTML=SV('note')+'<p>Low notes draw a broad figure, high notes a fine one.</p>'
+
+// ---------- the plate and its picture ----------
+// S cells across; the picture is worked out at Z times that, the field read between cells (so a line of sand is a line, not a run of squares)
+const S=96,HZN=.92,G=0,P=makePlate(S,HZN),Z=3,T=S*Z,TT=T*T
+const C=$('c');C.width=C.height=T
+const PX=C.getContext('2d'),IM=PX.createImageData(T,T),D32=new Uint32Array(IM.data.buffer)
+const PXI=new Int32Array(TT),PFX=new Float32Array(TT),PFY=new Float32Array(TT),PAL=new Float32Array(TT),GRN=new Float32Array(TT)
+for(let y=0;y<T;y++)for(let x=0;x<T;x++){const p=y*T+x,gx=(x+.5)/Z-.5,gy=(y+.5)/Z-.5,x0=Math.max(0,Math.min(S-2,Math.floor(gx))),y0=Math.max(0,Math.min(S-2,Math.floor(gy)))
+PXI[p]=y0*S+x0,PFX[p]=Math.max(0,Math.min(1,gx-x0)),PFY[p]=Math.max(0,Math.min(1,gy-y0))
+const d=P.R*Z-1-Math.hypot(x+.5-T/2,y+.5-T/2);PAL[p]=d<0?0:d>1?1:d                    // a soft rim, one picture cell wide
+GRN[p]=.24*(Math.random()-.5)}                                                      // grain: no two specks of sand alike
+const ET=new Float32Array(1026);for(let i=0;i<1026;i++){const x=i/256;ET[i]=Math.exp(-x*x)}
+// Sand gathers where the plate is still: the lines where the field crosses zero. The same amount of sand is always on the plate (the
+// picture is divided by its own mean), so at rest it lies thin and even, and as a figure forms it leaves the moving parts for the lines.
+// lk = the lock, 0 to 1: far from the note the sand lies loose and wide in the palette's blues, in tune it draws fine and gold
+const PAINT=lk=>{const U=P.U,WM=P.WM,a=P.amp(),sg=Math.max(.035,a*(.4+.5*(1-lk))),inv=256/sg,cap=.4+.6*lk,gr=1-.75*lk;let mean=0
+for(let i=0;i<P.N;i++)if(WM[i]){const k=(U[i]<0?-U[i]:U[i])*inv;k<1024&&(mean+=ET[k|0])}
+mean/=P.cells;const gain=(.17+.14*lk)/(mean>.03?mean:.03)
+for(let p=0;p<TT;p++){const al=PAL[p];if(!al)continue
+const i=PXI[p],fx=PFX[p],fy=PFY[p],u0=U[i],u1=U[i+S],u=(u0+(U[i+1]-u0)*fx)*(1-fy)+(u1+(U[i+S+1]-u1)*fx)*fy,k=(u<0?-u:u)*inv
+let b=(k<1024?ET[k|0]:0)*gain*(1+GRN[p]*gr);b>cap&&(b=cap);const l=(b*1023|0)*3
+D32[p]=al*255<<24|LUT[l+2]<<16|LUT[l+1]<<8|LUT[l]}
+PX.putImageData(IM,0,0)}
+
+// ---------- layout ----------
+let VW=0,VH=0,CX=0,CY=0,RS=100
+// portrait: note, plate and distance stacked between the top bar and whatever the bottom strip holds; landscape: note left, plate middle, distance right
+const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,ns=Math.max(44,Math.min(96,pt?VH*.1:VH*.2));document.body.classList.toggle('land',!pt),CX=VW/2
+if(pt){const tp=48+(parseFloat(getComputedStyle($('top')).paddingTop)||0),B=tg.hidden?24:bot.offsetHeight+6,av=VH-tp-B;RS=Math.max(60,Math.min(VW*.46,(av-ns-76)/2));const y0=tp+Math.max(0,(av-ns-76-2*RS)*.45)
+CY=y0+ns+12+RS,nt.style.left=ce.style.left=CX+'px',nt.style.top=y0+ns/2+'px',ce.style.top=CY+RS+38+'px'}
+else RS=Math.min((VH-24)*.46,VW*.24),CY=VH/2,nt.style.left=(CX-RS)/2+'px',ce.style.left=(CX+RS+VW)/2+'px',nt.style.top=ce.style.top=CY+'px'
+const sd=RS*T/(P.R*Z);C.style.width=C.style.height=sd+'px',C.style.left=CX-sd/2+'px',C.style.top=CY-sd/2+'px'
+ring.style.left=CX+'px',ring.style.top=CY+'px',ring.style.width=ring.style.height=2*RS+7+'px',nt.style.setProperty('--ns',ns+'px')}
+addEventListener('resize',FIT),FIT()
+
+// ---------- sound in ----------
+// mode: '' on the title card, 'mic' listening, 'tone' a test tone made here (bent by dragging the plate) and read by the same detector
+let mode='',A4=440,AC=null,AN=null,MS=null,SIL=null,BUF=new Float32Array(4096),DET=makePitch(4096,48000),DFS=48000,RDG=makeReading(),R0={on:0,held:0},TD=0
+let TM=69,TB=-17,HEAR=0,OSC=null,OG=null,TPH=0
+const GATE=.004,FMIN=30,FMAX=4200
+try{const a=+localStorage.getItem('sst.a4');a>=400&&a<=480&&(A4=a)}catch(e){}
+const TOAST=(s,ms=3600)=>{tst.textContent=s,tst.classList.add('on'),clearTimeout(TOAST.t),TOAST.t=setTimeout(_=>tst.classList.remove('on'),ms)}
+const CTX=_=>{if(!AC){const K=window.AudioContext||window.webkitAudioContext;if(!K)return null;try{AC=new K()}catch(e){return null}}try{AC.state=='suspended'&&AC.resume().catch(_=>{})}catch(e){}return AC}
+const WAKE=async _=>{try{WAKE.l=await navigator.wakeLock.request('screen')}catch(e){}}
+const MICOFF=_=>{if(MS){for(const t of MS.getTracks())t.stop();MS=null}if(AN){try{AN.disconnect()}catch(e){}AN=null}}
+const MIC=async _=>{if(PREVIEW)return 0
+if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return TOAST('This browser gives pages no microphone. The test tone still works.'),0
+try{const ac=CTX();if(!ac)throw 0;const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}})
+MICOFF(),MS=st;const src=ac.createMediaStreamSource(st);AN=ac.createAnalyser(),AN.fftSize=ac.sampleRate>60000?8192:4096,src.connect(AN)
+SIL||(SIL=ac.createGain(),SIL.gain.value=0,SIL.connect(ac.destination)),AN.connect(SIL)   // some browsers only run what reaches the speaker; this branch is silent
+BUF=new Float32Array(AN.fftSize),DFS=ac.sampleRate,DET=makePitch(AN.fftSize,DFS);return 1}
+catch(e){const n=e&&e.name;TOAST(n=='NotAllowedError'||n=='SecurityError'?'The microphone is blocked for this page. Allow it in the browser\'s site settings, then choose microphone again.':n=='NotFoundError'?'No microphone was found.':'The microphone could not be opened.',6000);return 0}}
+const TONEF=_=>A4*Math.pow(2,(TM-69)/12+TB/1200)
+const HEARSET=on=>{HEAR=on?1:0;tsn.innerHTML=SV(HEAR?'note':'mute'),tsn.classList.toggle('on',!!HEAR)
+if(HEAR){const ac=CTX();if(!ac)return;if(!OSC){OSC=ac.createOscillator(),OG=ac.createGain(),OSC.type='triangle',OG.gain.value=0,OSC.connect(OG),OG.connect(ac.destination),OSC.frequency.value=TONEF();try{OSC.start()}catch(e){}}
+OG.gain.setTargetAtTime(.07,ac.currentTime,.03)}else if(OG&&AC)OG.gain.setTargetAtTime(0,AC.currentTime,.03)}
+const SETMODE=async m=>{if(m=='mic'&&!(await MIC()))m=mode=='mic'?'tone':mode||'tone'
+if(m!='mic')MICOFF();if(m=='tone'){if(DFS!=48000||BUF.length!=4096)BUF=new Float32Array(4096),DFS=48000,DET=makePitch(4096,48000)}else HEARSET(0)
+mode=m,RDG=makeReading(),R0={on:0,held:0},tg.hidden=m!='tone',hint.hidden=m!='tone',hint.textContent='drag the plate sideways to bend the tone, up or down to change the note'
+pmic.classList.toggle('on',m=='mic'),pton.classList.toggle('on',m=='tone'),FIT(),WAKE()}
+// one reading: the newest samples from the microphone, or the same length of the test tone (a fundamental and two overtones, with a little hiss)
+const READ=t=>{if(mode=='mic'){if(!AN)return;AN.getFloatTimeDomainData(BUF)}
+else{const w=2*Math.PI*TONEF()/DFS;for(let i=0;i<BUF.length;i++){TPH+=w;BUF[i]=.22*(Math.sin(TPH)+.3*Math.sin(2*TPH)+.12*Math.sin(3*TPH))+.002*(Math.random()-.5)}TPH%=2*Math.PI
+OSC&&AC&&OSC.frequency.setTargetAtTime(TONEF(),AC.currentTime,.015)}
+R0=RDG.push(DET(BUF,FMIN,FMAX),t,A4,GATE)}
+
+// ---------- the loop ----------
+// TH = how far the plate has turned, OM = how fast it turns, LK = the lock (0 loose, 1 in tune), LAMP = the spacing the standing figure was grown at
+let LAST=0,FN=0,TH=0,OM=0,LK=0,LAMP=9,SHOWN='',RNG='',RM=matchMedia('(prefers-reduced-motion:reduce)').matches
+const WMAX=.52                                     // fastest turn, radians a second, for a figure spaced 9 cells (a finer one turns slower in step, so its lines
+// pass any point at the same rate): while the sand is bright a line passes less than three times a second, and faster only once it has dimmed
+const LAMF=m=>{const l=13.5-(m-36)*8.5/60;return l<5?5:l>13.5?13.5:l}
+const SS=x=>x<=0?0:x>=1?1:x*x*(3-2*x)
+P.init(.02)
+// Each frame the plate takes its small steps (as many as the time since the last frame calls for, so it runs at one pace on any screen)
+// and the page turns it. The two heavier jobs take turns: the picture is redrawn on odd frames, the sound is read on even ones.
+const FRAME=now=>{requestAnimationFrame(FRAME);const t=now/1000,dt=Math.min(.05,Math.max(.001,t-LAST));LAST=t,FN++
+if(mode&&!(FN&1)&&t-TD>=.028)TD=t,READ(t)
+const r=R0,c=r.held?r.cents:0,ac=c<0?-c:c
+// a new note well away from the last one: most of the old figure is shaken off and the new spacing grows in its place
+if(r.held){const l=LAMF(r.midi);if(Math.abs(l-LAMP)>.7){const U=P.U;for(let i=0;i<P.N;i++)U[i]*=.06;LAMP=l}}
+// drive: a note that has just started pushes hard for a moment (a struck plate), a sounding note holds the figure, silence lets it settle out
+const e=r.on?.3+.75*Math.exp(-r.since/.22):r.held?.08:-.1,n=Math.round(dt*(r.on&&r.since<.7?720:480))
+P.step(e,LAMP,G,n<3?3:n>12?12:n)
+const lt=r.held?SS(1-(ac-3)/7):0;LK+=(lt-LK)*(1-Math.exp(-dt/.09))
+const om=r.on?Math.sign(c)*WMAX*LAMP/9*Math.tanh(Math.max(0,ac-1.5)/12):0;OM+=(om-OM)*(1-Math.exp(-dt/.1));RM||(TH+=OM*dt)
+if(FN&1){PAINT(LK);const k=LK>.02?'rgba(255,180,84,'+(.15+.75*LK).toFixed(2)+')':'';k!=RNG&&(ring.style.borderColor=RNG=k)}
+C.style.transform='rotate('+TH.toFixed(4)+'rad)'
+SHOW(r,ac)}
+// the words: the note, then how far off in whole cents and which way; nothing is rewritten unless it changed
+const SHOW=(r,ac)=>{let s
+if(!r.held)s=mode?'w':'';else{const n=Math.round(ac),tn=ac<=3;s=r.name+'|'+r.oct+'|'+(tn?'in':n+(r.cents<0?'f':'s'))+'|'+r.on+'|'+r.f.toFixed(1)}
+if(s==SHOWN)return;SHOWN=s
+if(!r.held){nt.innerHTML='',ce.className='rdx wait',ce.innerHTML=mode?'<b>listening</b>':'';return}
+const tn=ac<=3,n=Math.round(ac)
+nt.innerHTML=r.name[0]+'<sup>'+(r.name[1]||'')+'</sup><sub>'+r.oct+'</sub>',nt.className='rdx'+(tn?' in':'')+(r.on?'':' dim')
+ce.className='rdx'+(tn?' in':'')+(r.on?'':' dim'),ce.innerHTML='<b>'+(tn?'in tune':n+(n==1?' cent ':' cents ')+(r.cents<0?'flat':'sharp'))+'</b><small>'+r.f.toFixed(1)+' Hz</small>'}
+
+// ---------- touch: in test tone, dragging the plate bends the tone (its full width is a semitone) and steps the note ----------
+let DG=null
+fld.addEventListener('pointerdown',ev=>{if(mode!='tone')return;DG={x:ev.clientX,y:ev.clientY,b:TB,m:TM};try{fld.setPointerCapture(ev.pointerId)}catch(e){}})
+fld.addEventListener('pointermove',ev=>{if(!DG)return;const b=DG.b+(ev.clientX-DG.x)/(2*RS)*100,m=DG.m-Math.round((ev.clientY-DG.y)/26);TB=b<-65?-65:b>65?65:b,TM=m<28?28:m>103?103:m})
+const DGE=_=>{DG=null};fld.addEventListener('pointerup',DGE),fld.addEventListener('pointercancel',DGE)
+tdn.onclick=_=>{TM=Math.max(28,TM-1)},tup.onclick=_=>{TM=Math.min(103,TM+1)},tsn.onclick=_=>HEARSET(!HEAR)
+addEventListener('keydown',ev=>{const k=ev.key;if(k=='Escape')return hlp.hidden?PM(pm.hidden):(hlp.hidden=true);if(mode!='tone')return
+k=='ArrowLeft'?TB=Math.max(-65,TB-1):k=='ArrowRight'?TB=Math.min(65,TB+1):k=='ArrowUp'?TM=Math.min(103,TM+1):k=='ArrowDown'?TM=Math.max(28,TM-1):k==' '&&HEARSET(!HEAR)})
+
+// ---------- title, menu, help ----------
+const PM=on=>{if(on)pm.hidden=false,requestAnimationFrame(_=>pm.classList.remove('out'));else pm.classList.add('out'),setTimeout(_=>pm.classList.contains('out')&&(pm.hidden=true),160)}
+const ASET=a=>{A4=a<415?415:a>466?466:a,aval.textContent=A4+' Hz';try{localStorage.setItem('sst.a4',A4)}catch(e){}}
+const BEGIN=async m=>{await SETMODE(m);document.body.classList.remove('pre'),st.classList.add('out'),setTimeout(_=>st.hidden=true,560)}
+document.body.classList.add('pre'),ASET(A4)
+if(PREVIEW)sgo.hidden=pmic.hidden=true,scp.textContent='This preview page cannot use the microphone, so it plays a test tone you bend by hand. The full page listens.'
+else sgo.onclick=_=>BEGIN('mic'),pmic.onclick=_=>{PM(0),SETMODE('mic')}
+sto.onclick=_=>BEGIN('tone'),pton.onclick=_=>{PM(0),SETMODE('tone')}
+mnb.onclick=_=>PM(1),pmx.onclick=_=>PM(0),pm.onclick=ev=>{ev.target==pm&&PM(0)}
+adn.onclick=_=>ASET(A4-1),aup.onclick=_=>ASET(A4+1)
+phl.onclick=_=>{PM(0),hlp.hidden=false},hok.onclick=_=>{hlp.hidden=true},hlp.onclick=ev=>{ev.target==hlp&&(hlp.hidden=true)}
+pt.onclick=_=>{PM(0),MICOFF(),HEARSET(0),mode='',R0={on:0,held:0},tg.hidden=hint.hidden=true,FIT(),st.hidden=false,document.body.classList.add('pre'),requestAnimationFrame(_=>st.classList.remove('out'))}
+// the page gives the microphone back while it is out of sight and takes it up again on return
+document.addEventListener('visibilitychange',_=>{try{if(document.hidden){AC&&AC.state=='running'&&AC.suspend()}else{AC&&AC.resume().catch(_=>{}),mode&&WAKE()}}catch(e){}})
+window.__T=_=>({mode,r:R0,lk:LK,om:OM,th:TH,amp:P.amp(),lam:LAMP,a4:A4,tb:TB,tm:TM,fs:DFS})
+requestAnimationFrame(FRAME)
+</script>
