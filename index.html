@@ -25,8 +25,8 @@ body.open #con{translate:var(--sl,300px) 0;box-shadow:-22px 0 46px #000;cursor:p
 .vh{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 /* the plate in its well: a bezel with vents round it, a ring of light inside the bezel that comes on in tune, and the plate standing a little proud on its bolt.
    #rimb is the plate's edge seen shaking (a soft double of it); #cg is the light given off by powders that glow */
-#well{border-radius:50%;background:radial-gradient(closest-side,#030405 calc(100% - 11px),#000 calc(100% - 10.5px),#343840 calc(100% - 9.5px),#1c1e23 calc(100% - 5px),#101114 calc(100% - 1.5px),#000 calc(100% - 1px));box-shadow:0 1px 0 rgba(255,255,255,.1),0 -1px 0 rgba(0,0,0,.7),0 6px 16px rgba(0,0,0,.45);pointer-events:none}
-#vents{border-radius:50%;background:repeating-conic-gradient(from -5deg,#000 0 10deg,rgba(0,0,0,0) 10deg 30deg);-webkit-mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 8px),#000 calc(100% - 7.5px) calc(100% - 3px),rgba(0,0,0,0) calc(100% - 2.5px));mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 8px),#000 calc(100% - 7.5px) calc(100% - 3px),rgba(0,0,0,0) calc(100% - 2.5px));pointer-events:none}
+#well{border-radius:50%;background:radial-gradient(closest-side,#030405 calc(100% - 17px),#000 calc(100% - 16.5px),#343840 calc(100% - 15.5px),#1c1e23 calc(100% - 8px),#101114 calc(100% - 1.5px),#000 calc(100% - 1px));box-shadow:0 1px 0 rgba(255,255,255,.1),0 -1px 0 rgba(0,0,0,.7),0 6px 16px rgba(0,0,0,.45);pointer-events:none}
+#vents{border-radius:50%;background:repeating-conic-gradient(from 11deg,#000 0 8deg,rgba(0,0,0,0) 8deg 30deg);-webkit-mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 12.5px),#000 calc(100% - 12px) calc(100% - 4.5px),rgba(0,0,0,0) calc(100% - 4px));mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 12.5px),#000 calc(100% - 12px) calc(100% - 4.5px),rgba(0,0,0,0) calc(100% - 4px));pointer-events:none}
 #led{border-radius:50%;border:2.5px solid rgba(255,255,255,.075);transition:border-color .35s,box-shadow .35s;pointer-events:none}
 #led.in{border-color:var(--ac);box-shadow:0 0 9px color-mix(in srgb,var(--ac) 75%,transparent),0 0 24px color-mix(in srgb,var(--ac) 38%,transparent),inset 0 0 9px color-mix(in srgb,var(--ac) 55%,transparent)}
 #ring{border-radius:50%;border:1.5px solid rgba(160,185,220,.22);background:radial-gradient(circle at 36% 30%,#17191e,#0b0c0f 62%,#060709);box-shadow:inset 0 0 22px rgba(0,0,0,.8),0 0 0 1px #000,0 10px 22px rgba(0,0,0,.7);pointer-events:none}
@@ -34,45 +34,40 @@ body.open #con{translate:var(--sl,300px) 0;box-shadow:-22px 0 46px #000;cursor:p
 #c,#cg{pointer-events:none}#cg{filter:blur(3.5px) saturate(1.5) brightness(1.3);mix-blend-mode:screen}
 #bolt{width:15px;height:15px;margin:-7.5px 0 0 -7.5px;border-radius:50%;background:#17191d;box-shadow:inset 0 0 0 1.5px #2c2f36,inset 0 1.5px 0 0 rgba(255,255,255,.13),0 0 0 1px #000,0 1px 3px rgba(0,0,0,.8);pointer-events:none}
 #fld{border-radius:50%;pointer-events:auto}
-/* hardware: round buttons at the plate's corners, and under the dial keys and a lever. None of it carries a word: what a press did is said on the readout */
-.cb,.key,.sb{display:inline-flex;align-items:center;justify-content:center;color:#c3cad6;background:linear-gradient(180deg,#262930,#0e0f12);box-shadow:inset 0 1px 0 rgba(255,255,255,.11),inset 0 -1px 0 rgba(0,0,0,.6),0 2px 4px rgba(0,0,0,.85),0 0 0 1px #000;transition:color .18s,translate .08s,box-shadow .08s,opacity .25s}
-.cb,.sb{width:40px;height:40px;border-radius:50%}.key{width:40px;height:40px;border-radius:8px}.cb svg,.key svg,.sb svg{width:20px;height:20px;transition:filter .18s}
-.cb:active,.key:active,.sb:active{translate:0 1.5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 2px rgba(0,0,0,.9),0 0 0 1px #000}
-.cb.on,.key.on,.sb.on{color:var(--ac)}.cb.on svg,.key.on svg,.sb.on svg{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 65%,transparent))}
-.sb.no{opacity:.32}
+/* hardware: round buttons at the plate's corners, and under it keys. Each says what it is by a sign; the four source keys carry their names as well */
+.cb,.key,.sk{display:inline-flex;align-items:center;justify-content:center;color:#c3cad6;background:linear-gradient(180deg,#262930,#0e0f12);box-shadow:inset 0 1px 0 rgba(255,255,255,.11),inset 0 -1px 0 rgba(0,0,0,.6),0 2px 4px rgba(0,0,0,.85),0 0 0 1px #000;transition:color .18s,translate .08s,box-shadow .08s,opacity .25s}
+.cb{width:40px;height:40px;border-radius:50%}.key{width:46px;height:42px;border-radius:8px}.cb svg,.key svg{width:20px;height:20px;transition:filter .18s}
+.cb:active,.key:active,.sk:active{translate:0 1.5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 2px rgba(0,0,0,.9),0 0 0 1px #000}
+.cb.on,.key.on,.sk.on{color:var(--ac)}.cb.on svg,.key.on svg,.sk.on svg{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 65%,transparent))}
 /* the one button that is not part of the console: seen only while looking closer, it goes back */
 #zo{position:fixed;z-index:3;right:calc(env(safe-area-inset-right,0px) + 14px);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);opacity:.55}#zo:hover,#zo:active{opacity:1}
-/* the powders: a tray of grey keys, each with its powder's colour painted on it. A press pours some of that powder onto the plate */
-#hop{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;padding:5px;border-radius:9px;background:#040506;box-shadow:inset 0 2px 6px #000,inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.08)}
-.pw{position:relative;flex:0 0 calc((100% - 40px)/9);height:36px;border-radius:5px;background:linear-gradient(180deg,#5d616b,#33363d);box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(0,0,0,.5),0 2px 3px rgba(0,0,0,.8),0 0 0 1px #000;transition:translate .08s,box-shadow .08s}
-#hop.two .pw{flex-basis:calc((100% - 20px)/5)}
-.pw i{position:absolute;inset:6px 5px;border-radius:2px;background:var(--p);box-shadow:inset 0 0 0 1px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.28),0 0 7px var(--pg,rgba(0,0,0,0));pointer-events:none}
-.pw:active{translate:0 1.5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 2px rgba(0,0,0,.9),0 0 0 1px #000}
-/* the deck: the dial, and under it one row. From the left: what the plate hears (the microphone, or an instrument played here); down an
-   octave, play, up an octave; the bend lever. It is the same whatever the plate hears: listening, what is not in use is dimmed, and a
-   touch on any of it goes over to the instrument */
-#bot{display:flex;flex-direction:column;gap:10px}
-#dial{display:block;width:100%;height:48px;cursor:ew-resize}
-#trn{display:grid;grid-template-columns:auto 1fr auto auto auto 1fr auto;align-items:center;row-gap:10px}
-#src{grid-area:1/1;display:flex;gap:2px;padding:3px;border-radius:23px;background:#040506;box-shadow:inset 0 2px 6px #000,inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.08)}
-#tdn{grid-area:1/3;margin-right:9px}#ply{grid-area:1/4}#tup{grid-area:1/5;margin-left:9px}
+/* the source: four keys in one slot, of which the one in use stays down and lit: the microphone, or one of the instruments. Every choice
+   is in sight with its name on it. The same four are on the title card, larger */
+.srk{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:3px;border-radius:11px;background:#040506;box-shadow:inset 0 2px 6px #000,inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.08)}
+.sk{height:38px;gap:6px;border-radius:8px;min-width:0}.sk svg{width:18px;height:18px;flex:0 0 auto;transition:filter .18s}.sk b{font:600 9px/1 monospace;letter-spacing:.1em;text-transform:uppercase}
+.sk.on{translate:0 1px;background:linear-gradient(180deg,#131518,#0a0b0d);box-shadow:inset 0 2px 5px rgba(0,0,0,.85),0 0 0 1px #000,0 0 10px color-mix(in srgb,var(--ac) 20%,transparent)}.sk.on b{text-shadow:0 0 6px color-mix(in srgb,var(--ac) 55%,transparent)}
+.sk.no{opacity:.32}
+/* the powders: small lit ports set in the bezel round the plate, each the colour of its powder. A press sprays some of that powder onto
+   the plate from where the port is. (.pj is the place a finger can press; the i in it is the port itself.) */
+.pj{width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.pj i{width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.8) 0 8%,rgba(255,255,255,0) 36%),var(--p);box-shadow:0 0 0 2px #050608,0 0 0 3px rgba(255,255,255,.1),inset 0 -2px 3px rgba(0,0,0,.45),0 0 6px var(--pg,rgba(0,0,0,0));filter:brightness(.8) saturate(.92);transition:filter .3s,scale .08s;pointer-events:none}
+.pj:active i{scale:.84}.pj.fire i{filter:brightness(1.5) saturate(1.1);transition:none}
+/* the deck: the source keys, the dial, and one row of keys: flat, down an octave, play, up an octave, sharp. It is the same whatever the
+   plate hears: listening, the keys of that row are dimmed, and a touch on one (or on the dial) goes over to the instrument */
+#dial{display:block;height:48px;cursor:ew-resize}
+#trn{display:flex;align-items:center;justify-content:center;gap:7px}
 /* play, as on Nano: a circle in the middle that shows what a press would do. Stopped, a triangle in the accent colour; sounding, two
    bars, and a light goes round its seat */
-#ply{position:relative;width:56px;height:56px;margin:5px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#dfe4ec;background:linear-gradient(180deg,#2b2e36,#0e0f12);box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(0,0,0,.6),0 3px 6px rgba(0,0,0,.85),0 0 0 1px #000,0 0 0 5px #050608,0 0 0 6px rgba(255,255,255,.07);transition:color .18s,translate .08s,opacity .25s}
+#ply{position:relative;width:56px;height:56px;margin:5px 7px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#dfe4ec;background:linear-gradient(180deg,#2b2e36,#0e0f12);box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(0,0,0,.6),0 3px 6px rgba(0,0,0,.85),0 0 0 1px #000,0 0 0 5px #050608,0 0 0 6px rgba(255,255,255,.07);transition:color .18s,translate .08s,opacity .25s}
 #ply svg{width:26px;height:26px;transition:filter .18s}#ply:active{translate:0 1.5px}
 #ply.on{color:var(--ac)}#ply.on svg{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 65%,transparent))}
 #ply:before{content:'';position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 0deg,rgba(0,0,0,0) 0 50%,var(--ac));-webkit-mask:radial-gradient(farthest-side,rgba(0,0,0,0) calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,rgba(0,0,0,0) calc(100% - 3px),#000 calc(100% - 2px));filter:drop-shadow(0 0 3px var(--ac));animation:spin 2.8s linear infinite;transition:opacity .7s;pointer-events:none}
 #ply.on:before{opacity:0}
-/* the bend lever in its slot: a flat at one end, a sharp at the other */
-#bnd{grid-area:1/7;position:relative;width:88px;height:40px;border-radius:8px;background:#040506;box-shadow:inset 0 2px 6px #000,inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.08);cursor:ew-resize;transition:opacity .25s}
-#bnd svg{position:absolute;top:50%;width:13px;height:13px;margin-top:-6.5px;stroke-width:2.2;color:rgba(223,228,236,.36);pointer-events:none}#bnd svg:first-child{left:6px}#bnd svg:last-child{right:6px}
-#bnk{position:absolute;left:50%;top:4px;bottom:4px;width:24px;margin-left:-12px;border-radius:5px;background:linear-gradient(90deg,#15171b,#3a3e47 45%,#3a3e47 55%,#15171b);box-shadow:0 0 0 1px #000,0 2px 4px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.14);translate:var(--bx,0px) 0;pointer-events:none}
-#bnk:after{content:'';position:absolute;left:50%;top:5px;bottom:5px;width:2px;margin-left:-1px;border-radius:1px;background:var(--ac);box-shadow:0 0 5px color-mix(in srgb,var(--ac) 70%,transparent)}
-/* in a narrow column (beside the plate, in landscape) the row is two: the octave keys and play above, the source and the lever below */
-#bot.nar #src{grid-area:2/1/3/4;justify-self:start}#bot.nar #bnd{grid-area:2/5/3/8;justify-self:end}
-body.mic #tdn,body.mic #tup,body.mic #bnd,body.mic #ply{opacity:.4}
-@media (max-width:389px) and (orientation:portrait){.sb,.key{width:34px;height:34px}#bnd{width:76px;height:34px}#ply{width:50px;height:50px}#tdn{margin-right:6px}#tup{margin-left:6px}}
-body.cmp .pw{height:28px}body.cmp #ply{width:48px;height:48px}
+body.mic #trn .key,body.mic #ply{opacity:.4}
+@media (max-width:389px) and (orientation:portrait){.key{width:40px;height:38px}#ply{width:50px;height:50px}.sk{gap:4px}.sk b{font-size:8px;letter-spacing:.06em}.sk svg{width:16px;height:16px}}
+/* in a narrow column (beside the plate, in landscape) the source keys stand two and two, and the row of keys is closer */
+body.nar #src{grid-template-columns:1fr 1fr}body.nar #trn{gap:4px}body.nar #trn .key{width:30px;height:40px}body.nar #ply{width:50px;height:50px;margin:5px 4px}
+body.cmp #src .sk{height:32px}body.cmp #ply{width:48px;height:48px}
 /* a toast, Nano's */
 #tst{position:fixed;left:50%;translate:-50% 0;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:12;padding:8px 14px;border-radius:6px;background:rgba(0,0,0,.78);border:1px solid #fff3;font-size:13px;opacity:0;transition:opacity .3s;white-space:normal;width:max-content;max-width:min(92vw,420px);text-align:center;pointer-events:none}
 #tst.on{opacity:1}
@@ -83,7 +78,7 @@ body.cmp .pw{height:28px}body.cmp #ply{width:48px;height:48px}
 #pm button,#pm .links a,#pm .rw,#pm summary{font:15px/1.2 monospace;letter-spacing:.04em;color:#fff;border:0;border-radius:0;background:none;padding:12px 20px;text-align:left;display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer}
 #pm button>svg,#pm .links a>svg{width:18px;height:18px;flex:0 0 auto;stroke-width:1.8;opacity:.85}
 #pm button:active,#pm .links a:active,#pm summary:active{background:color-mix(in srgb,var(--ac) 16%,transparent)}#pm button.on{color:var(--ac)}
-#pm .links{display:flex;flex-direction:column}#pm .links a{display:block}#pm .links a small{display:block;font-size:11px;letter-spacing:.02em;color:#9aa3b3;margin-top:3px}
+#pm .links{display:flex;flex-direction:column}#pm .links a{justify-content:space-between}#pm .ext{margin-top:auto;padding-top:26px}#pm .links a small{display:block;font-size:11px;letter-spacing:.02em;color:#9aa3b3;margin-top:3px}
 #pm .rw{justify-content:space-between;padding:2px 10px 2px 20px;cursor:default}#pm .rw span{display:flex;align-items:center;gap:2px}#pm .rw b{font-weight:400;min-width:64px;text-align:center;font-variant-numeric:tabular-nums}#pm .rw button{padding:0;width:44px;height:44px;justify-content:center;font-size:20px}
 #pm .sm{font-size:11px;letter-spacing:.06em;padding:6px 10px;margin:2px 20px 0;align-self:flex-end;border:1px solid rgba(160,185,220,.3);border-radius:4px;color:#aab3c2}
 #pm #pmx{align-self:flex-start;margin:0 0 0 8px;padding:10px}
@@ -92,39 +87,39 @@ body.cmp .pw{height:28px}body.cmp #ply{width:48px;height:48px}
 #pm .fad,#pm .fad *{touch-action:none}.fad{position:relative;height:44px;cursor:ew-resize}.fad u{position:absolute;left:0;right:0;top:14px;height:16px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.6);pointer-events:none}
 .fad i{position:absolute;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.4);pointer-events:none}
 #pm summary{list-style:none}#pm summary::-webkit-details-marker{display:none}#pm summary:after{content:'+';margin-left:auto;opacity:.6}#pm details[open] summary:after{content:'\2212'}
-#pm .hr{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;margin:0;padding:8px 20px;font-size:13px;line-height:1.5}.hr svg{width:22px;height:22px;margin-top:2px}.hr p{margin:0}.hr p b{color:var(--ac);font-weight:400}
+#pm .hr{display:grid;grid-template-columns:22px 1fr;gap:12px;align-items:start;margin:0;padding:7px 20px;font-size:13px;line-height:1.45}.hr svg{width:20px;height:20px;margin-top:1px;color:var(--ac)}.hr p{margin:0;color:#c9cfd9}.hr p b{display:block;color:#fff;font-weight:700;letter-spacing:.04em}
 #pm .nt{margin:0;padding:8px 20px 4px;font-size:12px;line-height:1.5;color:#9aa3b3;font-style:italic}
 /* the title card, as on Nano */
 #st{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(8,10,14,.88);transition:opacity .55s;cursor:default}#st,#st *{touch-action:pan-x pan-y}#st.out{opacity:0;pointer-events:none}
 #stb{display:flex;flex-direction:column;align-items:center;gap:9px;width:min(360px,90vw);max-height:94vh;overflow-y:auto;padding:4px 2px;animation:bin .8s both}
 .logo{width:min(320px,84vw)}.logo svg{width:100%;height:auto;stroke:none;display:block}
-.sub{margin:0 0 22px;font-size:13px;letter-spacing:.22em;opacity:.55;text-align:center}
-#st .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-#st button{font:15px/1.3 monospace;border:1px solid #fff3;border-radius:8px;text-align:center;min-width:128px;padding:14px 12px;background:rgba(20,24,30,.5);transition:scale .12s}#st button:active{scale:.95}#st #sgo{border-color:var(--ac);box-shadow:0 0 12px color-mix(in srgb,var(--ac) 28%,transparent)}
+.ask{margin:20px 0 6px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(223,228,236,.6);text-align:center}
+#stk{width:min(340px,90vw)}#stk .sk{flex-direction:column;height:68px;gap:8px}#stk .sk svg{width:24px;height:24px}#stk .sk b{font-size:9.5px}
 #st button:focus-visible,#pm button:focus-visible{outline:1px solid #fff}
 #st .cap{margin:18px 0 0;font-size:12px;opacity:.75;text-align:center;max-width:300px;line-height:1.5}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 <div id=sa></div>
 <div id=pm hidden role=dialog aria-modal=true aria-label="menu"><button id=pmx aria-label="close menu" title="close menu"></button>
-<details id=phd><summary>help guide</summary><div class=hr id=h1></div><div class=hr id=h2></div><div class=hr id=h3></div><div class=hr id=h4></div><div class=hr id=h5></div><p class=nt>Sound is measured on this device. Nothing is recorded or sent.</p></details>
+<details id=phd><summary>help guide</summary><div id=hlp></div><p class=nt>Sound is measured on this device.<br>Nothing is recorded or sent.</p></details>
 <p class=h>reference pitch</p><div class=rw><span>A4</span><span><button id=adn aria-label="lower the reference pitch">&#8722;</button><b id=aval>440 Hz</b><button id=aup aria-label="raise the reference pitch">+</button></span></div><button id=ard class=sm>back to 440</button>
 <p class=h>light</p><button id=pac>accent color<i class=sw></i></button><div id=acc hidden><div class=fad id=fdr><u></u><i></i></div><div class=fad id=fdg><u></u><i></i></div><div class=fad id=fdb><u></u><i></i></div><button id=acr class=sm>back to amber</button></div>
 <button id=pt class=dv>return to title</button>
-<p class=h>more scale space</p><div class=links><a href="https://setzstone.itch.io/scale-space" target=_blank rel=noopener>Scale Space<small>early access</small></a><a href="https://setzstone.itch.io/cymatist" target=_blank rel=noopener>Scale Space Cymatist<small>cymatics tools</small></a><a href="https://www.reddit.com/r/ScaleSpace/" target=_blank rel=noopener>r/ScaleSpace<small>finds, builds, and the dev log</small></a></div></div>
+<div class=ext><p class=h>more scale space, on other sites</p><div class=links><a href="https://setzstone.itch.io/cymatist" target=_blank rel=noopener><span>Scale Space Cymatist<small>itch.io &#183; cymatics tools</small></span></a><a href="https://setzstone.itch.io/scale-space" target=_blank rel=noopener><span>Scale Space<small>itch.io &#183; early access</small></span></a><a href="https://www.reddit.com/r/ScaleSpace/" target=_blank rel=noopener><span>r/ScaleSpace<small>reddit.com &#183; finds, builds, and the dev log</small></span></a></div></div></div>
 <div id=con><div id=face></div><i class=scr id=s1></i><i class=scr id=s2 style="--r:-20deg"></i><i class=scr id=s3 style="--r:80deg"></i><i class=scr id=s4 style="--r:10deg"></i>
 <svg style="position:absolute;width:0;height:0" aria-hidden=true><filter id=deb x="-3%" y="-25%" width="106%" height="150%" color-interpolation-filters="sRGB"><feComponentTransfer in="SourceAlpha" result="a"><feFuncA type="linear" slope="4"/></feComponentTransfer><feOffset in="a" dy="1.3" result="o"/><feComposite in="a" in2="o" operator="out" result="lip"/><feFlood flood-color="#000" flood-opacity=".85"/><feComposite in2="lip" operator="in" result="sh"/><feComposite in="o" in2="a" operator="out" result="edge"/><feFlood flood-color="#fff" flood-opacity=".2"/><feComposite in2="edge" operator="in" result="hl"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="sh"/><feMergeNode in="hl"/></feMerge></filter></svg>
 <div id=brand><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 222" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space Intunist"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g><path fill="currentColor" d="M1164.750 293.875h5.885v5.885h-5.885zM1170.625 293.875h5.885v5.885h-5.885zM1176.500 293.875h5.885v5.885h-5.885zM1170.625 299.750h5.885v5.885h-5.885zM1170.625 305.625h5.885v5.885h-5.885zM1170.625 311.500h5.885v5.885h-5.885zM1170.625 317.375h5.885v5.885h-5.885zM1170.625 323.250h5.885v5.885h-5.885zM1164.750 329.125h5.885v5.885h-5.885zM1170.625 329.125h5.885v5.885h-5.885zM1176.500 329.125h5.885v5.885h-5.885zM1194.125 293.875h5.885v5.885h-5.885zM1217.625 293.875h5.885v5.885h-5.885zM1194.125 299.750h5.885v5.885h-5.885zM1217.625 299.750h5.885v5.885h-5.885zM1194.125 305.625h5.885v5.885h-5.885zM1200.000 305.625h5.885v5.885h-5.885zM1217.625 305.625h5.885v5.885h-5.885zM1194.125 311.500h5.885v5.885h-5.885zM1205.875 311.500h5.885v5.885h-5.885zM1217.625 311.500h5.885v5.885h-5.885zM1194.125 317.375h5.885v5.885h-5.885zM1211.750 317.375h5.885v5.885h-5.885zM1217.625 317.375h5.885v5.885h-5.885zM1194.125 323.250h5.885v5.885h-5.885zM1217.625 323.250h5.885v5.885h-5.885zM1194.125 329.125h5.885v5.885h-5.885zM1217.625 329.125h5.885v5.885h-5.885zM1229.375 293.875h5.885v5.885h-5.885zM1235.250 293.875h5.885v5.885h-5.885zM1241.125 293.875h5.885v5.885h-5.885zM1247.000 293.875h5.885v5.885h-5.885zM1252.875 293.875h5.885v5.885h-5.885zM1241.125 299.750h5.885v5.885h-5.885zM1241.125 305.625h5.885v5.885h-5.885zM1241.125 311.500h5.885v5.885h-5.885zM1241.125 317.375h5.885v5.885h-5.885zM1241.125 323.250h5.885v5.885h-5.885zM1241.125 329.125h5.885v5.885h-5.885zM1264.625 293.875h5.885v5.885h-5.885zM1288.125 293.875h5.885v5.885h-5.885zM1264.625 299.750h5.885v5.885h-5.885zM1288.125 299.750h5.885v5.885h-5.885zM1264.625 305.625h5.885v5.885h-5.885zM1288.125 305.625h5.885v5.885h-5.885zM1264.625 311.500h5.885v5.885h-5.885zM1288.125 311.500h5.885v5.885h-5.885zM1264.625 317.375h5.885v5.885h-5.885zM1288.125 317.375h5.885v5.885h-5.885zM1264.625 323.250h5.885v5.885h-5.885zM1288.125 323.250h5.885v5.885h-5.885zM1270.500 329.125h5.885v5.885h-5.885zM1276.375 329.125h5.885v5.885h-5.885zM1282.250 329.125h5.885v5.885h-5.885zM1299.875 293.875h5.885v5.885h-5.885zM1323.375 293.875h5.885v5.885h-5.885zM1299.875 299.750h5.885v5.885h-5.885zM1323.375 299.750h5.885v5.885h-5.885zM1299.875 305.625h5.885v5.885h-5.885zM1305.750 305.625h5.885v5.885h-5.885zM1323.375 305.625h5.885v5.885h-5.885zM1299.875 311.500h5.885v5.885h-5.885zM1311.625 311.500h5.885v5.885h-5.885zM1323.375 311.500h5.885v5.885h-5.885zM1299.875 317.375h5.885v5.885h-5.885zM1317.500 317.375h5.885v5.885h-5.885zM1323.375 317.375h5.885v5.885h-5.885zM1299.875 323.250h5.885v5.885h-5.885zM1323.375 323.250h5.885v5.885h-5.885zM1299.875 329.125h5.885v5.885h-5.885zM1323.375 329.125h5.885v5.885h-5.885zM1341.000 293.875h5.885v5.885h-5.885zM1346.875 293.875h5.885v5.885h-5.885zM1352.750 293.875h5.885v5.885h-5.885zM1346.875 299.750h5.885v5.885h-5.885zM1346.875 305.625h5.885v5.885h-5.885zM1346.875 311.500h5.885v5.885h-5.885zM1346.875 317.375h5.885v5.885h-5.885zM1346.875 323.250h5.885v5.885h-5.885zM1341.000 329.125h5.885v5.885h-5.885zM1346.875 329.125h5.885v5.885h-5.885zM1352.750 329.125h5.885v5.885h-5.885zM1376.250 293.875h5.885v5.885h-5.885zM1382.125 293.875h5.885v5.885h-5.885zM1388.000 293.875h5.885v5.885h-5.885zM1393.875 293.875h5.885v5.885h-5.885zM1370.375 299.750h5.885v5.885h-5.885zM1370.375 305.625h5.885v5.885h-5.885zM1376.250 311.500h5.885v5.885h-5.885zM1382.125 311.500h5.885v5.885h-5.885zM1388.000 311.500h5.885v5.885h-5.885zM1393.875 317.375h5.885v5.885h-5.885zM1393.875 323.250h5.885v5.885h-5.885zM1370.375 329.125h5.885v5.885h-5.885zM1376.250 329.125h5.885v5.885h-5.885zM1382.125 329.125h5.885v5.885h-5.885zM1388.000 329.125h5.885v5.885h-5.885zM1405.625 293.875h5.885v5.885h-5.885zM1411.500 293.875h5.885v5.885h-5.885zM1417.375 293.875h5.885v5.885h-5.885zM1423.250 293.875h5.885v5.885h-5.885zM1429.125 293.875h5.885v5.885h-5.885zM1417.375 299.750h5.885v5.885h-5.885zM1417.375 305.625h5.885v5.885h-5.885zM1417.375 311.500h5.885v5.885h-5.885zM1417.375 317.375h5.885v5.885h-5.885zM1417.375 323.250h5.885v5.885h-5.885zM1417.375 329.125h5.885v5.885h-5.885z"/></svg></div>
 <div id=dspw class=win><canvas id=dsp></canvas></div><p id=sr class=vh aria-live=off></p>
 <div id=well></div><div id=vents></div><div id=led></div>
 <button class=cb id=mnb aria-label="menu" title="menu"></button><button class=cb id=pfs hidden aria-label="fullscreen" title="fullscreen"></button><button class=cb id=pzm aria-label="look closer" title="look closer"></button><button class=cb id=pvt aria-label="sweep the plate clear" title="sweep the plate clear"></button>
-<div id=hop></div>
-<div id=bot><canvas id=dial class=win aria-label="tuning dial: slide to change the note" role=slider></canvas><div id=trn><div id=src><button class=sb id=smc aria-label="listen with the microphone" title="listen with the microphone"></button><button class=sb id=svo></button></div><button class=key id=tdn aria-label="down an octave" title="down an octave"></button><button id=ply></button><button class=key id=tup aria-label="up an octave" title="up an octave"></button><div id=bnd role=slider aria-label="bend the note; it springs back"><i id=bnk></i></div></div></div>
+<div id=src class=srk></div>
+<canvas id=dial class=win aria-label="tuning dial: slide to change the note" role=slider></canvas>
+<div id=trn><button class=key id=tfl aria-label="flat: bends the note down while held" title="flat (hold)"></button><button class=key id=tdn aria-label="down an octave" title="down an octave"></button><button id=ply></button><button class=key id=tup aria-label="up an octave" title="up an octave"></button><button class=key id=tsh aria-label="sharp: bends the note up while held" title="sharp (hold)"></button></div>
 </div>
 <div id=pl><div id=ring></div><div id=rimb></div><canvas id=cg></canvas><canvas id=c></canvas><div id=bolt></div><div id=fld></div></div>
 <button class=cb id=zo hidden aria-label="back to the console" title="back to the console"></button>
 <div id=tst role=status></div>
-<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 222" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space Intunist"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g><path fill="currentColor" d="M1164.750 293.875h5.885v5.885h-5.885zM1170.625 293.875h5.885v5.885h-5.885zM1176.500 293.875h5.885v5.885h-5.885zM1170.625 299.750h5.885v5.885h-5.885zM1170.625 305.625h5.885v5.885h-5.885zM1170.625 311.500h5.885v5.885h-5.885zM1170.625 317.375h5.885v5.885h-5.885zM1170.625 323.250h5.885v5.885h-5.885zM1164.750 329.125h5.885v5.885h-5.885zM1170.625 329.125h5.885v5.885h-5.885zM1176.500 329.125h5.885v5.885h-5.885zM1194.125 293.875h5.885v5.885h-5.885zM1217.625 293.875h5.885v5.885h-5.885zM1194.125 299.750h5.885v5.885h-5.885zM1217.625 299.750h5.885v5.885h-5.885zM1194.125 305.625h5.885v5.885h-5.885zM1200.000 305.625h5.885v5.885h-5.885zM1217.625 305.625h5.885v5.885h-5.885zM1194.125 311.500h5.885v5.885h-5.885zM1205.875 311.500h5.885v5.885h-5.885zM1217.625 311.500h5.885v5.885h-5.885zM1194.125 317.375h5.885v5.885h-5.885zM1211.750 317.375h5.885v5.885h-5.885zM1217.625 317.375h5.885v5.885h-5.885zM1194.125 323.250h5.885v5.885h-5.885zM1217.625 323.250h5.885v5.885h-5.885zM1194.125 329.125h5.885v5.885h-5.885zM1217.625 329.125h5.885v5.885h-5.885zM1229.375 293.875h5.885v5.885h-5.885zM1235.250 293.875h5.885v5.885h-5.885zM1241.125 293.875h5.885v5.885h-5.885zM1247.000 293.875h5.885v5.885h-5.885zM1252.875 293.875h5.885v5.885h-5.885zM1241.125 299.750h5.885v5.885h-5.885zM1241.125 305.625h5.885v5.885h-5.885zM1241.125 311.500h5.885v5.885h-5.885zM1241.125 317.375h5.885v5.885h-5.885zM1241.125 323.250h5.885v5.885h-5.885zM1241.125 329.125h5.885v5.885h-5.885zM1264.625 293.875h5.885v5.885h-5.885zM1288.125 293.875h5.885v5.885h-5.885zM1264.625 299.750h5.885v5.885h-5.885zM1288.125 299.750h5.885v5.885h-5.885zM1264.625 305.625h5.885v5.885h-5.885zM1288.125 305.625h5.885v5.885h-5.885zM1264.625 311.500h5.885v5.885h-5.885zM1288.125 311.500h5.885v5.885h-5.885zM1264.625 317.375h5.885v5.885h-5.885zM1288.125 317.375h5.885v5.885h-5.885zM1264.625 323.250h5.885v5.885h-5.885zM1288.125 323.250h5.885v5.885h-5.885zM1270.500 329.125h5.885v5.885h-5.885zM1276.375 329.125h5.885v5.885h-5.885zM1282.250 329.125h5.885v5.885h-5.885zM1299.875 293.875h5.885v5.885h-5.885zM1323.375 293.875h5.885v5.885h-5.885zM1299.875 299.750h5.885v5.885h-5.885zM1323.375 299.750h5.885v5.885h-5.885zM1299.875 305.625h5.885v5.885h-5.885zM1305.750 305.625h5.885v5.885h-5.885zM1323.375 305.625h5.885v5.885h-5.885zM1299.875 311.500h5.885v5.885h-5.885zM1311.625 311.500h5.885v5.885h-5.885zM1323.375 311.500h5.885v5.885h-5.885zM1299.875 317.375h5.885v5.885h-5.885zM1317.500 317.375h5.885v5.885h-5.885zM1323.375 317.375h5.885v5.885h-5.885zM1299.875 323.250h5.885v5.885h-5.885zM1323.375 323.250h5.885v5.885h-5.885zM1299.875 329.125h5.885v5.885h-5.885zM1323.375 329.125h5.885v5.885h-5.885zM1341.000 293.875h5.885v5.885h-5.885zM1346.875 293.875h5.885v5.885h-5.885zM1352.750 293.875h5.885v5.885h-5.885zM1346.875 299.750h5.885v5.885h-5.885zM1346.875 305.625h5.885v5.885h-5.885zM1346.875 311.500h5.885v5.885h-5.885zM1346.875 317.375h5.885v5.885h-5.885zM1346.875 323.250h5.885v5.885h-5.885zM1341.000 329.125h5.885v5.885h-5.885zM1346.875 329.125h5.885v5.885h-5.885zM1352.750 329.125h5.885v5.885h-5.885zM1376.250 293.875h5.885v5.885h-5.885zM1382.125 293.875h5.885v5.885h-5.885zM1388.000 293.875h5.885v5.885h-5.885zM1393.875 293.875h5.885v5.885h-5.885zM1370.375 299.750h5.885v5.885h-5.885zM1370.375 305.625h5.885v5.885h-5.885zM1376.250 311.500h5.885v5.885h-5.885zM1382.125 311.500h5.885v5.885h-5.885zM1388.000 311.500h5.885v5.885h-5.885zM1393.875 317.375h5.885v5.885h-5.885zM1393.875 323.250h5.885v5.885h-5.885zM1370.375 329.125h5.885v5.885h-5.885zM1376.250 329.125h5.885v5.885h-5.885zM1382.125 329.125h5.885v5.885h-5.885zM1388.000 329.125h5.885v5.885h-5.885zM1405.625 293.875h5.885v5.885h-5.885zM1411.500 293.875h5.885v5.885h-5.885zM1417.375 293.875h5.885v5.885h-5.885zM1423.250 293.875h5.885v5.885h-5.885zM1429.125 293.875h5.885v5.885h-5.885zM1417.375 299.750h5.885v5.885h-5.885zM1417.375 305.625h5.885v5.885h-5.885zM1417.375 311.500h5.885v5.885h-5.885zM1417.375 317.375h5.885v5.885h-5.885zM1417.375 323.250h5.885v5.885h-5.885zM1417.375 329.125h5.885v5.885h-5.885z"/></svg></div><p class=sub>build 7</p><div class=row><button id=sgo>listen</button><button id=sto>play</button></div><p class=cap id=scp>Sound is measured on this device. Nothing is recorded or sent.</p></div></div>
+<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 222" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space Intunist"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g><path fill="currentColor" d="M1164.750 293.875h5.885v5.885h-5.885zM1170.625 293.875h5.885v5.885h-5.885zM1176.500 293.875h5.885v5.885h-5.885zM1170.625 299.750h5.885v5.885h-5.885zM1170.625 305.625h5.885v5.885h-5.885zM1170.625 311.500h5.885v5.885h-5.885zM1170.625 317.375h5.885v5.885h-5.885zM1170.625 323.250h5.885v5.885h-5.885zM1164.750 329.125h5.885v5.885h-5.885zM1170.625 329.125h5.885v5.885h-5.885zM1176.500 329.125h5.885v5.885h-5.885zM1194.125 293.875h5.885v5.885h-5.885zM1217.625 293.875h5.885v5.885h-5.885zM1194.125 299.750h5.885v5.885h-5.885zM1217.625 299.750h5.885v5.885h-5.885zM1194.125 305.625h5.885v5.885h-5.885zM1200.000 305.625h5.885v5.885h-5.885zM1217.625 305.625h5.885v5.885h-5.885zM1194.125 311.500h5.885v5.885h-5.885zM1205.875 311.500h5.885v5.885h-5.885zM1217.625 311.500h5.885v5.885h-5.885zM1194.125 317.375h5.885v5.885h-5.885zM1211.750 317.375h5.885v5.885h-5.885zM1217.625 317.375h5.885v5.885h-5.885zM1194.125 323.250h5.885v5.885h-5.885zM1217.625 323.250h5.885v5.885h-5.885zM1194.125 329.125h5.885v5.885h-5.885zM1217.625 329.125h5.885v5.885h-5.885zM1229.375 293.875h5.885v5.885h-5.885zM1235.250 293.875h5.885v5.885h-5.885zM1241.125 293.875h5.885v5.885h-5.885zM1247.000 293.875h5.885v5.885h-5.885zM1252.875 293.875h5.885v5.885h-5.885zM1241.125 299.750h5.885v5.885h-5.885zM1241.125 305.625h5.885v5.885h-5.885zM1241.125 311.500h5.885v5.885h-5.885zM1241.125 317.375h5.885v5.885h-5.885zM1241.125 323.250h5.885v5.885h-5.885zM1241.125 329.125h5.885v5.885h-5.885zM1264.625 293.875h5.885v5.885h-5.885zM1288.125 293.875h5.885v5.885h-5.885zM1264.625 299.750h5.885v5.885h-5.885zM1288.125 299.750h5.885v5.885h-5.885zM1264.625 305.625h5.885v5.885h-5.885zM1288.125 305.625h5.885v5.885h-5.885zM1264.625 311.500h5.885v5.885h-5.885zM1288.125 311.500h5.885v5.885h-5.885zM1264.625 317.375h5.885v5.885h-5.885zM1288.125 317.375h5.885v5.885h-5.885zM1264.625 323.250h5.885v5.885h-5.885zM1288.125 323.250h5.885v5.885h-5.885zM1270.500 329.125h5.885v5.885h-5.885zM1276.375 329.125h5.885v5.885h-5.885zM1282.250 329.125h5.885v5.885h-5.885zM1299.875 293.875h5.885v5.885h-5.885zM1323.375 293.875h5.885v5.885h-5.885zM1299.875 299.750h5.885v5.885h-5.885zM1323.375 299.750h5.885v5.885h-5.885zM1299.875 305.625h5.885v5.885h-5.885zM1305.750 305.625h5.885v5.885h-5.885zM1323.375 305.625h5.885v5.885h-5.885zM1299.875 311.500h5.885v5.885h-5.885zM1311.625 311.500h5.885v5.885h-5.885zM1323.375 311.500h5.885v5.885h-5.885zM1299.875 317.375h5.885v5.885h-5.885zM1317.500 317.375h5.885v5.885h-5.885zM1323.375 317.375h5.885v5.885h-5.885zM1299.875 323.250h5.885v5.885h-5.885zM1323.375 323.250h5.885v5.885h-5.885zM1299.875 329.125h5.885v5.885h-5.885zM1323.375 329.125h5.885v5.885h-5.885zM1341.000 293.875h5.885v5.885h-5.885zM1346.875 293.875h5.885v5.885h-5.885zM1352.750 293.875h5.885v5.885h-5.885zM1346.875 299.750h5.885v5.885h-5.885zM1346.875 305.625h5.885v5.885h-5.885zM1346.875 311.500h5.885v5.885h-5.885zM1346.875 317.375h5.885v5.885h-5.885zM1346.875 323.250h5.885v5.885h-5.885zM1341.000 329.125h5.885v5.885h-5.885zM1346.875 329.125h5.885v5.885h-5.885zM1352.750 329.125h5.885v5.885h-5.885zM1376.250 293.875h5.885v5.885h-5.885zM1382.125 293.875h5.885v5.885h-5.885zM1388.000 293.875h5.885v5.885h-5.885zM1393.875 293.875h5.885v5.885h-5.885zM1370.375 299.750h5.885v5.885h-5.885zM1370.375 305.625h5.885v5.885h-5.885zM1376.250 311.500h5.885v5.885h-5.885zM1382.125 311.500h5.885v5.885h-5.885zM1388.000 311.500h5.885v5.885h-5.885zM1393.875 317.375h5.885v5.885h-5.885zM1393.875 323.250h5.885v5.885h-5.885zM1370.375 329.125h5.885v5.885h-5.885zM1376.250 329.125h5.885v5.885h-5.885zM1382.125 329.125h5.885v5.885h-5.885zM1388.000 329.125h5.885v5.885h-5.885zM1405.625 293.875h5.885v5.885h-5.885zM1411.500 293.875h5.885v5.885h-5.885zM1417.375 293.875h5.885v5.885h-5.885zM1423.250 293.875h5.885v5.885h-5.885zM1429.125 293.875h5.885v5.885h-5.885zM1417.375 299.750h5.885v5.885h-5.885zM1417.375 305.625h5.885v5.885h-5.885zM1417.375 311.500h5.885v5.885h-5.885zM1417.375 317.375h5.885v5.885h-5.885zM1417.375 323.250h5.885v5.885h-5.885zM1417.375 329.125h5.885v5.885h-5.885z"/></svg></div><p class=ask>choose what the plate hears</p><div id=stk class=srk></div><p class=cap id=scp>Sound is measured on this device.<br>Nothing is recorded or sent.</p></div></div>
 <script>
 'use strict'
 const PREVIEW=false                        // the build sets this: a preview page cannot use the microphone, so it offers playing only
@@ -258,13 +253,22 @@ cello:'<g stroke-width="1.8"><path d="M12 6.6c-2.3 0-3.8 1.2-3.8 2.9 0 1 .5 1.7 
 guitar:'<g stroke-width="1.8"><path d="M12 10c-1.7 0-2.8.9-2.8 2.1 0 .7.3 1.3.9 1.7-1.2.6-2.1 1.8-2.1 3.3 0 2.2 1.8 3.6 4 3.6s4-1.4 4-3.6c0-1.5-.9-2.7-2.1-3.3.6-.4.9-1 .9-1.7 0-1.2-1.1-2.1-2.8-2.1z"/><circle cx="12" cy="16.7" r="1.3"/><path d="M12 10V5"/><rect x="10.5" y="2" width="3" height="3" rx=".7"/></g>',
 flat:'<path d="M8.5 3.5v16.2c3.8-1.6 6.6-4 6.6-6.6 0-1.7-1.2-2.8-2.8-2.8-1.5 0-2.9 1-3.8 2.4"/>',sharp:'<path d="M9.3 4.5v16M14.7 3.5v16M6.3 10.3l11.4-2.6M6.3 16.3l11.4-2.6"/>'}
 const SV=(n,st)=>'<svg viewBox="0 0 24 24"'+(st?' style="'+st+'"':'')+'>'+IC[n]+'</svg>'
-mnb.innerHTML=SV('menu'),pmx.innerHTML=SV('x'),pvt.innerHTML=SV('broom'),pfs.innerHTML=SV('full'),pzm.innerHTML=SV('zin'),zo.innerHTML=SV('zout'),smc.innerHTML=SV('mic'),tdn.innerHTML=SV('oct','rotate:90deg'),tup.innerHTML=SV('oct','rotate:-90deg')
-bnd.insertAdjacentHTML('afterbegin',SV('flat')),bnd.insertAdjacentHTML('beforeend',SV('sharp'))
-h1.innerHTML=SV('ay')+'<p>Off the note, the sand is shaken loose: its lines spread and soften, most on one side of the plate and around the rim. <b>Sharp</b>, the loose side is the <b>upper</b> one. <b>Flat</b>, the <b>lower</b> one. The plate\'s edge blurs with it.</p>'
-h2.innerHTML=SV('fplate')+'<p>The closer you get, the crisper the lines. <b>In tune</b>, the whole figure is crisp and at rest, and the ring of light round the plate comes on.</p>'
-h3.innerHTML=SV('note')+'<p>Low notes draw a broad figure, high notes a fine one.</p>'
-h4.innerHTML=SV('mic')+'<p>The two round buttons at the lower left choose what the plate hears: the <b>microphone</b>, or an <b>instrument</b> played here (press it again for the next one). <b>Play</b> starts and stops the instrument. Slide the <b>dial</b> to move through the notes; the arrows beside play jump an octave; the lever bends the note and springs back.</p>'
-h5.innerHTML=SV('grains')+'<p>The painted keys pour powders: each press adds a quarter of a plateful, mixed in with what is there. The <b>broom</b> sweeps the plate clear. A finger on the plate pushes the sand about. <b>Pinch</b> the plate, or press the magnifier, to look closer.</p>'
+IC.ext='<path d="M14 5h5v5M19 5l-8.5 8.5M17 14v4.5H5.5V7H10"/>',IC.dial='<path d="M4.5 19.5v-5M9.5 19.5v-8M14.5 19.5v-5M19.5 19.5v-8"/><path d="M9.5 3.3l-2.4 0 2.4 3.6 2.4-3.6z" fill="currentColor"/>',IC.touch='<circle cx="12" cy="12" r="2.6" fill="currentColor"/><circle cx="12" cy="12" r="7.5" stroke-dasharray="2.4 3.5"/>',IC.port='<circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>'
+mnb.innerHTML=SV('menu'),pmx.innerHTML=SV('x'),pvt.innerHTML=SV('broom'),pfs.innerHTML=SV('full'),pzm.innerHTML=SV('zin'),zo.innerHTML=SV('zout'),tfl.innerHTML=SV('flat'),tdn.innerHTML=SV('oct','rotate:90deg'),tup.innerHTML=SV('oct','rotate:-90deg'),tsh.innerHTML=SV('sharp')
+for(const a of document.querySelectorAll('#pm .links a'))a.insertAdjacentHTML('beforeend',SV('ext'))
+// the help guide: each feature by its name, and in a sentence or two what it does
+hlp.innerHTML=[['fplate','In tune','Crisp lines and a lit ring mean the note is in tune.'],
+['ay','Sharp or flat','Off the note, the sand shakes loose. Loose at the top is sharp. Loose at the bottom is flat.'],
+['mic','Mic','Listens to your instrument.'],
+['violin','Violin, cello, guitar','Play a note for you to tune to.'],
+['play','Play','Starts and stops that note.'],
+['dial','Dial','Slide it to change the note.'],
+['oct','Arrows','Jump an octave down or up.'],
+['sharp','Flat and sharp','Hold one to bend the note. Let go and it returns.'],
+['port','Powder ports','Tap a coloured port on the rim to spray in that powder.'],
+['broom','Broom','Sweeps the plate clean.'],
+['touch','Finger','Push the sand around with a finger.'],
+['zin','Magnifier','Looks closer. Pinching the plate does the same.']].map(([i,n,t])=>'<div class=hr>'+SV(i,i=='oct'?'rotate:-90deg':'')+'<p><b>'+n+'</b>'+t+'</p></div>').join('')
 
 // ---------- the plate and the sand ----------
 // The plate is Nano's (S cells across, never seen directly). What shows is sand: NG grains, each a speck on a canvas KT pixels to the cell.
@@ -279,25 +283,24 @@ h5.innerHTML=SV('grains')+'<p>The painted keys pour powders: each press adds a q
 // The loop says how loose the sand is where (DISTURB there). When the sound stops, every grain comes to rest where it is.
 // A finger on the plate pushes the sand aside and it stays pushed (its home goes with it) until the plate, ringing, shakes it level again.
 // Every grain is of some kind (MATS): sand, or one of the other powders. The broom draws every grain off to the vents round the plate's
-// edge, and there they stay until some powder is poured. A pour lays a quarter of a plateful: from the grains that are off the plate
-// while there are any, and after that by drawing a quarter of what lies there off and laying it back as the new kind. The number of
-// grains never changes.
+// edge, and there they stay until some powder is sprayed in. A press on a powder's port sprays a quarter of a plateful from that port:
+// from the grains that are off the plate while there are any, and after that by drawing a quarter of what lies there off through the
+// vents and spraying it back as the new kind. The number of grains never changes.
 // Seen from closer (see "looking closer"), the same grains are drawn larger, each a round dab.
 const S=96,HZN=.92,G=0,P=makePlate(S,HZN),KT=5,T=S*KT,TT=T*T,NG=22000,RP=P.R-1.3
 const C=$('c'),CG=$('cg');C.width=C.height=CG.width=CG.height=T
 const PX=C.getContext('2d'),IM=PX.createImageData(T,T),D32=new Uint32Array(IM.data.buffer),PXG=CG.getContext('2d'),IMG=PXG.createImageData(T,T),G32=new Uint32Array(IMG.data.buffer),CNT=new Uint8Array(TT),GQ=new Int32Array(NG).fill(-1),
 F32=_=>new Float32Array(NG),U8=_=>new Uint8Array(NG),GX=F32(),GY=F32(),HX=F32(),HY=F32(),HU=F32(),HV=F32(),HR=F32(),S2=F32(),C2=F32(),S3=F32(),C3=F32(),OX=F32(),OY=F32(),LV=F32(),JT=F32(),LX_=F32(),LY_=F32(),
-HOX=F32(),HOY=F32(),GT=F32(),VSX=F32(),VSY=F32(),VTX=F32(),VTY=F32(),SPD=F32(),GDX=F32(),GDY=F32(),PH=new Uint16Array(NG),MV=U8().fill(1),MT=U8(),MN=U8(),GS=U8(),
+HOX=F32(),HOY=F32(),GT=F32(),VSX=F32(),VSY=F32(),VTX=F32(),VTY=F32(),GDX=F32(),GDY=F32(),PH=new Uint16Array(NG),MV=U8().fill(1),MT=U8(),MN=U8(),GS=U8(),
 WAVE=new Float32Array(1024).map((_,i)=>Math.sin(i*Math.PI/512))
 let RSD=0x2545F491;const RND=_=>{RSD^=RSD<<13,RSD^=RSD>>>17,RSD^=RSD<<5;return(RSD>>>0)/4294967296}
 // homes, dealt evenly over the plate (but not under the bolt in the middle). HX, HY in cells. HU, HV = the same place with the plate's centre
 // at 0 and its rim at 1 (HV -1 is the top); HR = how far out that is; S2..C3 = the sine and cosine of twice and three times its place on the
 // clock (for the rim's waver). OX, OY = which way, and what share of the full spread, this grain lies off its line when loose; PH = where
-// it is in its own slow stir. VTX, VTY = the vent it is drawn off to (the nearest of twelve round the edge); SPD = how late it is laid back
-// down (0 first, 1 last: from the middle outwards, in a spiral)
-for(let i=0;i<NG;i++){let x,y,q;do x=RND()*2-1,y=RND()*2-1,q=x*x+y*y;while(q>1||q<.0034);const a=Math.atan2(y,x),b=RND()*6.2832,o=Math.pow(RND(),.8),va=Math.round(a/.5236)*.5236
+// it is in its own slow stir. VTX, VTY = the vent it is drawn off to (the nearest of twelve round the edge)
+for(let i=0;i<NG;i++){let x,y,q;do x=RND()*2-1,y=RND()*2-1,q=x*x+y*y;while(q>1||q<.0034);const a=Math.atan2(y,x),b=RND()*6.2832,o=Math.pow(RND(),.8),va=Math.round((a-.2618)/.5236)*.5236+.2618
 HU[i]=x,HV[i]=y,HR[i]=Math.sqrt(q),S2[i]=Math.sin(2*a),C2[i]=Math.cos(2*a),S3[i]=Math.sin(3*a),C3[i]=Math.cos(3*a),OX[i]=Math.cos(b)*o,OY[i]=Math.sin(b)*o,PH[i]=RND()*1024
-GX[i]=HX[i]=S/2+x*RP,GY[i]=HY[i]=S/2+y*RP,VTX[i]=S/2+Math.cos(va)*(P.R+2.4),VTY[i]=S/2+Math.sin(va)*(P.R+2.4),SPD[i]=HR[i]*.72+(a+Math.PI)/6.2832*.28}
+GX[i]=HX[i]=S/2+x*RP,GY[i]=HY[i]=S/2+y*RP,VTX[i]=S/2+Math.cos(va)*(P.R+2.4),VTY[i]=S/2+Math.sin(va)*(P.R+2.4)}
 // What can lie on the plate. For each kind: its name; four colours, from one grain alone to a heap of them (c), and the same for the one
 // grain in four that is darker (d); glow 1 if it gives off light; iri 1 if its colour plays with the light instead of having shades of its
 // own; p the colour painted on its key, where that is not simply one of its shades. They stand in the order of their keys: the pale
@@ -316,6 +319,11 @@ const MATS=[{n:'silver',p:'#e6e9ee',c:[[150,156,166],[188,194,204],[220,225,233]
 const RGB=(r,g,b)=>(255<<24|b<<16|g<<8|r)>>>0,SC=new Uint32Array(MATS.length*10),GLW=new Uint8Array(MATS.length),IRT=new Uint32Array(1024);let IRI=-1
 MATS.forEach((m,k)=>{m.c.forEach((c,j)=>SC[k*10+j+1]=RGB(...c)),m.d.forEach((c,j)=>SC[k*10+j+6]=RGB(...c)),GLW[k]=m.glow?1:0,m.iri&&(IRI=k)})
 const SANDK=MATS.findIndex(m=>m.n=='sand');MT.fill(SANDK)                    // the plate starts covered in plain sand
+// The ports the powders come in by: one for each kind, on the bezel at the hours of a clock, from ten o'clock round by six to two, in
+// the table's order (so the pale ones are on the left, the rainbow runs round the bottom, and black is on the right; there are three
+// hours free at the top for more). PJA = each port's place on the clock, in radians from twelve; PJX, PJY = the same place in the
+// plate's cells. The vents sand leaves by are at the half hours, between them
+const PJA=MATS.map((m,k)=>(300-30*k)*Math.PI/180),PJX=PJA.map(a=>S/2+Math.sin(a)*(P.R+2.2)),PJY=PJA.map(a=>S/2-Math.cos(a)*(P.R+2.2))
 for(let j=0;j<4;j++)for(let h=0;h<256;h++){const v=[.74,.85,.94,1][j]*255,f=n=>{const k=(n+h/42.667)%6;return v-v*.42*Math.max(0,Math.min(k,4-k,1))};IRT[j*256+h]=RGB(f(5)|0,f(3)|0,f(1)|0)}
 // SPREAD = how far the loosest sand lies off its line, as a share of the tether (so of the gap between lines: at .42 neighbouring bands
 // just fail to meet, and the figure can always be made out); STIR = how far the loosest sand wanders as it stirs, in cells;
@@ -339,7 +347,8 @@ let ZV=1,ZX=0,ZY=0,ZT=null,ZL=0,PN=null,ZCH=0,ZM=0,GSH=-1                 // GSH
 // about a third of a second) and where it lies off its line is worked out again (LX_, LY_). A grain at rest on its line is left alone
 // between turns; a grain on the move (MV) is moved every frame, and so is every grain while a finger is on the plate. z is the random
 // number, its low half for one way and its high half for the other. A grain on its way to a vent (GS 1) flies there in half a second; one
-// waiting to be laid back down (GS 2), or swept off and not yet poured back (GS 3), is not on the plate at all. Only the pixels that held sand last frame are wiped, and only those
+// waiting its turn to be sprayed in (GS 2), or swept off and not yet sprayed back (GS 3), is not on the plate at all; one being sprayed
+// in (GS 4) flies from its powder's port to its home in four tenths of a second, the nearer homes first. Only the pixels that held sand last frame are wiped, and only those
 // that hold it now are painted. (Seen from closer, ZPAINT draws them instead.) GDX, GDY = where each grain was last drawn, in cells.
 // A finger pushes a patch the size of a fingertip on the screen, so a smaller patch of the plate when it is seen from closer.
 const SAND=(f,live,w,hop,t)=>{const U=P.U,sq=Math.sqrt(f)/32768*live,sh=.2*w,hpr=hop*f/15*4294967296*live,kl=(1-Math.exp(-f/4.5))*live,sw=SPREAD*w,hk=1-.026*live,
@@ -347,8 +356,10 @@ k1=TK|0,k2=TK*1.63|0,fr=FRM++&3,w2=w*w,c=S/2,r2=RP*RP,mx=S-2,jl=live/128,fon=FON
 if(!zm)for(let i=0;i<NG;i++){const q=GQ[i];q>=0&&(D32[q]=0,G32[q]=0,CNT[q]=0)}
 for(let i=0;i<NG;i++){let x,y;const gs=GS[i]
 if(gs){if(gs==3)continue
-if(gs==1){const e=(t-GT[i])*2;if(e<0)x=VSX[i],y=VSY[i];else if(e<1)x=VSX[i]+(VTX[i]-VSX[i])*e*e,y=VSY[i]+(VTY[i]-VSY[i])*e*e;else{NGL-=GLW[MT[i]],GQ[i]=-1;if(MN[i]==255)GS[i]=3,BUSY--;else GS[i]=2,GT[i]=LANDT+SPD[i]*1.1;continue}}
-else{if(t<GT[i]){GQ[i]=-1;continue}const b=MN[i];NGL+=GLW[b],MT[i]=b,GS[i]=0,BUSY--,HOX[i]=HOY[i]=0,GX[i]=HX[i],GY[i]=HY[i],LV[i]=1,JT[i]=.3,MV[i]=1,x=HX[i]+(LX_[i]=OX[i]*sw),y=HY[i]+(LY_[i]=OY[i]*sw)}}
+if(gs==1){const e=(t-GT[i])*2;if(e<0)x=VSX[i],y=VSY[i];else if(e<1)x=VSX[i]+(VTX[i]-VSX[i])*e*e,y=VSY[i]+(VTY[i]-VSY[i])*e*e;else{NGL-=GLW[MT[i]],GQ[i]=-1;if(MN[i]==255)GS[i]=3,BUSY--;else{const b=MN[i],dx=HX[i]-PJX[b],dy=HY[i]-PJY[b];GS[i]=2,GT[i]=LANDT+Math.sqrt(dx*dx+dy*dy)*.006+i%97*.0022}continue}}
+else{let e;if(gs==2){if(t<GT[i]){GQ[i]=-1;continue}const b=MN[i];GS[i]=4,GT[i]=t,MT[i]=b,NGL+=GLW[b],VSX[i]=PJX[b],VSY[i]=PJY[b],e=0}else e=(t-GT[i])*2.5
+if(e<1){const k=e*(2-e);x=VSX[i]+(HX[i]-VSX[i])*k,y=VSY[i]+(HY[i]-VSY[i])*k}
+else GS[i]=0,BUSY--,HOX[i]=HOY[i]=0,GX[i]=HX[i],GY[i]=HY[i],LV[i]=1,JT[i]=.3,MV[i]=1,x=HX[i]+(LX_[i]=OX[i]*sw),y=HY[i]+(LY_[i]=OY[i]*sw)}}
 else{x=GX[i],y=GY[i];const turn=(i&3)==fr
 if(turn||fon||MV[i]){let hx=HX[i]+HOX[i],hy=HY[i]+HOY[i],mv=1
 z^=z<<13,z^=z>>>17,z^=z<<5
@@ -375,18 +386,19 @@ RSD=z;if(zm)return ZPAINT(k1)
 for(let i=0;i<NG;i++){const q=GQ[i];if(q<0)continue;const m=MT[i],n=CNT[q],col=m==IRI?IRT[(n-1<<8)+(PH[i]+(q>>2)+k1&255)]:SC[m*10+n+(i&3?0:5)];D32[q]=col;GLW[m]&&(G32[q]=col)}
 PX.putImageData(IM,0,0);if(NGL>0||GDIRTY)PXG.putImageData(IMG,0,0),GDIRTY=NGL>0?1:0
 const gsh=NGL>0?1:0;gsh!=GSH&&(GSH=gsh,cg.style.display=gsh?'':'none')}
-// pour a quarter of a plateful of a kind. While there is sand off the plate (swept away, or on its way out with nowhere to go back to)
-// it comes from that. With the plate full, a quarter of what lies there (any of it) is drawn off to the vents and the same grains come
-// back as the new kind. The number of grains never changes; only where they are and what they are made of
+// spray in a quarter of a plateful of a kind, from its port. While there is sand off the plate (swept away, or on its way out with
+// nowhere to go back to) it comes from that. With the plate full, a quarter of what lies there (any of it) is drawn off to the vents
+// and the same grains come back in, by the port, as the new kind. Homes near the port are reached first. The number of grains never
+// changes; only where they are and what they are made of
 const POUR=(m,t)=>{let off=0,onp=0;for(let i=0;i<NG;i++){const g=GS[i];g==3||g==1&&MN[i]==255?off++:g||onp++}
-const Q=NG/4,pa=off>Q*1.05?Q/off:1,pb=onp&&off<Q*.95?(Q-off)/onp:0                  // (what is left of the sand off the plate goes on whole, rather than leave a few grains behind)
+const Q=NG/4,pa=off>Q*1.05?Q/off:1,pb=onp&&off<Q*.95?(Q-off)/onp:0,px=PJX[m],py=PJY[m]                  // (what is left of the sand off the plate goes on whole, rather than leave a few grains behind)
 for(let i=0;i<NG;i++){const g=GS[i]
-if(g==3){if(RND()<pa)GS[i]=2,MN[i]=m,GT[i]=t+.1+SPD[i]*1.1,BUSY++}
+if(g==3){if(RND()<pa){const dx=HX[i]-px,dy=HY[i]-py;GS[i]=2,MN[i]=m,GT[i]=t+.04+Math.sqrt(dx*dx+dy*dy)*.006+RND()*.2,BUSY++}}
 else if(g==1)MN[i]==255&&RND()<pa&&(MN[i]=m)
 else if(!g&&RND()<pb)GS[i]=1,MN[i]=m,GT[i]=t+RND()*.3,VSX[i]=GDX[i],VSY[i]=GDY[i],BUSY++}
 LANDT=t+.95,DMSG(MATS[m].n.toUpperCase(),1.8)}
-// the broom: every grain is drawn off to the vents, and stays off the plate until something is poured
-const VENT=t=>{for(let i=0;i<NG;i++){const g=GS[i];if(!g)GS[i]=1,MN[i]=255,GT[i]=t+RND()*.3,VSX[i]=GDX[i],VSY[i]=GDY[i],BUSY++;else if(g==1)MN[i]=255;else if(g==2)GS[i]=3,GQ[i]=-1,BUSY--}
+// the broom: every grain is drawn off to the vents (one on its way in turns back), and stays off the plate until something is sprayed in
+const VENT=t=>{for(let i=0;i<NG;i++){const g=GS[i];if(!g)GS[i]=1,MN[i]=255,GT[i]=t+RND()*.3,VSX[i]=GDX[i],VSY[i]=GDY[i],BUSY++;else if(g==1)MN[i]=255;else if(g==2)GS[i]=3,GQ[i]=-1,BUSY--;else if(g==4)GS[i]=1,MN[i]=255,GT[i]=t,VSX[i]=GDX[i],VSY[i]=GDY[i]}
 DMSG('SWEPT',1.6)}
 SAND(1,0,4.5,0,0)                                    // the sand as it lies before any sound
 
@@ -431,27 +443,27 @@ const HOMEC=_=>{const sd=RS*S/P.R;PUT(C,CX-sd/2,CY-sd/2,sd,sd),PUT(cg,CX-sd/2,CY
 // its well): the face, the edge's blurred double (not drawn once it is off the screen), the finger's field, the bolt
 const PLATE=_=>{const z=ZV,x=CX*z+ZX,y=CY*z+ZY,R=(el,r)=>PUT(el,x-r*z,y-r*z,2*r*z,2*r*z);R(ring,RS+1.5),R(rimb,RS+2),R(fld,RS),PUT(bolt,x,y),bolt.style.scale=z==1?'':z.toFixed(3),rimb.style.visibility=z>1.7?'hidden':''}
 // Portrait, top to bottom: the name (pressed into the metal, in the middle), the readout, the plate in its square (a button at each
-// corner), the powder keys, the dial, and the row of controls. Landscape: the name at the top left; readout and powder keys to the left
-// of the plate; dial and controls to the right. Nothing moves when the source changes. PS = the side of the plate's square; cw = the
-// width of a column
-const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,k=DPR(),cs=getComputedStyle(sa),st=parseFloat(cs.paddingTop)||0,sr_=parseFloat(cs.paddingRight)||0,sb=parseFloat(cs.paddingBottom)||0,sl=parseFloat(cs.paddingLeft)||0,M=VW<360?12:18,cmp=pt?VH<640:VH<400
-ZHOME(),document.body.classList.toggle('land',!pt),document.body.classList.toggle('cmp',cmp),DLH=cmp?42:48,dial.style.height=DLH+'px';let PS,dw,dh,cw
+// corner, the powder ports in its bezel), the source keys, the dial, and the row of keys. Landscape: the name at the top left; readout
+// and source keys to the left of the plate; dial and keys to the right. Nothing moves when the source changes. PS = the side of the
+// plate's square; cw = the width of a column
+const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,k=DPR(),cs=getComputedStyle(sa),st=parseFloat(cs.paddingTop)||0,sr_=parseFloat(cs.paddingRight)||0,sb=parseFloat(cs.paddingBottom)||0,sl=parseFloat(cs.paddingLeft)||0,M=VW<360?12:18,cmp=pt?VH<640:VH<400,B=document.body.classList
+ZHOME(),B.toggle('land',!pt),B.toggle('cmp',cmp),DLH=cmp?42:48,dial.style.height=DLH+'px';let PS,dw,dh,cw
 if(pt){cw=Math.min(VW-2*M,440);const X0=(VW-cw)/2,br=VH>=780?38:VH>=680?30:0;let y=st+16
-bot.style.width=hop.style.width=cw+'px',bot.classList.remove('nar'),hop.classList.remove('two'),dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
-const deck=bot.offsetHeight,hh=hop.offsetHeight,fix=y+(br?br+14:0)+dh+hh+deck+sb+14;PS=Math.max(150,Math.min(cw,VH-fix-40));const g=Math.max(8,Math.min(30,(VH-fix-PS)/4));y+=Math.max(0,VH-fix-PS-4*g)*.42
+B.remove('nar'),dial.style.width=src.style.width=trn.style.width=cw+'px',dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
+const sh=src.offsetHeight,th=trn.offsetHeight,fix=y+(br?br+14:0)+dh+sh+10+DLH+10+th+sb+14;PS=Math.max(150,Math.min(cw,VH-fix-20));const g=Math.max(8,Math.min(30,(VH-fix-PS)/3));y+=Math.max(0,VH-fix-PS-2*g)*.42
 brand.hidden=!br;br&&(PUT(brand,(VW-br*6.04)/2,y,br*6.04,br),y+=br+14)
-PUT(dspw,X0,y,dw,dh),y+=dh+g,CX=VW/2,CY=y+PS/2,y+=PS+g,PUT(hop,X0,y),y+=hh+g,PUT(bot,X0,y)}
+PUT(dspw,X0,y,dw,dh),y+=dh+g,CX=VW/2,CY=y+PS/2,y+=PS+g,PUT(src,X0,y),y+=sh+10,PUT(dial,X0,y),y+=DLH+10,PUT(trn,X0,y)}
 else{PS=Math.max(150,Math.min(VH-st-sb-18,VW*.5)),CX=VW/2,CY=st+(VH-st-sb)/2;const e=Math.max(sl,sr_)+M,lw=CX-PS/2-M-e;cw=Math.max(140,Math.min(lw,430));const xl=e+(lw-cw)/2,xr=CX+PS/2+M+(lw-cw)/2,br=VH<330||lw<150?0:VH>=600?28:18
-bot.style.width=hop.style.width=cw+'px',bot.classList.toggle('nar',cw<300),hop.classList.toggle('two',cw<330),dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
-const hh=hop.offsetHeight,y=Math.max(st+13+(br?br+12:0),CY-(dh+14+hh)/2)
+B.toggle('nar',cw<300),dial.style.width=src.style.width=trn.style.width=cw+'px',dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
+const sh=src.offsetHeight,th=trn.offsetHeight,y=Math.max(st+13+(br?br+12:0),CY-(dh+14+sh)/2),yr=CY-(DLH+12+th)/2
 brand.hidden=!br;br&&PUT(brand,e+12,st+13,br*6.04,br)
-PUT(dspw,xl,y,dw,dh),PUT(hop,xl,y+dh+14),PUT(bot,xr,CY-bot.offsetHeight/2)}
-RS=Math.max(40,Math.min(PS/2-23,1.4142*(PS/2-21)-46));const o=PS/2-21
-PUT(mnb,CX-o-20,CY-o-20),PUT(pfs,CX+o-20,CY-o-20),PUT(pzm,CX-o-20,CY+o-20),PUT(pvt,CX+o-20,CY+o-20)
-RING(well,RS+21),RING(vents,RS+20),RING(led,RS+8.5),PLATE(),HOMEC()
+PUT(dspw,xl,y,dw,dh),PUT(src,xl,y+dh+14),PUT(dial,xr,yr),PUT(trn,xr,yr+DLH+12)}
+RS=Math.max(40,Math.min(PS/2-29,1.4142*(PS/2-21)-52));const o=PS/2-21,rj=RS+18.5
+PUT(mnb,CX-o-20,CY-o-20),PUT(pfs,CX+o-20,CY-o-20),PUT(pzm,CX-o-20,CY+o-20),PUT(pvt,CX+o-20,CY+o-20),PJ.forEach((b,i)=>PUT(b,CX+Math.sin(PJA[i])*rj,CY-Math.cos(PJA[i])*rj))
+RING(well,RS+27),RING(vents,RS+26),RING(led,RS+8.5),PLATE(),HOMEC()
 PUT(s1,11,st+11),PUT(s2,VW-20,st+11),PUT(s3,11,VH-sb-20),PUT(s4,VW-20,VH-sb-20)
-DLW=dial.clientWidth||cw,BNT=Math.max(10,bnd.clientWidth/2-24),SPX=Math.max(24,Math.min(38,DLW/9.5)),SLIDE=Math.round(Math.min(VW-58,Math.max(250,VW*.8),400)),document.documentElement.style.setProperty('--sl',SLIDE+'px')
-dsp.width=Math.round(dw*k),dsp.height=Math.round(dh*k),DNOW.fill(9),DFLUSH(),dial.width=Math.round(DLW*k),dial.height=Math.round(DLH*k),DIALDRAW(),BNDRAW()}
+DLW=dial.clientWidth||cw,SPX=Math.max(24,Math.min(38,DLW/9.5)),SLIDE=Math.round(Math.min(VW-58,Math.max(250,VW*.8),400)),document.documentElement.style.setProperty('--sl',SLIDE+'px')
+dsp.width=Math.round(dw*k),dsp.height=Math.round(dh*k),DNOW.fill(9),DFLUSH(),dial.width=Math.round(DLW*k),dial.height=Math.round(DLH*k),DIALDRAW()}
 addEventListener('resize',_=>FIT())
 
 // ---------- sound in ----------
@@ -551,9 +563,11 @@ const bend=Math.pow(2,(TP+BEND/100-PP)/12);for(const q of x.src)q.s.playbackRate
 // The play button, Nano's: it shows what a press would do. Stopped, a triangle in the accent colour; sounding, two bars. A bowed voice
 // holds its note until it is stopped; a plucked one is plucked again each time its note has died away (READ), so it too sounds until stopped
 const PLAYSET=on=>{PLAYING=on?1:0,ply.innerHTML=SV(PLAYING?'pause':'play'),ply.classList.toggle('on',!PLAYING),ply.title=ply.ariaLabel=PLAYING?'stop':'play';if(PLAYING)VSTART(),PLUCK(performance.now()/1000,1);else VSTOP()}
-// the two source buttons: the microphone's is lit while listening; the instrument's shows which instrument, and is lit while it is the source
-const SRCUI=_=>{const n=VOICES[VOICE].n;smc.classList.toggle('on',mode=='mic'),svo.classList.toggle('on',mode=='tone'),svo.innerHTML=SV(n),svo.title=svo.ariaLabel='play the '+n+' (press again for the next instrument)'}
-const VOICESET=v=>{VOICE=(v%VOICES.length+VOICES.length)%VOICES.length,SRCUI(),DMSG(VOICES[VOICE].n.toUpperCase(),1.6);try{localStorage.setItem('sst.voice',VOICE)}catch(e){}PLAYING&&PLAYSET(1)}
+// the source keys (SKS on the console, TKS on the title card): the one the plate hears is lit, and down
+const SRCUI=_=>{for(const row of [SKS,TKS])row.forEach((b,k)=>b.classList.toggle('on',k?mode=='tone'&&VOICE==k-1:mode=='mic'))}
+const VSAVE=_=>{try{localStorage.setItem('sst.voice',VOICE)}catch(e){}}
+// an instrument's key always sets that instrument sounding
+const VOICESET=v=>{VOICE=(v%VOICES.length+VOICES.length)%VOICES.length,VSAVE(),SRCUI(),PLAYSET(1)}
 // (if the microphone was asked for and could not be had, the page falls back to playing, but silent, and without talking over the message that said why)
 const SETMODE=async m=>{const asked=m;if(m=='mic'&&!(await MIC()))m=mode=='mic'?'tone':mode||'tone'
 if(m!='mic')MICOFF();if(m=='tone'){if(DFS!=48000||BUF.length!=4096)BUF=new Float32Array(4096),DFS=48000,DET=makePitch(4096,48000);TGT=PCLAMP(Math.round(TP)),COAST=0,VEL=0}       // the dial, which was following what was heard, settles on the nearest note
@@ -656,10 +670,10 @@ dial.addEventListener('pointermove',ev=>{const d=DLD;if(!d)return;const now=perf
 const DLUP=ev=>{const d=DLD;if(!d)return;DLD=null;const r=dial.getBoundingClientRect()
 if(d.mv<6)TGT=PCLAMP(Math.round(TP+(ev.clientX-r.left-r.width/2)/SPX));else if(performance.now()-d.t<90&&Math.abs(d.v)>3)VEL=d.v<-70?-70:d.v>70?70:d.v,COAST=1;else SETTLE(0)}
 dial.addEventListener('pointerup',DLUP),dial.addEventListener('pointercancel',DLUP)
-// each frame: the dial coasts or settles, and a bend lets go
+// each frame: the dial coasts or settles; a held flat or sharp key bends the note further, and let go, the bend lets go
 const DIALSTEP=(dt,t)=>{if(!DLD){if(COAST){SETP(PCLAMP(TP+VEL*dt)),VEL*=Math.exp(-dt/.32);if(TP<=28||TP>=103||Math.abs(VEL)<1.2)COAST=0,VEL=0,SETTLE(1)}
 else if(TGT!=null){const d=TGT-TP;if(Math.abs(d)<.004)SETP(TGT),TGT=null,PLUCK(t);else SETP(TP+d*(1-Math.exp(-dt/.06)))}}
-if(!BND&&BEND)BEND=Math.abs(BEND)<.4?0:BEND*Math.exp(-dt/.09),TMOVE=t,BNDRAW()
+if(BDIR){const b=BEND+BDIR*dt*130;BEND=b<-49?-49:b>49?49:b,TMOVE=t}else if(BEND)BEND=Math.abs(BEND)<.4?0:BEND*Math.exp(-dt/.09),TMOVE=t
 TP!=DLP&&DIALDRAW()}
 // go by so many notes from where the dial stands, or from where it is already heading
 const STEP=d=>{TGT=PCLAMP(Math.round(TGT!=null?TGT:TP)+d),COAST=0,VEL=0}
@@ -741,19 +755,13 @@ let WHA=0,WHT=0,WHL=0
 addEventListener('wheel',ev=>{if(!ZL&&ev.target!=fld)return;ev.preventDefault();const now=performance.now();now-WHL>350&&(WHA=0);WHL=now,WHA+=ev.deltaY*(ev.deltaMode?30:1)
 if(Math.abs(WHA)>=40&&now-WHT>320)ZGO(ZL+(WHA<0?1:-1),ev.clientX,ev.clientY),WHA=0,WHT=now},{passive:false})
 pzm.onclick=_=>ZGO(ZL?0:1),zo.onclick=_=>ZGO(0)
-// ---------- the bend lever (playing) ----------
-// Pull it either way to bend the note, up to half a semitone; let go and it springs back to the middle (DIALSTEP lets the bend go)
-let BND=null
-let BNT=20                                              // how far the lever travels either way, in pixels
-const BNDRAW=_=>bnk.style.setProperty('--bx',BEND/49*BNT+'px')
-bnd.addEventListener('pointerdown',ev=>{mode=='mic'&&SETMODE('tone');BND={x:ev.clientX};try{bnd.setPointerCapture(ev.pointerId)}catch(e){}})
-bnd.addEventListener('pointermove',ev=>{const d=BND;if(!d)return;const b=BEND+(ev.clientX-d.x)/BNT*49;d.x=ev.clientX,BEND=b<-49?-49:b>49?49:b,TMOVE=performance.now()/1000,BNDRAW()})
-const BNE=_=>{BND=null};bnd.addEventListener('pointerup',BNE),bnd.addEventListener('pointercancel',BNE)
-// the octave keys (listening, a press on either goes over to the instrument first, as a touch on the dial or the lever does)
+// ---------- the flat and sharp keys (playing) ----------
+// Held, one bends the note down and the other up, by up to half a semitone in about a third of a second; let go and the note springs
+// back (DIALSTEP does both). BDIR = which is held: -1 flat, 1 sharp, 0 neither
+let BDIR=0
+for(const [el,d] of [[tfl,-1],[tsh,1]]){const up=_=>{BDIR==d&&(BDIR=0)};el.addEventListener('pointerdown',ev=>{mode=='mic'&&SETMODE('tone');mode&&(BDIR=d);try{el.setPointerCapture(ev.pointerId)}catch(e){}}),el.addEventListener('pointerup',up),el.addEventListener('pointercancel',up)}
+// the octave keys (listening, a press on either goes over to the instrument first, as a touch on the dial or on flat or sharp does)
 tdn.onclick=_=>{mode=='mic'&&SETMODE('tone');STEP(-12)},tup.onclick=_=>{mode=='mic'&&SETMODE('tone');STEP(12)}
-// the two source buttons: the microphone; and the instrument, which a second press changes for the next one
-smc.onclick=_=>{PREVIEW?DMSG('NO MIC HERE',2):mode&&mode!='mic'&&SETMODE('mic')}
-svo.onclick=_=>{mode=='tone'?VOICESET(VOICE+1):mode&&(SETMODE('tone'),DMSG(VOICES[VOICE].n.toUpperCase(),1.6))}
 // play: starts and stops the instrument (and, listening, goes over to it)
 ply.onclick=_=>{mode=='tone'?PLAYSET(!PLAYING):mode&&SETMODE('tone')}
 addEventListener('keydown',ev=>{const k=ev.key;if(k=='Escape')return ZL?ZGO(0):PM(!OPEN);if(!mode||OPEN)return
@@ -776,25 +784,29 @@ ACDRAG(fdr,0),ACDRAG(fdg,1),ACDRAG(fdb,2),pac.onclick=_=>{acc.hidden=!acc.hidden
 // The menu is behind the console: opening it slides the console aside. It closes by its X, by a touch or a swipe on what still shows of the
 // console, by a swipe to the left on the menu itself, or by Escape
 let OPEN=0
-const PM=on=>{OPEN=on?1:0;if(on)pm.hidden=false,pm.scrollTop=0,requestAnimationFrame(_=>document.body.classList.add('open'));else document.body.classList.remove('open'),setTimeout(_=>OPEN||(pm.hidden=true),440)}
+const PM=on=>{OPEN=on?1:0,mnb.classList.toggle('on',!!on);if(on)pm.hidden=false,pm.scrollTop=0,requestAnimationFrame(_=>document.body.classList.add('open'));else document.body.classList.remove('open'),setTimeout(_=>OPEN||(pm.hidden=true),440)}
 con.addEventListener('click',ev=>{OPEN&&ev.target==con&&PM(0)})
 let SWP=null;pm.addEventListener('pointerdown',ev=>{SWP={x:ev.clientX,y:ev.clientY}}),pm.addEventListener('pointerup',ev=>{const d=SWP;SWP=null;d&&d.x-ev.clientX>50&&Math.abs(ev.clientY-d.y)<50&&!ev.target.closest('.fad')&&PM(0)})
 const ASET=a=>{A4=a<415?415:a>466?466:a,aval.textContent=A4+' Hz',ard.hidden=A4==440,SHOWN='';try{localStorage.setItem('sst.a4',A4)}catch(e){}}
 const BEGIN=async m=>{await SETMODE(m);document.body.classList.remove('pre'),st.classList.add('out'),setTimeout(_=>st.hidden=true,560)}
 document.body.classList.add('pre'),ASET(A4)
-if(PREVIEW)sgo.hidden=true,smc.classList.add('no'),scp.textContent='This preview page cannot use the microphone, so it only plays. The full page also listens.'
-else sgo.onclick=_=>BEGIN('mic')
-sto.onclick=_=>BEGIN('tone')
+// The source keys, on the console and on the title card: the microphone, then each instrument, each with its sign and its name. On the
+// title card a press starts the page with that source; on the console it changes the source
+const NOMIC=_=>TOAST('This preview page cannot use the microphone. The full page can.')
+const SKEYS=(host,ids,fn)=>['mic',...VOICES.map(v=>v.n)].map((n,k)=>{const b=document.createElement('button');b.className='sk',b.id=ids[k],b.innerHTML=SV(n)+'<b>'+n+'</b>',b.title=b.ariaLabel=k?'play the '+n:'listen with the microphone',b.onclick=_=>fn(k),host.appendChild(b);return b})
+const SKS=SKEYS(src,['smc','sv0','sv1','sv2'],k=>{if(!mode)return;if(!k)return PREVIEW?NOMIC():mode!='mic'&&SETMODE('mic');mode=='tone'?VOICE==k-1&&PLAYING||VOICESET(k-1):(VOICE=k-1,VSAVE(),SETMODE('tone'))})                // (a press on the key that is already sounding changes nothing)
+const TKS=SKEYS(stk,['sgo','sto','st1','st2'],k=>{if(!k)return PREVIEW?NOMIC():BEGIN('mic');VOICE=k-1,VSAVE(),BEGIN('tone')})
+if(PREVIEW)SKS[0].classList.add('no'),TKS[0].classList.add('no'),scp.innerHTML='This preview page cannot use the microphone, so it only plays.<br>The full page also listens.'
 mnb.onclick=_=>{ZL||PM(1)},pmx.onclick=_=>PM(0)
 adn.onclick=_=>ASET(A4-1),aup.onclick=_=>ASET(A4+1),ard.onclick=_=>ASET(440)
 pt.onclick=_=>{PM(0),MICOFF(),PLAYSET(0),mode='',R0={on:0,held:0},SHOWN='',document.body.classList.remove('mic'),SRCUI(),st.hidden=false,document.body.classList.add('pre'),requestAnimationFrame(_=>st.classList.remove('out'))}
 // full screen, where the browser allows it (as on Nano)
 addEventListener('fullscreenchange',_=>{const f=!!document.fullscreenElement;pfs.innerHTML=SV(f?'unfull':'full'),pfs.classList.toggle('on',f)}),pfs.hidden=!document.fullscreenEnabled
 pfs.onclick=_=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}catch(e){}}
-// the powder keys: one for each kind, in the table's order, its colour painted on it. A press pours a quarter of a plateful. The broom
-// sweeps the plate clear
-MATS.forEach((m,k)=>{const b=document.createElement('button'),i=document.createElement('i');b.className='pw',b.title=b.ariaLabel='pour '+m.n,i.style.setProperty('--p',m.p||'rgb('+m.c[0]+')'),m.glow&&i.style.setProperty('--pg','rgba('+m.c[0]+',.55)')
-b.appendChild(i),b.onclick=_=>POUR(k,performance.now()/1000),hop.appendChild(b)})
+// the powder ports: one for each kind, set in the bezel (FIT places them). A press sprays in a quarter of a plateful, and the port
+// brightens for a moment. The broom sweeps the plate clear
+const PJ=MATS.map((m,k)=>{const b=document.createElement('button'),i=document.createElement('i');b.className='pj',b.dataset.m=k,b.title=b.ariaLabel='spray in '+m.n,i.style.setProperty('--p',m.p||'rgb('+m.c[0]+')'),m.glow&&i.style.setProperty('--pg','rgba('+m.c[0]+',.5)')
+b.appendChild(i),b.onclick=_=>{POUR(k,performance.now()/1000),b.classList.add('fire'),setTimeout(_=>b.classList.remove('fire'),450)},con.appendChild(b);return b})
 pvt.onclick=_=>VENT(performance.now()/1000)
 // the page gives the microphone back while it is out of sight and takes it up again on return
 document.addEventListener('visibilitychange',_=>{try{if(document.hidden){AC&&AC.state=='running'&&AC.suspend()}else{AC&&AC.resume().catch(_=>{}),mode&&WAKE()}}catch(e){}})
