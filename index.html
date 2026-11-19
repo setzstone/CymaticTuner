@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang=en><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover"><title>Scale Space Intunist</title><link rel=icon href="data:,"><style>
+<!DOCTYPE html><html lang=en><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Intunist"><meta name="apple-mobile-web-app-status-bar-style" content="black"><title>Scale Space Intunist</title><link rel=icon href="data:,"><style>
 :root{--ac:#ffb454;--ach:#ff8f00}
 *{box-sizing:border-box;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;-webkit-tap-highlight-color:transparent}
 body{margin:0;overflow:hidden;color:#fff;font:12px/1.4 monospace;background:#050608}
@@ -202,7 +202,7 @@ body.mv #con>*:not(#dspw),body.mv #pl>*{transition:left .24s cubic-bezier(.2,.8,
 @media (max-width:389px) and (orientation:portrait){#trn .key{height:38px}#ply{width:50px;height:50px}}
 /* in a narrow column (beside the plate, in landscape) the row of keys is closer */
 body.nar #trn{gap:4px}body.nar #trn .key{height:40px}body.nar #ply{width:50px;height:50px;margin:5px 4px}
-body.cmp #ply{width:48px;height:48px}
+body.cmp #ply{width:48px;height:48px}body.sn #trn .key{height:38px}body.sn #ply{width:50px;height:50px}
 /* a toast, Nano's */
 #tst{position:fixed;left:50%;translate:-50% 0;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:12;padding:8px 14px;border-radius:6px;background:rgba(0,0,0,.78);border:1px solid #fff3;font-size:13px;opacity:0;transition:opacity .3s;white-space:normal;width:max-content;max-width:min(92vw,420px);text-align:center;pointer-events:none}
 #tst.on{opacity:1}
@@ -638,11 +638,16 @@ const PLATE=_=>{const z=ZV,x=CX*z+ZX,y=CY*z+ZY,R=(el,r)=>PUT(el,x-r*z,y-r*z,2*r*
 // the microphone's key, the instrument's name and the full-screen key, under them the knob with the metronome's windows either
 // side of it, then the row of keys and the dial. Nothing moves when the source changes. PS = the side of the plate's square;
 // cw = the width of a column; KN = how large the knob is with its signs; D = how large an orb is in its socket
-const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,k=DPR(),cs=getComputedStyle(sa),st=parseFloat(cs.paddingTop)||0,sr_=parseFloat(cs.paddingRight)||0,sb=parseFloat(cs.paddingBottom)||0,sl=parseFloat(cs.paddingLeft)||0,M=VW<360?12:18,cmp=pt?VH<640:VH<400,B=document.body.classList,cp=pt&&VH<700,KN=cmp||cp?84:100,ms=40,MK=VW<360?36:40,dv=DEVOK?ms+6:0
-ZHOME(),B.toggle('land',!pt),B.toggle('cmp',cmp),DLH=cmp||cp?38:42,dial.style.height=DLH+'px',knb.style.setProperty('--kn',KN+'px');let PS,dw,dh,cw
-if(pt){cw=Math.min(VW-2*M,440);const X0=(VW-cw)/2,MW=cw>=320?46:40,br=cp?0:Math.min(VH>=850?44:VH>=730?38:30,(cw-92)/6.04|0);let y=st+12
-B.remove('nar'),trn.style.width=(cp?cw-KN-10-MK-6:cw-2*MW-12)+'px',dw=cp?cw-88:cw,DGW=br?16:0,DPX=(dw-DGW-2*DPAD)/DC,dh=DR*DPX+2*DPAD
-const th=trn.offsetHeight,hb=br?Math.max(36,br):0,bh=Math.max(KN,44+th),fix=y+(hb?hb+12:0)+dh+(cp?bh+10+DLH:KN+14+DLH+10+th)+sb+14;PS=Math.max(150,Math.min(cw,VH-fix-28));const g=Math.max(14,Math.min(30,(VH-fix-PS)/3));y+=Math.max(0,VH-fix-PS-2*g)*.42
+const FIT=sh=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,k=DPR(),cs=getComputedStyle(sa),st=parseFloat(cs.paddingTop)||0,sr_=parseFloat(cs.paddingRight)||0,sb=parseFloat(cs.paddingBottom)||0,sl=parseFloat(cs.paddingLeft)||0,M=VW<360?12:18,cmp=pt?VH<640:VH<400,B=document.body.classList,cp=pt&&(!!sh||VH<600),sn=pt&&!cp&&VH<720,KN=cmp||cp||sn?84:100,ms=40,MK=VW<360?36:40,dv=DEVOK?ms+6:0
+ZHOME(),B.toggle('land',!pt),B.toggle('cmp',cmp),B.toggle('sn',sn),DLH=cmp||cp||sn?38:42,dial.style.height=DLH+'px',knb.style.setProperty('--kn',KN+'px');let PS,dw,dh,cw
+if(pt){cw=Math.min(VW-2*M,440);const X0=(VW-cw)/2,MW=cw>=320?46:40,br=cp?0:Math.min(VH>=850?44:VH>=730?38:30,(cw-92)/6.04|0);let y=st+(sn?8:12)
+B.remove('nar'),trn.style.width=(cp?cw-KN-10-MK-6:cw-2*MW-12)+'px',dw=cp?cw-(document.fullscreenEnabled?88:44):sn?Math.round(cw*.87):cw,DGW=br?16:0,DPX=(dw-DGW-2*DPAD)/DC,dh=DR*DPX+2*DPAD
+const th=trn.offsetHeight,hb=br?Math.max(36,br):0,bh=Math.max(KN,44+th),fix=y+(hb?hb+12:0)+dh+(cp?bh+10+DLH:KN+14+DLH+10+th)+sb+14;if(sn&&VH-fix-22<226)return FIT(1);PS=Math.max(150,Math.min(cw,VH-fix-(sn?22:28)));const g=Math.max(sn?11:14,Math.min(30,(VH-fix-PS)/3));y+=Math.max(0,VH-fix-PS-2*g)*.42
+// (sn, snug: a screen under 720 px tall, an iPhone's browser for one, has the same arrangement as a taller one, drawn in a little,
+// with the sizes the sideways arrangement has: the smaller knob and dial, the two rows beside the knob 10 px apart, and the
+// readout at 87 % of the width, in the middle, since its height goes with its width and what it gives up the plate gets. Up to
+// build 20 such a screen had the short arrangement, which has no name and stacks the lower rows otherwise. The short one is
+// now only for a screen where the snug one would leave the plate's square under 226 px, the orbs at their smallest: FIT(1).)
 // (The small windows, the name, the pace and the measure, are as tall as the keys beside them look: 38 px, set 1 px lower, so
 // that a window's frame and a key's cap with its side begin and end together.)
 // (tall: five rows in order, and the readout among them in the place its grip has brought it to (RO; ROY: where its top would be
@@ -650,18 +655,22 @@ const th=trn.offsetHeight,hb=br?Math.max(36,br):0,bh=Math.max(KN,44+th),fix=y+(h
 // with the keys; the plate, a little below the middle of its room; left of the knob two rows in line, the microphone's key and the
 // instrument's name, and the metronome's key, the pace and the measure; the keys with the volume at one end and the muffle at the
 // other; the dial at the bottom, where a thumb reaches it. Short (cp): no name, the corner keys at the two ends of the readout,
-// which stays over the plate; the knob at the right of two rows, the upper one the microphone's key, the name, the pace and the
-// measure, the lower one the metronome's key and the keys; the dial under them all; no volume, muffle or grip)
+// which stays over the plate (where the browser cannot go full screen, an iPhone's, that key is hidden and the readout has its
+// room); the knob at the right of two rows, the upper one the microphone's key, the name, the pace and the measure, the lower one
+// the metronome's key and the keys; the dial under them all; no volume, muffle or grip)
 ROK=br?1:0,dgr.hidden=!br,brand.hidden=!br,vkn.hidden=flt.hidden=!!cp
 if(br){const rw=cw-KN-10,R=[[hb,12,y=>{PUT(brand,(VW-br*6.04)/2,y+(hb-br)/2+br*.13,br*6.04,br),PUT(mnb,X0,y+(hb-36)/2),PUT(pfs,X0+cw-38,y+(hb-36)/2)}],[PS,g,y=>{CX=VW/2,CY=y+PS/2+5}],
-[KN+3,11,y=>{const y1=y+3+(KN-90)/2;PUT(smc,X0,y1),DEVOK&&PUT(sdv,X0+ms+6,y1),PUT(nmw,X0+ms+8+dv,y1+1,rw-ms-8-dv,38),PUT(mtk,X0,y1+52,ms,38),PUT(tpw,X0+ms+8,y1+53,rw-ms-MW-14,38),PUT(sgw,X0+rw-MW,y1+53,MW,38),PUT(knb,X0+cw-KN,y+3)}],
+[KN+3,11,y=>{const rg=KN<100?10:14,y1=y+3+(KN-76-rg)/2;PUT(smc,X0,y1),DEVOK&&PUT(sdv,X0+ms+6,y1),PUT(nmw,X0+ms+8+dv,y1+1,rw-ms-8-dv,38),PUT(mtk,X0,y1+38+rg,ms,38),PUT(tpw,X0+ms+8,y1+39+rg,rw-ms-MW-14,38),PUT(sgw,X0+rw-MW,y1+39+rg,MW,38),PUT(knb,X0+cw-KN,y+3)}],
 [th,10,y=>{PUT(trn,X0+MW+6,y),PUT(vkn,X0,y+(th-38)/2,MW,38),PUT(flt,X0+cw-MW,y+(th-38)/2,MW,38)}],[DLH,10,y=>PUT(dial,X0,y)]]
-let q=y;ROY=[0,1,2,3,4,5].map(i=>{const v=q;i<5&&(q+=R[i][0]+R[i][1]);return v});q=y;for(let i=0;i<6;i++){i==RO&&(PUT(dspw,X0,q,dw,dh),q+=dh+(i?g:12));i<5&&(R[i][2](q),q+=R[i][0]+R[i][1])}}
+let q=y;ROY=[0,1,2,3,4,5].map(i=>{const v=q;i<5&&(q+=R[i][0]+R[i][1]);return v});q=y;for(let i=0;i<6;i++){i==RO&&(PUT(dspw,X0+(cw-dw)/2,q,dw,dh),q+=dh+(i?g:12));i<5&&(R[i][2](q),q+=R[i][0]+R[i][1])}}
 else{PUT(mnb,X0,y+(dh-36)/2),PUT(pfs,X0+cw-38,y+(dh-36)/2),PUT(dspw,X0+44,y,dw,dh),y+=dh+g,CX=VW/2,CY=y+PS/2,y+=PS+g
 const rw=cw-KN-10,av=rw-ms-6-dv-MK-6,nw=Math.round(av*.45)-3;PUT(smc,X0,y),DEVOK&&PUT(sdv,X0+ms+6,y),PUT(nmw,X0+ms+6+dv,y+1,nw,38),PUT(tpw,X0+ms+12+dv+nw,y+1,av-nw-6,38),PUT(sgw,X0+rw-MK,y+1,MK,38),PUT(mtk,X0,y+44+(th-38)/2,MK,38),PUT(trn,X0+MK+6,y+44),PUT(knb,X0+cw-KN,y+(bh-KN)/2),y+=bh+10,PUT(dial,X0,y)}
 dial.style.width=cw+'px'}
-else{PS=Math.max(150,Math.min(VH-st-sb-28,VW*.5)),CX=VW/2,CY=st+(VH-st-sb)/2;const e=Math.max(sl,sr_)+M,lw=CX-PS/2-M-e;cw=Math.max(140,Math.min(lw,430));const xl=e+(lw-cw)/2,xr=CX+PS/2+M+(lw-cw)/2,T0=st+M,H=VH-st-sb,top=T0+46,bot=VH-sb-M,MW=cw<230?40:46           // (the corner keys stand as far from the top edge as from the side; what is under them has the room from top to bot)
+else{PS=Math.max(150,Math.min(VH-st-sb-28,VW*.5,VW-2*Math.max(sl,sr_)-4*M-2*(KN+100))),CX=VW/2,CY=st+(VH-st-sb)/2;const e=Math.max(sl,sr_)+M,lw=CX-PS/2-M-e;cw=Math.max(140,Math.min(lw,430));const xl=e+(lw-cw)/2,xr=CX+PS/2+M+(lw-cw)/2,T0=st+M,H=VH-st-sb,top=T0+46,bot=VH-sb-M,MW=cw<230?40:46           // (the corner keys stand as far from the top edge as from the side; what is under them has the room from top to bot)
 B.toggle('nar',cw<300),dial.style.width=trn.style.width=cw+'px',dw=cw,DGW=0,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD,ROK=0,dgr.hidden=true,vkn.hidden=flt.hidden=false
+// (the plate is as large as the height allows, and no larger than leaves each side a column of the knob's width and 100 px: less
+// than that and the instrument's name has no window to speak of and the muffle's key is under the knob, as on an iPhone SE held
+// sideways up to build 20)
 // (left: the menu key in the corner; under it, in the middle of the room that is left, the name (as tall as that room allows), the
 // readout, and the pace's row: the metronome's key, the pace, the measure)
 const th=trn.offsetHeight,bm=Math.min(34,cw/6.04|0,bot-top-dh-56),br=bm<16?0:bm,lh=(br?br+10:0)+dh+46;let y=top+Math.max(0,(bot-top-lh)/2)
