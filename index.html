@@ -8,7 +8,7 @@ button{font:inherit;color:#fff;background:none;border:0;padding:0;cursor:pointer
 svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* the console: one panel, painted black in a wrinkle finish, with everything set into it. It slides aside to show the inside of the
    machine, which is the menu. (The paint's texture, --gp, is a picture the script makes once: see the end of the script.) */
-#con{position:fixed;inset:0;z-index:1;overflow:hidden;background:radial-gradient(130% 62% at 30% -10%,rgba(255,255,255,.075),rgba(255,255,255,0) 60%),linear-gradient(180deg,rgba(255,255,255,.012),rgba(0,0,0,.34)),var(--gp,none),#131417;transition:translate .42s cubic-bezier(.2,.8,.2,1)}
+#con{position:fixed;inset:0;z-index:1;overflow:hidden;overflow:clip;background:radial-gradient(130% 62% at 30% -10%,rgba(255,255,255,.075),rgba(255,255,255,0) 60%),linear-gradient(180deg,rgba(255,255,255,.012),rgba(0,0,0,.34)),var(--gp,none),#131417;transition:translate .42s cubic-bezier(.2,.8,.2,1)}
 #con>*,#pl>*{position:absolute}
 /* over the console, a sheet with the plate on it: its face, its edge seen shaking, the sand, the bolt, and the field a finger works in.
    Looking closer makes this plate grow out of the console; the console itself never changes. The sheet goes aside with the console */
@@ -28,14 +28,14 @@ body.drag #con,body.drag #pl{transition:none;will-change:translate}
 #lit{left:-70%;top:-30%;width:240%;height:160%;background:linear-gradient(104deg,rgba(255,255,255,0) 33%,rgba(255,255,255,.1) 50%,rgba(255,255,255,0) 67%);translate:-9% 0;opacity:var(--ga,1);pointer-events:none;will-change:translate}
 #flk{left:0;top:0;width:100%;height:100%;pointer-events:none}
 #shn{border-radius:50%;background:repeating-radial-gradient(circle closest-side,rgba(255,255,255,.02) 0 calc(var(--rg,1.05%)*.3),rgba(255,255,255,0) calc(var(--rg,1.05%)*.3) var(--rg,1.05%)),conic-gradient(from 315deg,rgba(255,255,255,.1),rgba(255,255,255,0) 11%,rgba(255,255,255,0) 39%,rgba(255,255,255,.06) 50%,rgba(255,255,255,0) 61%,rgba(255,255,255,0) 89%,rgba(255,255,255,.1));will-change:rotate;pointer-events:none}
-#face{inset:5px;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),inset 0 1px 0 rgba(255,255,255,.13),inset 0 0 30px rgba(0,0,0,.5);pointer-events:none}
 .scr{width:10px;height:10px;border-radius:50%;background:#1a1c20;box-shadow:0 0 0 1px #000,0 1px 1px 1px rgba(0,0,0,.6),0 -.5px 0 1.5px rgba(255,255,255,.05);pointer-events:none}
 .scr:before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 300deg,#eef0f4,#6c717b 12%,#24262b 26%,#8d929c 40%,#f2f4f7 51%,#5a5f69 65%,#1e2024 79%,#a2a7b1 91%,#eef0f4)}
 .scr:after{content:'';position:absolute;left:1.5px;right:1.5px;top:50%;height:1.4px;margin-top:-.7px;background:#050506;box-shadow:0 .6px 0 rgba(255,255,255,.4);rotate:var(--r,35deg)}
-/* the name: a plate sunk into the panel between the two corner keys, and on it raised letters of nickel, with the light on their upper
-   edges, a shadow under them, and a streak of the light across them that moves with it (the script moves #lgm). They are never darker
-   than a light grey, so they can always be read */
-#brand{pointer-events:none;border-radius:9px;padding:6px 11px;background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),var(--gp,none),#131417;box-shadow:inset 0 2px 5px rgba(0,0,0,.9),inset 0 0 0 1px rgba(0,0,0,.85),0 1px 0 rgba(255,255,255,.13),0 -1px 0 rgba(0,0,0,.5)}#brand svg{width:100%;height:100%;stroke:none;display:block;overflow:visible;filter:drop-shadow(0 -.7px 0 rgba(255,255,255,.6)) drop-shadow(0 1.3px 0 rgba(0,0,0,.95)) drop-shadow(0 3px 2.5px rgba(0,0,0,.6))}#brand path{fill:url(#lgm) #c3c8d2}#brand .lw g path{fill:#d9dde5}      /* (the astronaut is drawn in units of its own, where the letters' streak would come out wrong: it is one light grey) */
+/* the name: let into the panel between the two corner keys. Its letters are cut a hair below the paint and filled, as the sign on
+   every key is (the wall of the cut throws a shadow on the filling along its upper edges: #lge, in the letters' own measure; and the lower lip of
+   the cut catches the light), and a streak of the light crosses them as the light moves (the script moves #lgm). They are never darker than a light
+   grey, so they can always be read */
+#brand{pointer-events:none}#brand svg{width:100%;height:100%;stroke:none;display:block;overflow:visible;filter:drop-shadow(0 -.9px 0 rgba(0,0,0,.95)) drop-shadow(0 .9px 0 rgba(255,255,255,.22))}#brand .lw{filter:url(#lge)}#brand path{fill:url(#lgm) #c3c8d2}#brand .lw g path{fill:#d9dde5}#brand .ln{fill:#e2e6ec}      /* (the astronaut is drawn in units of its own, where the letters' streak would come out wrong: it is one light grey) */
 /* windows let into the panel: the readout and the dial. The readout is a dot-matrix display drawn on a canvas; #sr says the same in words */
 .win{border-radius:7px;background:#040506;box-shadow:inset 0 2px 7px #000,inset 0 0 0 1px #000,0 0 0 2px #23262b,0 -1px 0 2px rgba(255,255,255,.24),0 1.5px 0 2px rgba(0,0,0,.75),0 4px 6px 2px rgba(0,0,0,.45)}
 #dspw{pointer-events:none;box-shadow:inset 0 2px 7px #000,inset 0 0 0 1px #000,0 0 0 2px #23262b,0 -1px 0 2px rgba(255,255,255,.24),0 1.5px 0 2px rgba(0,0,0,.75),0 4px 6px 2px rgba(0,0,0,.45),0 0 18px 2px color-mix(in srgb,var(--ac) 8%,transparent)}       /* (its light falls a little on the metal round it) */
@@ -68,7 +68,7 @@ body.drag #con,body.drag #pl{transition:none;will-change:translate}
    under it its side wall, which goes out of sight as the cap travels down. Its sign is cut in and filled (a dark edge above, a light
    one below). A streak of the light lies across every cap and moves with the light. The round buttons have a polished collar */
 .cb,.key,.sk{display:inline-flex;align-items:center;justify-content:center;position:relative;color:#d4d9e2;background:var(--gk,none),linear-gradient(170deg,#373a42,#1d1f23 48%,#101114);box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 1px 0 0 rgba(255,255,255,.07),inset -1px 0 0 rgba(0,0,0,.5),inset 0 -2px 1px rgba(0,0,0,.6),0 0 0 1px #000,0 3px 0 1px #070708,0 6px 7px rgba(0,0,0,.7);transition:color .18s,translate .07s,box-shadow .07s,opacity .25s}
-.cb{width:40px;height:40px;border-radius:50%;background:var(--gk,none),radial-gradient(circle at 36% 28%,#3d4048,#15171a 72%)}.key{width:46px;height:42px;border-radius:8px}.key.ck{width:38px;height:36px;border-radius:9px}.cb svg,.key svg{width:20px;height:20px;transition:filter .18s}
+.cb{width:40px;height:40px;border-radius:50%;background:var(--gk,none),radial-gradient(circle at 36% 28%,#3d4048,#15171a 72%)}.key{width:46px;height:42px;border-radius:8px}.key.ck{width:38px;height:36px;border-radius:9px;color:#c6cbd5;background:linear-gradient(rgba(255,255,255,.03),rgba(255,255,255,.03)),var(--gp,none),#131417;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.45),0 0 0 1px #000,0 1px 0 1px #060607,0 0 0 2px rgba(255,255,255,.03),0 2px 3px rgba(0,0,0,.45)}.key.ck .gs{opacity:calc(var(--ga,1)*.3)}.cb svg,.key svg{width:20px;height:20px;transition:filter .18s}
 /* (the polished collar of a round button, and of play: a ring of its own, turned as the light moves) */
 .cb:after,#ply:after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 300deg,#eef0f4,#6c717b 12%,#24262b 26%,#8d929c 40%,#f2f4f7 51%,#5a5f69 65%,#1e2024 79%,#a2a7b1 91%,#eef0f4);-webkit-mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 3px),#000 calc(100% - 2.5px));mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 3px),#000 calc(100% - 2.5px));rotate:calc(var(--la,0)*1deg);will-change:rotate;pointer-events:none}
 .cb svg,.key svg,.sk svg{filter:drop-shadow(0 -.8px 0 rgba(0,0,0,.9)) drop-shadow(0 .7px 0 rgba(255,255,255,.18))}
@@ -78,38 +78,58 @@ body.drag #con,body.drag #pl{transition:none;will-change:translate}
 #dlg{border-radius:7px;overflow:hidden;pointer-events:none}#dlg .gs{opacity:calc(var(--ga,1)*.66)}
 .key:nth-child(2),.sk:nth-child(2){background-position:-31px -17px,0 0}.key:nth-child(4),.sk:nth-child(3){background-position:-9px -44px,0 0}.key:nth-child(5),.sk:nth-child(4){background-position:-52px -6px,0 0}
 .cb:active,.key:active,.sk:active,.cb.dn,.key.dn,.sk.dn{translate:0 2.5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 1px rgba(0,0,0,.6),0 0 0 1px #000,0 .5px 0 1px #070708,0 1px 3px rgba(0,0,0,.8)}.cb:active,.key:active,.cb.dn,.key.dn{color:var(--ac);transition-duration:0s,.07s,.07s,.25s}.cb:active svg,.key:active svg,.cb.dn svg,.key.dn svg{transition-duration:0s}.cb:active svg,.key:active svg,.cb.dn svg,.key.dn svg{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 65%,transparent))}
-.cb.on,.key.on,.sk.on{color:var(--ac)}.cb.on svg,.key.on svg,.sk.on svg{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 65%,transparent))}
+.cb.on,.key.on,.sk.on,.cb.fl{color:var(--ac)}.cb.on svg,.key.on svg,.sk.on svg,.cb.fl svg{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 65%,transparent))}
+/* (a round button that is on stays down, as the microphone's key does and as play does: its cap sunk in its collar, darker, and lit a little by its own sign) */
+.cb.on{translate:0 2.5px;background:var(--gk,none),radial-gradient(circle at 36% 28%,#24262b,#0c0d0f 72%);box-shadow:inset 0 2px 5px rgba(0,0,0,.85),inset 0 0 0 1px rgba(0,0,0,.5),0 0 0 1px #000,0 .5px 0 1px #070708,0 0 12px color-mix(in srgb,var(--ac) 20%,transparent)}
+/* (the two corner keys are caps of the panel's own paint, standing a hair above it in a fine gap. Pressed, a cap goes a hair below the panel, and it stays there while what it opens is open) */
+.key.ck:active,.key.ck.dn,.key.ck.on{translate:0 1.5px;background:linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),var(--gp,none),#131417;box-shadow:inset 0 2px 4px rgba(0,0,0,.9),inset 0 0 0 1px rgba(0,0,0,.6),0 0 0 1px #000,0 1px 0 1px rgba(255,255,255,.07)}
 /* the one button that is not part of the console: seen only while looking closer, it goes back */
 #zo{position:fixed;z-index:3;right:calc(env(safe-area-inset-right,0px) + 14px);bottom:calc(env(safe-area-inset-bottom,0px) + 14px);opacity:.55}#zo:hover,#zo:active{opacity:1}
-/* the source: four keys in one slot, of which the one in use stays down and lit: the microphone, or one of the instruments. Every choice
-   is in sight with its name on it. The same four are on the title card, larger */
-.srk{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:3px 3px 7px;border-radius:11px;background:#040506;box-shadow:inset 0 3px 7px #000,inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.1),0 -1px 0 rgba(0,0,0,.6)}
+/* the source. The microphone's key stands by itself: it stays down and lit while the microphone listens, with an instrument or
+   without. The instrument is chosen on a knob (.knb): a round knob with a pointer, the instruments' signs set round it, one to
+   every 40 degrees from the top; the sign it points to is lit, and that instrument's name stands in a small window beside it
+   (.nmw, a dot-matrix like the readout). The knob is turned by a finger going round it, or a sign is touched and it goes there.
+   .kn is the knob's cap with its polished collar, which stays put; its u is what turns: the pointer, and the grip cut round its edge.
+   The same three are on the title card, on a piece of the panel of their own (#stk) */
+.knb{position:relative;width:var(--kn,100px);height:var(--kn,100px);border-radius:50%;cursor:pointer;touch-action:none;flex:0 0 auto;outline:0}
+.knb>svg{position:absolute;left:50%;top:50%;width:calc(var(--kn,100px)*.17);height:calc(var(--kn,100px)*.17);margin:calc(var(--kn,100px)*-.085) 0 0 calc(var(--kn,100px)*-.085);color:rgba(223,228,236,.52);filter:drop-shadow(0 -.8px 0 rgba(0,0,0,.9)) drop-shadow(0 .7px 0 rgba(255,255,255,.14));transition:color .15s,filter .15s;pointer-events:none}
+.knb>svg.on{color:var(--ac);filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 70%,transparent))}
+.knb .kn{position:absolute;left:27%;top:27%;width:46%;height:46%;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -2px 1px rgba(0,0,0,.6),0 0 0 1px #000,0 3px 0 1px #070708,0 7px 9px rgba(0,0,0,.75)}
+.kn u{position:absolute;inset:0;border-radius:50%;transition:rotate .17s cubic-bezier(.3,1.5,.5,1)}
+.kn u:before{content:'';position:absolute;left:50%;top:14%;width:3px;height:27%;margin-left:-1.5px;border-radius:2px;background:var(--ac);box-shadow:0 0 5px var(--ac)}
+.kn u:after{content:'';position:absolute;inset:3px;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.15) 0 3deg,rgba(0,0,0,.36) 3deg 7.5deg);-webkit-mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 4.5px),#000 calc(100% - 4px));mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 4.5px),#000 calc(100% - 4px))}
+.knb:focus-visible .kn{outline:1px solid #fff;outline-offset:3px}
+.nmw{overflow:hidden;pointer-events:none}.nmw canvas{display:block;width:100%;height:100%;filter:drop-shadow(0 0 2.5px color-mix(in srgb,var(--ac) 60%,transparent))}.nmw .gs{opacity:calc(var(--ga,1)*.66)}
 .sk{height:38px;gap:6px;border-radius:8px;min-width:0}.sk svg{width:18px;height:18px;flex:0 0 auto;transition:filter .18s}.sk b{font:600 9px/1 monospace;letter-spacing:.1em;text-transform:uppercase;text-shadow:0 -.8px 0 rgba(0,0,0,.9),0 .7px 0 rgba(255,255,255,.14)}
 .sk.on{translate:0 2.5px;background:var(--gk,none),linear-gradient(170deg,#1f2125,#101113);box-shadow:inset 0 2px 5px rgba(0,0,0,.8),inset 0 0 0 1px rgba(0,0,0,.5),0 0 0 1px #000,0 .5px 0 1px #070708,0 0 12px color-mix(in srgb,var(--ac) 22%,transparent)}.sk.on b{text-shadow:0 0 6px color-mix(in srgb,var(--ac) 55%,transparent)}
 .sk.no{opacity:.32}
 /* the powders: glass orbs in sockets round the plate's bezel, each the colour of its powder and faintly lit by it. A press sprays some
    of that powder onto the plate from where the orb is. (.pj is the place a finger can press; its :before is the socket, a metal ring
-   with a dark seat; the i is the orb, of glass: a hard bright reflection at the upper left with a soft bloom round it (the s), a small glint
+   with a dark seat; its :after the glow it gives off while it is touched or its note sounds; the i is the orb, of glass: a hard bright reflection at the upper left with a soft bloom round it (the s), a small glint
    at the lower right, a dark band just inside the edge and a line of light on the edge itself, light gathered low in the glass, and
    the colour, deepest at the top. --p, --hi, --lo, --dk and --gl are the orb's colour, its lighter and darker shades and its glow.) */
-.pj{width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.pj:before{content:'';position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:radial-gradient(circle,#010203 0 62%,rgba(1,2,3,0) 66%),conic-gradient(from 300deg,#eef0f4,#6c717b 12%,#24262b 26%,#8d929c 40%,#f2f4f7 51%,#5a5f69 65%,#1e2024 79%,#a2a7b1 91%,#eef0f4);box-shadow:0 1px 3px rgba(0,0,0,.9),0 0 0 1px #000}
-.pj i{position:relative;width:18px;height:18px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 71% 73%,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 7%),radial-gradient(closest-side,rgba(0,0,0,0) 62%,rgba(0,0,0,.42) 86%,rgba(0,0,0,.1) 92%,rgba(255,255,255,.4) 97%,rgba(255,255,255,.1) 100%),radial-gradient(ellipse 60% 42% at 54% 84%,var(--hi) 0,rgba(255,255,255,0) 100%),radial-gradient(circle at 50% 66%,var(--p) 0,var(--lo) 55%,var(--dk) 100%);box-shadow:0 0 7px 1px var(--gl),inset 0 0 1px rgba(0,0,0,.8);transition:filter .3s,scale .08s,box-shadow .3s;pointer-events:none}
+.pj{width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.pj:before{content:'';position:absolute;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:radial-gradient(circle,#010203 0 62%,rgba(1,2,3,0) 66%),conic-gradient(from 300deg,#eef0f4,#6c717b 12%,#24262b 26%,#8d929c 40%,#f2f4f7 51%,#5a5f69 65%,#1e2024 79%,#a2a7b1 91%,#eef0f4);box-shadow:0 1px 3px rgba(0,0,0,.9),0 0 0 1px #000}
+.pj i{position:relative;width:22px;height:22px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 71% 73%,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 7%),radial-gradient(closest-side,rgba(0,0,0,0) 62%,rgba(0,0,0,.42) 86%,rgba(0,0,0,.1) 92%,rgba(255,255,255,.4) 97%,rgba(255,255,255,.1) 100%),radial-gradient(ellipse 60% 42% at 54% 84%,var(--hi) 0,rgba(255,255,255,0) 100%),radial-gradient(circle at 50% 66%,var(--p) 0,var(--lo) 55%,var(--dk) 100%);box-shadow:0 0 7px 1px var(--gl),inset 0 0 1px rgba(0,0,0,.8);transition:filter .3s,scale .08s,box-shadow .3s;pointer-events:none}
 .pj.iri i{background:radial-gradient(circle at 71% 73%,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 7%),radial-gradient(closest-side,rgba(0,0,0,0) 62%,rgba(0,0,0,.42) 86%,rgba(0,0,0,.1) 92%,rgba(255,255,255,.45) 97%,rgba(255,255,255,.1) 100%),radial-gradient(circle at 50% 60%,rgba(30,26,60,0) 0,rgba(30,26,60,.5) 100%),conic-gradient(from 200deg,#ff9ccb,#a9b4ff,#96f0d4,#ffe39a,#ff9ccb)}
 .pj s{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse 22% 15% at 31% 24%,#fff 0,#fff 55%,rgba(255,255,255,0) 100%),radial-gradient(ellipse 46% 34% at 33% 27%,rgba(255,255,255,.5) 0,rgba(255,255,255,0) 100%);will-change:translate;pointer-events:none}
-.pj:active i{scale:.88;filter:brightness(.8)}
+/* (the glow: light of the orb's own colour (--gt; --gw where another colour is to be used instead), round it and over its socket, while a finger is on it (.tch) or its note sounds
+   (.snd), and the glass itself brighter. With the powders off the glass is dark and has no colour to give: then it is lit from
+   within and glows in the accent colour) */
+.pj:after{content:'';position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;box-shadow:0 0 9px 4px var(--gw,var(--gt)),0 0 24px 9px color-mix(in srgb,var(--gw,var(--gt)) 50%,transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.pj.tch:after,.pj.snd:after{opacity:1;transition-duration:.04s}.pj.tch i,.pj.snd i{filter:grayscale(0) brightness(1.45) saturate(1.2) contrast(1);transition-duration:.04s,.08s,.3s}
+#con.cof .pj{--gw:color-mix(in srgb,var(--ac) 85%,transparent)}#con.cof .pj.tch i,#con.cof .pj.snd i{filter:grayscale(1) brightness(1.05) saturate(1) contrast(1.1)}#con.seq .pj i{transition-duration:.3s,.08s,.3s}     /* (every look of the glass is the same list of changes in different amounts, so that it can go gradually from any one to any other; and during a switch's run a lit orb takes as long over it as the rest) */
 /* Each of the twelve is also a note's key: C at the top, then round by semitones as the hours go (--h: its hour). .pj b is its note's
-   name, shown while the notes are on; it is lit in the accent colour while its note sounds (.snd), and underlined while the microphone
-   hears its note (.hd). With the powders off (#con.cof) the orbs are dark glass; with the notes off (#con.nof) the names are folded
-   away. For a moment after either switch is thrown (#con.seq) each of the twelve waits its turn, so they go one after another */
-.pj b{position:absolute;left:0;right:0;top:50%;margin-top:-6.5px;font:700 10.5px/13px monospace;letter-spacing:-.03em;text-align:center;color:#fff;text-shadow:0 0 2px #000,0 0 3px #000,0 1px 1px #000;transition:transform .36s cubic-bezier(.3,1.6,.5,1),opacity .2s,color .12s,text-shadow .12s;pointer-events:none}
-.pj b sup{font-size:9px;line-height:0;vertical-align:3px;margin-left:-1.5px;margin-right:-1px}
-.pj.snd b{color:var(--ac);text-shadow:0 0 6px var(--ac),0 0 2px #000,0 1px 1px #000}.pj.hd b{text-decoration:underline;text-decoration-color:var(--ac);text-decoration-thickness:2px;text-underline-offset:1.5px}
+   name, shown while the notes are on; it is underlined while the microphone hears its note (.hd). With the powders off (#con.cof) the orbs are dark glass; with the notes off (#con.nof) the names are folded
+   away. For a moment after either switch is thrown (#con.seq) each of the twelve waits its turn, so they go one after another, clockwise
+   from the top, on and off alike */
+.pj b{position:absolute;left:0;right:0;top:50%;margin-top:-7.5px;font:700 12.5px/15px monospace;letter-spacing:-.03em;text-align:center;color:#fff;text-shadow:0 0 2px #000,0 0 3px #000,0 1px 1px #000;transition:transform .36s cubic-bezier(.3,1.6,.5,1),opacity .2s,color .12s,text-shadow .12s;pointer-events:none}
+.pj b sup{font-size:10.5px;line-height:0;vertical-align:3.5px;margin-left:-2px;margin-right:-1.5px}
+.pj.hd b{text-decoration:underline;text-decoration-color:var(--ac);text-decoration-thickness:2px;text-underline-offset:1.5px}
 #con.nof .pj b{transform:perspective(36px) rotateX(-94deg) translateY(4px);opacity:0;transition-timing-function:ease-in,ease}
-#con.cof .pj i{filter:grayscale(1) brightness(.32) contrast(1.15);box-shadow:inset 0 0 1px rgba(0,0,0,.8)}#con.cof .pj u{display:none}
-#con.seq .pj i,#con.seq .pj b{transition-delay:calc(var(--h)*34ms)}#con.seq.cof .pj i,#con.seq.nof .pj b{transition-delay:calc((11 - var(--h))*26ms)}
+#con.cof .pj i{filter:grayscale(1) brightness(.32) saturate(1) contrast(1.15);box-shadow:inset 0 0 1px rgba(0,0,0,.8)}#con.cof .pj u{display:none}
+#con.seq .pj i,#con.seq .pj b{transition-delay:calc(var(--h)*34ms)}
 #con.cof.nof .pj{cursor:default}
-.pj.fire i{filter:brightness(1.4) saturate(1.2);box-shadow:0 0 13px 3px var(--gl),inset 0 0 1px rgba(0,0,0,.6);transition:none}
 /* an orb that has just sprayed is spent: dim, and coming back over a second and a half */
 @keyframes spent{0%,12%{filter:brightness(.7) saturate(.85);box-shadow:0 0 3px 0 var(--gl),inset 0 0 1px rgba(0,0,0,.8)}}
 .pj.spent i{animation:spent 1.6s ease-in-out}
@@ -130,10 +150,10 @@ body.drag #con,body.drag #pl{transition:none;will-change:translate}
 #ply:not(.on){color:var(--ac)}#ply:not(.on) svg{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 65%,transparent))}
 #ply:before{content:'';position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 0deg,rgba(0,0,0,0) 0 50%,var(--ac));-webkit-mask:radial-gradient(farthest-side,rgba(0,0,0,0) calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,rgba(0,0,0,0) calc(100% - 3px),#000 calc(100% - 2px));filter:drop-shadow(0 0 3px var(--ac));animation:spin 2.8s linear infinite;transition:opacity .7s;pointer-events:none}
 #ply.on:before{opacity:0}
-@media (max-width:389px) and (orientation:portrait){.key{width:40px;height:38px}#ply{width:50px;height:50px}.sk{gap:4px}.sk b{font-size:8px;letter-spacing:.06em}.sk svg{width:16px;height:16px}}
-/* in a narrow column (beside the plate, in landscape) the source keys stand two and two, and the row of keys is closer */
-body.nar #src{grid-template-columns:1fr 1fr}body.nar #trn{gap:4px}body.nar #trn .key{width:30px;height:40px}body.nar #ply{width:50px;height:50px;margin:5px 4px}
-body.cmp #src .sk{height:32px}body.cmp #ply{width:48px;height:48px}
+@media (max-width:389px) and (orientation:portrait){.key{width:40px;height:38px}#ply{width:50px;height:50px}}
+/* in a narrow column (beside the plate, in landscape) the row of keys is closer */
+body.nar #trn{gap:4px}body.nar #trn .key{width:30px;height:40px}body.nar #ply{width:50px;height:50px;margin:5px 4px}
+body.cmp #ply{width:48px;height:48px}
 /* a toast, Nano's */
 #tst{position:fixed;left:50%;translate:-50% 0;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:12;padding:8px 14px;border-radius:6px;background:rgba(0,0,0,.78);border:1px solid #fff3;font-size:13px;opacity:0;transition:opacity .3s;white-space:normal;width:max-content;max-width:min(92vw,420px);text-align:center;pointer-events:none}
 #tst.on{opacity:1}
@@ -160,7 +180,8 @@ body.cmp #src .sk{height:32px}body.cmp #ply{width:48px;height:48px}
 #st{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(20,24,30,.42);-webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3);transition:opacity .55s;cursor:default}#st,#st *{touch-action:pan-x pan-y}#st.out{opacity:0;pointer-events:none}
 #stb{display:flex;flex-direction:column;align-items:center;gap:9px;width:min(360px,90vw);max-height:94vh;overflow:hidden auto;padding:4px 2px;animation:bin .8s both}
 .logo{width:min(320px,84vw)}.logo svg{width:100%;height:auto;stroke:none;display:block}
-#stk{width:100%;max-width:340px;margin-top:26px}#stk .sk{flex-direction:column;height:68px;gap:8px}#stk .sk svg{width:24px;height:24px}#stk .sk b{font-size:9.5px}
+#stk{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:24px;padding:12px 16px;border-radius:16px;background:var(--gp,none),#131417;box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 0 0 1px rgba(255,255,255,.04),0 0 0 1px #000,0 12px 30px rgba(0,0,0,.6)}#stk .knb{--kn:124px;touch-action:none}#stk .sk{flex-direction:column;width:72px;height:68px;gap:8px}#stk .sk svg{width:24px;height:24px}#stk .sk b{font-size:9.5px}#stk .nmw{width:88px;height:30px}
+@media (max-width:379px){#stk{gap:9px;padding:10px 10px}#stk .knb{--kn:106px}#stk .sk{width:62px}#stk .nmw{width:80px}}
 #st button:focus-visible,#pm button:focus-visible{outline:1px solid #fff}
 #st .cap{margin:18px 0 0;font-size:12px;opacity:.75;text-align:center;max-width:300px;line-height:1.5}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
@@ -172,13 +193,13 @@ body.cmp #src .sk{height:32px}body.cmp #ply{width:48px;height:48px}
 <p class=h>light</p><button id=pac>accent color<i class=sw></i></button><div id=acc hidden><div class=fad id=fdr><u></u><i></i></div><div class=fad id=fdg><u></u><i></i></div><div class=fad id=fdb><u></u><i></i></div><button id=acr class=sm>back to amber</button></div><div id=gla><span>glint</span><div class=fad id=fgl><u></u><i></i></div></div>
 <button id=pt class=dv>return to title</button>
 <div class=ext><p class=h>more scale space, on other sites</p><div class=links><a href="https://setzstone.itch.io/cymatist" target=_blank rel=noopener><span>Scale Space Cymatist<small>itch.io &#183; cymatics tools</small></span></a><a href="https://setzstone.itch.io/scale-space" target=_blank rel=noopener><span>Scale Space<small>itch.io &#183; early access</small></span></a><a href="https://www.reddit.com/r/ScaleSpace/" target=_blank rel=noopener><span>r/ScaleSpace<small>reddit.com &#183; finds, builds, and the dev log</small></span></a></div></div></div>
-<svg style="position:absolute;width:0;height:0" aria-hidden=true><defs><linearGradient id=lgm gradientUnits=userSpaceOnUse x1=110 y1=0 x2=1450 y2=0 gradientTransform="rotate(20)"><stop offset=0 stop-color="#a9afba"/><stop offset=.34 stop-color="#c3c8d2"/><stop offset=.5 stop-color="#fff"/><stop offset=.66 stop-color="#c3c8d2"/><stop offset=1 stop-color="#a9afba"/></linearGradient></defs></svg>
-<div id=con><div id=face></div><div id=lit></div><canvas id=flk></canvas>
+<svg style="position:absolute;width:0;height:0" aria-hidden=true><defs><linearGradient id=lgm gradientUnits=userSpaceOnUse x1=110 y1=0 x2=1450 y2=0 gradientTransform="rotate(20)"><stop offset=0 stop-color="#a9afba"/><stop offset=.34 stop-color="#c3c8d2"/><stop offset=.5 stop-color="#fff"/><stop offset=.66 stop-color="#c3c8d2"/><stop offset=1 stop-color="#a9afba"/></linearGradient><filter id=lge color-interpolation-filters="sRGB"><feOffset in="SourceAlpha" dx="3.5" dy="8.2" result="o"/><feComposite in="SourceAlpha" in2="o" operator="out" result="e"/><feGaussianBlur in="e" stdDeviation="2.6" result="b"/><feComposite in="b" in2="SourceAlpha" operator="in" result="c"/><feColorMatrix in="c" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .78 0" result="h"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="h"/></feMerge></filter></defs></svg>
+<div id=con><div id=lit></div><canvas id=flk></canvas>
 <div id=brand><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 222" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space Intunist"><g class="lw"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></g><path class="ln" fill="currentColor" d="M1164.750 293.875h5.885v5.885h-5.885zM1170.625 293.875h5.885v5.885h-5.885zM1176.500 293.875h5.885v5.885h-5.885zM1170.625 299.750h5.885v5.885h-5.885zM1170.625 305.625h5.885v5.885h-5.885zM1170.625 311.500h5.885v5.885h-5.885zM1170.625 317.375h5.885v5.885h-5.885zM1170.625 323.250h5.885v5.885h-5.885zM1164.750 329.125h5.885v5.885h-5.885zM1170.625 329.125h5.885v5.885h-5.885zM1176.500 329.125h5.885v5.885h-5.885zM1194.125 293.875h5.885v5.885h-5.885zM1217.625 293.875h5.885v5.885h-5.885zM1194.125 299.750h5.885v5.885h-5.885zM1217.625 299.750h5.885v5.885h-5.885zM1194.125 305.625h5.885v5.885h-5.885zM1200.000 305.625h5.885v5.885h-5.885zM1217.625 305.625h5.885v5.885h-5.885zM1194.125 311.500h5.885v5.885h-5.885zM1205.875 311.500h5.885v5.885h-5.885zM1217.625 311.500h5.885v5.885h-5.885zM1194.125 317.375h5.885v5.885h-5.885zM1211.750 317.375h5.885v5.885h-5.885zM1217.625 317.375h5.885v5.885h-5.885zM1194.125 323.250h5.885v5.885h-5.885zM1217.625 323.250h5.885v5.885h-5.885zM1194.125 329.125h5.885v5.885h-5.885zM1217.625 329.125h5.885v5.885h-5.885zM1229.375 293.875h5.885v5.885h-5.885zM1235.250 293.875h5.885v5.885h-5.885zM1241.125 293.875h5.885v5.885h-5.885zM1247.000 293.875h5.885v5.885h-5.885zM1252.875 293.875h5.885v5.885h-5.885zM1241.125 299.750h5.885v5.885h-5.885zM1241.125 305.625h5.885v5.885h-5.885zM1241.125 311.500h5.885v5.885h-5.885zM1241.125 317.375h5.885v5.885h-5.885zM1241.125 323.250h5.885v5.885h-5.885zM1241.125 329.125h5.885v5.885h-5.885zM1264.625 293.875h5.885v5.885h-5.885zM1288.125 293.875h5.885v5.885h-5.885zM1264.625 299.750h5.885v5.885h-5.885zM1288.125 299.750h5.885v5.885h-5.885zM1264.625 305.625h5.885v5.885h-5.885zM1288.125 305.625h5.885v5.885h-5.885zM1264.625 311.500h5.885v5.885h-5.885zM1288.125 311.500h5.885v5.885h-5.885zM1264.625 317.375h5.885v5.885h-5.885zM1288.125 317.375h5.885v5.885h-5.885zM1264.625 323.250h5.885v5.885h-5.885zM1288.125 323.250h5.885v5.885h-5.885zM1270.500 329.125h5.885v5.885h-5.885zM1276.375 329.125h5.885v5.885h-5.885zM1282.250 329.125h5.885v5.885h-5.885zM1299.875 293.875h5.885v5.885h-5.885zM1323.375 293.875h5.885v5.885h-5.885zM1299.875 299.750h5.885v5.885h-5.885zM1323.375 299.750h5.885v5.885h-5.885zM1299.875 305.625h5.885v5.885h-5.885zM1305.750 305.625h5.885v5.885h-5.885zM1323.375 305.625h5.885v5.885h-5.885zM1299.875 311.500h5.885v5.885h-5.885zM1311.625 311.500h5.885v5.885h-5.885zM1323.375 311.500h5.885v5.885h-5.885zM1299.875 317.375h5.885v5.885h-5.885zM1317.500 317.375h5.885v5.885h-5.885zM1323.375 317.375h5.885v5.885h-5.885zM1299.875 323.250h5.885v5.885h-5.885zM1323.375 323.250h5.885v5.885h-5.885zM1299.875 329.125h5.885v5.885h-5.885zM1323.375 329.125h5.885v5.885h-5.885zM1341.000 293.875h5.885v5.885h-5.885zM1346.875 293.875h5.885v5.885h-5.885zM1352.750 293.875h5.885v5.885h-5.885zM1346.875 299.750h5.885v5.885h-5.885zM1346.875 305.625h5.885v5.885h-5.885zM1346.875 311.500h5.885v5.885h-5.885zM1346.875 317.375h5.885v5.885h-5.885zM1346.875 323.250h5.885v5.885h-5.885zM1341.000 329.125h5.885v5.885h-5.885zM1346.875 329.125h5.885v5.885h-5.885zM1352.750 329.125h5.885v5.885h-5.885zM1376.250 293.875h5.885v5.885h-5.885zM1382.125 293.875h5.885v5.885h-5.885zM1388.000 293.875h5.885v5.885h-5.885zM1393.875 293.875h5.885v5.885h-5.885zM1370.375 299.750h5.885v5.885h-5.885zM1370.375 305.625h5.885v5.885h-5.885zM1376.250 311.500h5.885v5.885h-5.885zM1382.125 311.500h5.885v5.885h-5.885zM1388.000 311.500h5.885v5.885h-5.885zM1393.875 317.375h5.885v5.885h-5.885zM1393.875 323.250h5.885v5.885h-5.885zM1370.375 329.125h5.885v5.885h-5.885zM1376.250 329.125h5.885v5.885h-5.885zM1382.125 329.125h5.885v5.885h-5.885zM1388.000 329.125h5.885v5.885h-5.885zM1405.625 293.875h5.885v5.885h-5.885zM1411.500 293.875h5.885v5.885h-5.885zM1417.375 293.875h5.885v5.885h-5.885zM1423.250 293.875h5.885v5.885h-5.885zM1429.125 293.875h5.885v5.885h-5.885zM1417.375 299.750h5.885v5.885h-5.885zM1417.375 305.625h5.885v5.885h-5.885zM1417.375 311.500h5.885v5.885h-5.885zM1417.375 317.375h5.885v5.885h-5.885zM1417.375 323.250h5.885v5.885h-5.885zM1417.375 329.125h5.885v5.885h-5.885z"/></svg></div>
 <div id=dspw class=win><canvas id=dsp></canvas></div><p id=sr class=vh aria-live=off></p>
 <div id=well></div><div id=led></div>
 <button class="key ck" id=mnb aria-label="menu" title="menu"></button><button class="key ck" id=pfs hidden aria-label="fullscreen" title="fullscreen"></button><button class=cb id=pnt aria-label="note keys on or off" title="note keys"></button><button class=cb id=pcl aria-label="powders on or off" title="powders"></button><button class=cb id=pzm aria-label="look closer" title="look closer"></button><button class=cb id=pvt aria-label="sweep the plate clear" title="sweep the plate clear"></button>
-<div id=src class=srk></div>
+<button class=sk id=smc></button><div class=knb id=knb></div><div class="win nmw" id=nmw><canvas></canvas></div>
 <canvas id=dial class=win aria-label="tuning dial: slide to change the note" role=slider></canvas>
 <div id=dlg></div>
 <div id=trn><button class=key id=tfl aria-label="flat: bends the note down while held" title="flat (hold)"></button><button class=key id=tdn aria-label="down an octave" title="down an octave"></button><button id=ply></button><button class=key id=tup aria-label="up an octave" title="up an octave"></button><button class=key id=tsh aria-label="sharp: bends the note up while held" title="sharp (hold)"></button></div>
@@ -187,7 +208,7 @@ body.cmp #src .sk{height:32px}body.cmp #ply{width:48px;height:48px}
 <div id=cat></div>
 <button class=cb id=zo hidden aria-label="back to the console" title="back to the console"></button>
 <div id=tst role=status></div>
-<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 222" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space Intunist"><g class="lw"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></g><path class="ln" fill="currentColor" d="M1164.750 293.875h5.885v5.885h-5.885zM1170.625 293.875h5.885v5.885h-5.885zM1176.500 293.875h5.885v5.885h-5.885zM1170.625 299.750h5.885v5.885h-5.885zM1170.625 305.625h5.885v5.885h-5.885zM1170.625 311.500h5.885v5.885h-5.885zM1170.625 317.375h5.885v5.885h-5.885zM1170.625 323.250h5.885v5.885h-5.885zM1164.750 329.125h5.885v5.885h-5.885zM1170.625 329.125h5.885v5.885h-5.885zM1176.500 329.125h5.885v5.885h-5.885zM1194.125 293.875h5.885v5.885h-5.885zM1217.625 293.875h5.885v5.885h-5.885zM1194.125 299.750h5.885v5.885h-5.885zM1217.625 299.750h5.885v5.885h-5.885zM1194.125 305.625h5.885v5.885h-5.885zM1200.000 305.625h5.885v5.885h-5.885zM1217.625 305.625h5.885v5.885h-5.885zM1194.125 311.500h5.885v5.885h-5.885zM1205.875 311.500h5.885v5.885h-5.885zM1217.625 311.500h5.885v5.885h-5.885zM1194.125 317.375h5.885v5.885h-5.885zM1211.750 317.375h5.885v5.885h-5.885zM1217.625 317.375h5.885v5.885h-5.885zM1194.125 323.250h5.885v5.885h-5.885zM1217.625 323.250h5.885v5.885h-5.885zM1194.125 329.125h5.885v5.885h-5.885zM1217.625 329.125h5.885v5.885h-5.885zM1229.375 293.875h5.885v5.885h-5.885zM1235.250 293.875h5.885v5.885h-5.885zM1241.125 293.875h5.885v5.885h-5.885zM1247.000 293.875h5.885v5.885h-5.885zM1252.875 293.875h5.885v5.885h-5.885zM1241.125 299.750h5.885v5.885h-5.885zM1241.125 305.625h5.885v5.885h-5.885zM1241.125 311.500h5.885v5.885h-5.885zM1241.125 317.375h5.885v5.885h-5.885zM1241.125 323.250h5.885v5.885h-5.885zM1241.125 329.125h5.885v5.885h-5.885zM1264.625 293.875h5.885v5.885h-5.885zM1288.125 293.875h5.885v5.885h-5.885zM1264.625 299.750h5.885v5.885h-5.885zM1288.125 299.750h5.885v5.885h-5.885zM1264.625 305.625h5.885v5.885h-5.885zM1288.125 305.625h5.885v5.885h-5.885zM1264.625 311.500h5.885v5.885h-5.885zM1288.125 311.500h5.885v5.885h-5.885zM1264.625 317.375h5.885v5.885h-5.885zM1288.125 317.375h5.885v5.885h-5.885zM1264.625 323.250h5.885v5.885h-5.885zM1288.125 323.250h5.885v5.885h-5.885zM1270.500 329.125h5.885v5.885h-5.885zM1276.375 329.125h5.885v5.885h-5.885zM1282.250 329.125h5.885v5.885h-5.885zM1299.875 293.875h5.885v5.885h-5.885zM1323.375 293.875h5.885v5.885h-5.885zM1299.875 299.750h5.885v5.885h-5.885zM1323.375 299.750h5.885v5.885h-5.885zM1299.875 305.625h5.885v5.885h-5.885zM1305.750 305.625h5.885v5.885h-5.885zM1323.375 305.625h5.885v5.885h-5.885zM1299.875 311.500h5.885v5.885h-5.885zM1311.625 311.500h5.885v5.885h-5.885zM1323.375 311.500h5.885v5.885h-5.885zM1299.875 317.375h5.885v5.885h-5.885zM1317.500 317.375h5.885v5.885h-5.885zM1323.375 317.375h5.885v5.885h-5.885zM1299.875 323.250h5.885v5.885h-5.885zM1323.375 323.250h5.885v5.885h-5.885zM1299.875 329.125h5.885v5.885h-5.885zM1323.375 329.125h5.885v5.885h-5.885zM1341.000 293.875h5.885v5.885h-5.885zM1346.875 293.875h5.885v5.885h-5.885zM1352.750 293.875h5.885v5.885h-5.885zM1346.875 299.750h5.885v5.885h-5.885zM1346.875 305.625h5.885v5.885h-5.885zM1346.875 311.500h5.885v5.885h-5.885zM1346.875 317.375h5.885v5.885h-5.885zM1346.875 323.250h5.885v5.885h-5.885zM1341.000 329.125h5.885v5.885h-5.885zM1346.875 329.125h5.885v5.885h-5.885zM1352.750 329.125h5.885v5.885h-5.885zM1376.250 293.875h5.885v5.885h-5.885zM1382.125 293.875h5.885v5.885h-5.885zM1388.000 293.875h5.885v5.885h-5.885zM1393.875 293.875h5.885v5.885h-5.885zM1370.375 299.750h5.885v5.885h-5.885zM1370.375 305.625h5.885v5.885h-5.885zM1376.250 311.500h5.885v5.885h-5.885zM1382.125 311.500h5.885v5.885h-5.885zM1388.000 311.500h5.885v5.885h-5.885zM1393.875 317.375h5.885v5.885h-5.885zM1393.875 323.250h5.885v5.885h-5.885zM1370.375 329.125h5.885v5.885h-5.885zM1376.250 329.125h5.885v5.885h-5.885zM1382.125 329.125h5.885v5.885h-5.885zM1388.000 329.125h5.885v5.885h-5.885zM1405.625 293.875h5.885v5.885h-5.885zM1411.500 293.875h5.885v5.885h-5.885zM1417.375 293.875h5.885v5.885h-5.885zM1423.250 293.875h5.885v5.885h-5.885zM1429.125 293.875h5.885v5.885h-5.885zM1417.375 299.750h5.885v5.885h-5.885zM1417.375 305.625h5.885v5.885h-5.885zM1417.375 311.500h5.885v5.885h-5.885zM1417.375 317.375h5.885v5.885h-5.885zM1417.375 323.250h5.885v5.885h-5.885zM1417.375 329.125h5.885v5.885h-5.885z"/></svg></div><div id=stk class=srk></div><p class=cap id=scp>Sound is measured on this device.<br>Nothing is recorded or sent.</p></div></div>
+<div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 222" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space Intunist"><g class="lw"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></g><path class="ln" fill="currentColor" d="M1164.750 293.875h5.885v5.885h-5.885zM1170.625 293.875h5.885v5.885h-5.885zM1176.500 293.875h5.885v5.885h-5.885zM1170.625 299.750h5.885v5.885h-5.885zM1170.625 305.625h5.885v5.885h-5.885zM1170.625 311.500h5.885v5.885h-5.885zM1170.625 317.375h5.885v5.885h-5.885zM1170.625 323.250h5.885v5.885h-5.885zM1164.750 329.125h5.885v5.885h-5.885zM1170.625 329.125h5.885v5.885h-5.885zM1176.500 329.125h5.885v5.885h-5.885zM1194.125 293.875h5.885v5.885h-5.885zM1217.625 293.875h5.885v5.885h-5.885zM1194.125 299.750h5.885v5.885h-5.885zM1217.625 299.750h5.885v5.885h-5.885zM1194.125 305.625h5.885v5.885h-5.885zM1200.000 305.625h5.885v5.885h-5.885zM1217.625 305.625h5.885v5.885h-5.885zM1194.125 311.500h5.885v5.885h-5.885zM1205.875 311.500h5.885v5.885h-5.885zM1217.625 311.500h5.885v5.885h-5.885zM1194.125 317.375h5.885v5.885h-5.885zM1211.750 317.375h5.885v5.885h-5.885zM1217.625 317.375h5.885v5.885h-5.885zM1194.125 323.250h5.885v5.885h-5.885zM1217.625 323.250h5.885v5.885h-5.885zM1194.125 329.125h5.885v5.885h-5.885zM1217.625 329.125h5.885v5.885h-5.885zM1229.375 293.875h5.885v5.885h-5.885zM1235.250 293.875h5.885v5.885h-5.885zM1241.125 293.875h5.885v5.885h-5.885zM1247.000 293.875h5.885v5.885h-5.885zM1252.875 293.875h5.885v5.885h-5.885zM1241.125 299.750h5.885v5.885h-5.885zM1241.125 305.625h5.885v5.885h-5.885zM1241.125 311.500h5.885v5.885h-5.885zM1241.125 317.375h5.885v5.885h-5.885zM1241.125 323.250h5.885v5.885h-5.885zM1241.125 329.125h5.885v5.885h-5.885zM1264.625 293.875h5.885v5.885h-5.885zM1288.125 293.875h5.885v5.885h-5.885zM1264.625 299.750h5.885v5.885h-5.885zM1288.125 299.750h5.885v5.885h-5.885zM1264.625 305.625h5.885v5.885h-5.885zM1288.125 305.625h5.885v5.885h-5.885zM1264.625 311.500h5.885v5.885h-5.885zM1288.125 311.500h5.885v5.885h-5.885zM1264.625 317.375h5.885v5.885h-5.885zM1288.125 317.375h5.885v5.885h-5.885zM1264.625 323.250h5.885v5.885h-5.885zM1288.125 323.250h5.885v5.885h-5.885zM1270.500 329.125h5.885v5.885h-5.885zM1276.375 329.125h5.885v5.885h-5.885zM1282.250 329.125h5.885v5.885h-5.885zM1299.875 293.875h5.885v5.885h-5.885zM1323.375 293.875h5.885v5.885h-5.885zM1299.875 299.750h5.885v5.885h-5.885zM1323.375 299.750h5.885v5.885h-5.885zM1299.875 305.625h5.885v5.885h-5.885zM1305.750 305.625h5.885v5.885h-5.885zM1323.375 305.625h5.885v5.885h-5.885zM1299.875 311.500h5.885v5.885h-5.885zM1311.625 311.500h5.885v5.885h-5.885zM1323.375 311.500h5.885v5.885h-5.885zM1299.875 317.375h5.885v5.885h-5.885zM1317.500 317.375h5.885v5.885h-5.885zM1323.375 317.375h5.885v5.885h-5.885zM1299.875 323.250h5.885v5.885h-5.885zM1323.375 323.250h5.885v5.885h-5.885zM1299.875 329.125h5.885v5.885h-5.885zM1323.375 329.125h5.885v5.885h-5.885zM1341.000 293.875h5.885v5.885h-5.885zM1346.875 293.875h5.885v5.885h-5.885zM1352.750 293.875h5.885v5.885h-5.885zM1346.875 299.750h5.885v5.885h-5.885zM1346.875 305.625h5.885v5.885h-5.885zM1346.875 311.500h5.885v5.885h-5.885zM1346.875 317.375h5.885v5.885h-5.885zM1346.875 323.250h5.885v5.885h-5.885zM1341.000 329.125h5.885v5.885h-5.885zM1346.875 329.125h5.885v5.885h-5.885zM1352.750 329.125h5.885v5.885h-5.885zM1376.250 293.875h5.885v5.885h-5.885zM1382.125 293.875h5.885v5.885h-5.885zM1388.000 293.875h5.885v5.885h-5.885zM1393.875 293.875h5.885v5.885h-5.885zM1370.375 299.750h5.885v5.885h-5.885zM1370.375 305.625h5.885v5.885h-5.885zM1376.250 311.500h5.885v5.885h-5.885zM1382.125 311.500h5.885v5.885h-5.885zM1388.000 311.500h5.885v5.885h-5.885zM1393.875 317.375h5.885v5.885h-5.885zM1393.875 323.250h5.885v5.885h-5.885zM1370.375 329.125h5.885v5.885h-5.885zM1376.250 329.125h5.885v5.885h-5.885zM1382.125 329.125h5.885v5.885h-5.885zM1388.000 329.125h5.885v5.885h-5.885zM1405.625 293.875h5.885v5.885h-5.885zM1411.500 293.875h5.885v5.885h-5.885zM1417.375 293.875h5.885v5.885h-5.885zM1423.250 293.875h5.885v5.885h-5.885zM1429.125 293.875h5.885v5.885h-5.885zM1417.375 299.750h5.885v5.885h-5.885zM1417.375 305.625h5.885v5.885h-5.885zM1417.375 311.500h5.885v5.885h-5.885zM1417.375 317.375h5.885v5.885h-5.885zM1417.375 323.250h5.885v5.885h-5.885zM1417.375 329.125h5.885v5.885h-5.885z"/></svg></div><div id=stk><button class=sk id=sgo></button><div class=knb id=tkn></div><div class="win nmw"><canvas></canvas></div></div><p class=cap id=scp>Sound is measured on this device.<br>Nothing is recorded or sent.</p></div></div>
 <script>
 'use strict'
 const PREVIEW=false                        // the build sets this: a preview page cannot use the microphone, so it offers playing only
@@ -323,18 +344,20 @@ guitar:'<g stroke-width="1.8"><path d="M12 10c-1.7 0-2.8.9-2.8 2.1 0 .7.3 1.3.9 
 flat:'<path d="M8.5 3.5v16.2c3.8-1.6 6.6-4 6.6-6.6 0-1.7-1.2-2.8-2.8-2.8-1.5 0-2.9 1-3.8 2.4"/>',sharp:'<path d="M9.3 4.5v16M14.7 3.5v16M6.3 10.3l11.4-2.6M6.3 16.3l11.4-2.6"/>'}
 const SV=(n,st)=>'<svg viewBox="0 0 24 24"'+(st?' style="'+st+'"':'')+'>'+IC[n]+'</svg>'
 IC.ext='<path d="M14 5h5v5M19 5l-8.5 8.5M17 14v4.5H5.5V7H10"/>',IC.dial='<path d="M4.5 19.5v-5M9.5 19.5v-8M14.5 19.5v-5M19.5 19.5v-8"/><path d="M9.5 3.3l-2.4 0 2.4 3.6 2.4-3.6z" fill="currentColor"/>',IC.touch='<circle cx="12" cy="12" r="2.6" fill="currentColor"/><circle cx="12" cy="12" r="7.5" stroke-dasharray="2.4 3.5"/>',IC.port='<circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>'
+IC.piano='<g stroke-width="1.8"><rect x="3" y="6.5" width="18" height="11.5" rx="1.6"/><path d="M7.5 13.5V18M12 13.5V18M16.5 13.5V18"/><path d="M7.5 7v6M12 7v6M16.5 7v6" stroke-width="2.8" stroke-linecap="butt"/></g>',IC.flute='<g stroke-width="1.8" transform="rotate(-38 12 12)"><rect x="1" y="10.3" width="22" height="3.4" rx="1.7"/><path d="M4.6 9.2v1.1"/><path d="M9.5 12h.01M13 12h.01M16.5 12h.01M20 12h.01" stroke-width="1.5"/></g>',IC.clarinet='<g stroke-width="1.8" transform="rotate(24 12 12)"><path d="M12 1.6v13.6" stroke-width="2.7"/><path d="M12 15.2l-3.3 5.6h6.6z"/><path d="M15.1 5.6h.01M15.1 8.9h.01M15.1 12.2h.01" stroke-width="1.7"/></g>'
+IC.trumpet='<g stroke-width="1.8"><path d="M1.8 10.5h11.7c3.3 0 5.3-1.5 7.7-4.2v11.4c-2.4-2.7-4.4-4.2-7.7-4.2h-2"/><path d="M5 10.5v3.8a2.2 2.2 0 0 0 2.2 2.2h4a2.2 2.2 0 0 0 2.2-2.2v-.8"/><path d="M6.8 7v3.5M9.3 7v3.5M11.8 7v3.5"/></g>',IC.trombone='<g stroke-width="1.8"><path d="M16 15.2H4.3a2.35 2.35 0 0 1 0-4.7h10c2.8 0 4.7-1.3 6.9-4v11.4c-1.2-1.4-2.3-2.3-3.5-2.9"/><path d="M8 10.5v4.7"/></g>',IC.voice='<g stroke-width="1.8"><circle cx="8.8" cy="8.2" r="3.7"/><path d="M2.3 20.5c.5-3.9 3-5.9 6.5-5.9s6 2 6.5 5.9"/><path d="M16.8 5.6a4.6 4.6 0 0 1 0 5.8M19.6 3.3a8.3 8.3 0 0 1 0 10.4"/></g>',IC.knob='<circle cx="12" cy="13" r="6"/><path d="M12 13V9.2"/><path d="M12 2.5v1.6M4.2 6l1.2 1.1M19.8 6l-1.2 1.1M2.6 13.8h1.6M19.8 13.8h1.6"/>'
 mnb.innerHTML=SV('menu'),pnt.innerHTML=SV('note'),pcl.innerHTML=SV('grains'),pmx.innerHTML=SV('x'),pvt.innerHTML=SV('broom'),pfs.innerHTML=SV('full'),pzm.innerHTML=SV('zin'),zo.innerHTML=SV('zout'),tfl.innerHTML=SV('flat'),tdn.innerHTML=SV('oct','rotate:90deg'),tup.innerHTML=SV('oct','rotate:-90deg'),tsh.innerHTML=SV('sharp')
 for(const a of document.querySelectorAll('#pm .links a'))a.insertAdjacentHTML('beforeend',SV('ext'))
 // the help guide: each feature by its name, and in a sentence or two what it does
 hlp.innerHTML=[['fplate','In tune','Crisp lines and a lit ring mean the note is in tune.'],
 ['ay','Sharp or flat','Off the note, the sand shakes loose. Loose at the top is sharp. Loose at the bottom is flat.'],
 ['mic','Mic','Listens to your instrument. It can stay on while a note plays.'],
-['violin','Violin, cello, guitar','Play a note for you to tune to.'],
-['play','Play','Starts and stops that note.'],
+['knob','Instrument','Turn the knob, or touch a sign round it, to choose what plays the note.'],
+['play','Play','Starts and stops the note the dial is on.'],
 ['dial','Dial','Slide it to change the note.'],
 ['oct','Arrows','Jump an octave down or up.'],
 ['sharp','Flat and sharp','Hold one to bend the note. Let go and it returns.'],
-['note','Notes','Puts a note on each orb, C at the top. Touch one to sound it. With play down it stays on, so several make a chord.'],
+['note','Notes','Puts a note on each orb, C at the top. Hold one to sound it, hold several for a chord, or slide round the ring.'],
 ['grains','Powders','Lights the orbs. Hold one to keep spraying its powder.'],
 ['broom','Broom','Sweeps the plate clean.'],
 ['touch','Finger','Push the sand around with a finger.'],
@@ -545,34 +568,54 @@ const HOMEC=_=>{const sd=RS*S/P.R;PUT(C,CX-sd/2,CY-sd/2,sd,sd),PUT(cg,CX-sd/2,CY
 // screw, and under them all the shadow the plate throws once it is lifted (PSH; gone again once the plate fills the screen)
 const PSH=(z,x,y)=>{const q=psh.style,u=z-1;if(u<.004||z>2.7)return q.visibility='';const r=(RS+1.5)*z*(1.05+.07*Math.min(1,u)),d=Math.min(1,u);q.visibility='visible',q.opacity=Math.min(1,u*4).toFixed(2),PUT(psh,x+d*13-r,y+d*22-r,2*r,2*r)}
 const PLATE=_=>{const z=ZV,x=CX*z+ZX,y=CY*z+ZY,R=(el,r)=>PUT(el,x-r*z,y-r*z,2*r*z,2*r*z);R(ring,RS+1.5),R(shn,RS+1.5),R(rimb,RS+2),R(fld,RS),PSH(z,x,y),PUT(bolt,x,y),bolt.style.scale=z==1?'':z.toFixed(3),SCREW(),rimb.style.visibility=z>1.7?'hidden':''}
-// Portrait, top to bottom: the name on its plate with the menu and full-screen keys at the screen's two corners beside it, the readout,
-// the plate in its square (a round button at each corner: notes, powders, look closer, broom; the twelve orbs in its bezel), the source keys, the dial, and the row of keys. Landscape: the name at the top left; readout
-// and source keys to the left of the plate; dial and keys to the right. Nothing moves when the source changes. PS = the side of the
-// plate's square; cw = the width of a column
-const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,k=DPR(),cs=getComputedStyle(sa),st=parseFloat(cs.paddingTop)||0,sr_=parseFloat(cs.paddingRight)||0,sb=parseFloat(cs.paddingBottom)||0,sl=parseFloat(cs.paddingLeft)||0,M=VW<360?12:18,cmp=pt?VH<640:VH<400,B=document.body.classList
-ZHOME(),B.toggle('land',!pt),B.toggle('cmp',cmp),DLH=cmp?42:48,dial.style.height=DLH+'px';let PS,dw,dh,cw
-if(pt){cw=Math.min(VW-2*M,440);const X0=(VW-cw)/2,br=Math.min(VH>=850?44:VH>=730?38:VH>=680?30:0,(cw-110)/6.04|0);let y=st+12
-B.remove('nar'),dial.style.width=src.style.width=trn.style.width=cw+'px',dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
+// Portrait, top to bottom: the name between the menu and full-screen keys, the readout, the plate in its square (a round button at
+// each corner: notes, powders, look closer, broom; the twelve orbs in its bezel), the source (the microphone's key, the instrument
+// knob, the instrument's name), the dial, and the row of keys. Landscape: to the left of the plate the menu key in the top corner,
+// and under it the name, the readout and the microphone's key; to the right the knob with the name beside it, the full-screen key
+// in the top corner, and under them the dial and the row of keys. Nothing moves when the source changes. PS = the side of the
+// plate's square; cw = the width of a column; KN = how large the knob is with its signs
+const FIT=_=>{VW=innerWidth,VH=innerHeight;const pt=VH>=VW,k=DPR(),cs=getComputedStyle(sa),st=parseFloat(cs.paddingTop)||0,sr_=parseFloat(cs.paddingRight)||0,sb=parseFloat(cs.paddingBottom)||0,sl=parseFloat(cs.paddingLeft)||0,M=VW<360?12:18,cmp=pt?VH<640:VH<400,B=document.body.classList,cp=pt&&VH<700,KN=cmp||cp?84:100
+ZHOME(),B.toggle('land',!pt),B.toggle('cmp',cmp),DLH=cmp||cp?42:48,dial.style.height=DLH+'px',knb.style.setProperty('--kn',KN+'px');let PS,dw,dh,cw
+if(pt){cw=Math.min(VW-2*M,440);const X0=(VW-cw)/2,br=Math.min(VH>=850?44:VH>=730?38:VH>=680?30:0,(cw-92)/6.04|0);let y=st+12
+B.remove('nar'),dial.style.width=trn.style.width=cw+'px',dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
 // (the two corner keys, menu and full screen: beside the name at the top; where there is no room for the name, at the two ends of the
 // bottom row of keys if they fit there (low), and otherwise in a row of their own at the top. hb = how tall the top row is)
-const sh=src.offsetHeight,th=trn.offsetHeight,low=!br&&trn.firstElementChild.offsetLeft>=44,hb=br?br+12:low?0:36,fix=y+(hb?hb+12:0)+dh+sh+10+DLH+10+th+sb+14;PS=Math.max(150,Math.min(cw,VH-fix-20));const g=Math.max(8,Math.min(30,(VH-fix-PS)/3));y+=Math.max(0,VH-fix-PS-2*g)*.42
-const bn=br||(hb?24:0);brand.hidden=!bn;bn&&PUT(brand,(VW-bn*6.04-22)/2,y,bn*6.04+22,bn+12);hb&&(PUT(mnb,X0,y+(hb-36)/2),PUT(pfs,X0+cw-38,y+(hb-36)/2),y+=hb+12)
-PUT(dspw,X0,y,dw,dh),y+=dh+g,CX=VW/2,CY=y+PS/2,y+=PS+g,PUT(src,X0,y),y+=sh+10,PUT(dial,X0,y),y+=DLH+10,PUT(trn,X0,y);low&&(PUT(mnb,X0,y+(th-36)/2),PUT(pfs,X0+cw-38,y+(th-36)/2))}
-else{PS=Math.max(150,Math.min(VH-st-sb-18,VW*.5)),CX=VW/2,CY=st+(VH-st-sb)/2;const e=Math.max(sl,sr_)+M,lw=CX-PS/2-M-e;cw=Math.max(140,Math.min(lw,430));const xl=e+(lw-cw)/2,xr=CX+PS/2+M+(lw-cw)/2
-B.toggle('nar',cw<300),dial.style.width=src.style.width=trn.style.width=cw+'px',dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
-const sh=src.offsetHeight,th=trn.offsetHeight,bm=Math.min(34,(cw-22)/6.04|0,VH-st-sb-47-dh-14-sh),br=bm<16?0:bm,hb=br+12,y=Math.max(st+13+(br?hb+10:0),CY-(dh+14+sh)/2),yr=CY-(DLH+12+th)/2      // (the name: at the top left, as tall as the room over the readout allows)
-brand.hidden=!br;br&&PUT(brand,xl+(cw-br*6.04-22)/2,Math.max(st+10,st+5+(y-st-5-hb)/2),br*6.04+22,hb)                                   // midway between the panel's top edge and the readout
-PUT(dspw,xl,y,dw,dh),PUT(src,xl,y+dh+14),PUT(dial,xr,yr),PUT(trn,xr,yr+DLH+12)
-const ky=VH-sb-46;ky>=Math.max(y+dh+14+sh,yr+DLH+12+th)+6?(PUT(mnb,xl,ky),PUT(pfs,xr+cw-38,ky)):(PUT(mnb,xr,st+8),PUT(pfs,xr+cw-38,st+8))}                 // (the corner keys: at the two bottom corners, or over the dial if the screen is too low for that)
-RS=Math.max(40,Math.min(PS/2-29,1.4142*(PS/2-21)-52));const o=PS/2-21,rj=RS+21.5
-PUT(pnt,CX-o-20,CY-o-20),PUT(pcl,CX+o-20,CY-o-20),PUT(pzm,CX-o-20,CY+o-20),PUT(pvt,CX+o-20,CY+o-20),PJ.forEach((b,i)=>PUT(b,CX+Math.sin(PJA[i])*rj,CY-Math.cos(PJA[i])*rj))
-RING(well,RS+27),RING(led,RS+8.5),PLATE(),HOMEC(),FKFIT(),shn.style.setProperty('--rg',Math.max(1.05,400/(RS*k)).toFixed(2)+'%')                 // (the lathe's rings: never closer than four of the screen's own pixels at home, or they shimmer)
+const th=trn.offsetHeight,low=!br&&trn.firstElementChild.offsetLeft>=44,hb=br?Math.max(36,br):low?0:36,fix=y+(hb?hb+12:0)+dh+(cp?KN:KN+8+DLH)+10+th+sb+14;PS=Math.max(150,Math.min(cw,VH-fix-28));const g=Math.max(14,Math.min(30,(VH-fix-PS)/3));y+=Math.max(0,VH-fix-PS-2*g)*.42
+const bn=br||(hb?22:0);brand.hidden=!bn;bn&&PUT(brand,(VW-bn*6.04)/2,y+(hb-bn)/2,bn*6.04,bn);hb&&(PUT(mnb,X0,y+(hb-36)/2),PUT(pfs,X0+cw-38,y+(hb-36)/2),y+=hb+12)
+PUT(dspw,X0,y,dw,dh),y+=dh+g,CX=VW/2,CY=y+PS/2,y+=PS+g
+// (the source: the knob in the middle, the key in the middle of what is left of it and the name in the middle of what is right of it, and the dial
+// under them. On a short screen (cp) they are one block instead, to leave the plate its size: the knob at the left, and to its right the key and the name over a shorter dial)
+if(cp){const rx=X0+KN+10,rw=cw-KN-10,kw=Math.min(84,(rw-8)*.46),nw=Math.min(104,rw-8-kw);dial.style.width=rw+'px',PUT(knb,X0,y),PUT(smc,rx,y,kw),PUT(nmw,X0+cw-nw,y+4,nw,30),PUT(dial,rx,y+KN-DLH),y+=KN+10}
+else{const sw=(cw-KN)/2-8,kw=Math.min(84,sw),nw=Math.min(104,sw);PUT(smc,X0+(sw-kw)/2,y+(KN-smc.offsetHeight)/2,kw),PUT(knb,CX-KN/2,y),PUT(nmw,X0+cw-sw+(sw-nw)/2,y+KN/2-15,nw,30),y+=KN+8,PUT(dial,X0,y),y+=DLH+10}
+PUT(trn,X0,y);low&&(PUT(mnb,X0,y+(th-36)/2),PUT(pfs,X0+cw-38,y+(th-36)/2))}
+else{PS=Math.max(150,Math.min(VH-st-sb-28,VW*.5)),CX=VW/2,CY=st+(VH-st-sb)/2;const e=Math.max(sl,sr_)+M,lw=CX-PS/2-M-e;cw=Math.max(140,Math.min(lw,430));const xl=e+(lw-cw)/2,xr=CX+PS/2+M+(lw-cw)/2,T0=st+8,H=VH-st-sb
+B.toggle('nar',cw<300),dial.style.width=trn.style.width=cw+'px',dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
+// (left: under the menu key, in the middle of the room that is left, the name (as tall as that room allows), the readout and the microphone's key)
+const th=trn.offsetHeight,mh=smc.offsetHeight,bm=Math.min(34,cw/6.04|0,H-60-dh-10-mh-10),br=bm<16?0:bm,lh=(br?br+10:0)+dh+10+mh,kw=Math.min(84,cw);let y=T0+44+Math.max(0,(H-60-lh)/2)
+PUT(mnb,xl,T0),brand.hidden=!br,br&&(PUT(brand,xl+(cw-br*6.04)/2,y,br*6.04,br),y+=br+10),PUT(dspw,xl,y,dw,dh),PUT(smc,xl+(cw-kw)/2,y+dh+10,kw)
+// (right: the knob and the name side by side in the middle of the column, the full-screen key in the corner over them; then the dial and the keys)
+const rh=KN+8+DLH+10+th,nw=Math.min(104,cw-KN-10),gx=xr+(cw-KN-10-nw)/2,yr=Math.max(T0,st+(H-rh)/2)
+PUT(pfs,xr+cw-38,T0),PUT(knb,gx,yr),PUT(nmw,gx+KN+10,Math.max(yr+KN/2-15,T0+44),nw,30),PUT(dial,xr,yr+KN+8),PUT(trn,xr,yr+KN+8+DLH+10)}
+RS=Math.max(40,Math.min(PS/2-31,1.4142*(PS/2-21)-54));const o=PS/2-21,rj=RS+23.5
+PUT(pnt,CX-o-20,CY-o-20),PUT(pcl,CX+o-20,CY-o-20),PUT(pzm,CX-o-20,CY+o-20),PUT(pvt,CX+o-20,CY+o-20),PJ.forEach((b,i)=>{const x=CX+Math.sin(PJA[i])*rj,y=CY-Math.cos(PJA[i])*rj;OXY[2*i]=x,OXY[2*i+1]=y,PUT(b,x,y)})
+RING(well,RS+29),RING(led,RS+8.5),PLATE(),HOMEC(),FKFIT(),shn.style.setProperty('--rg',Math.max(1.05,400/(RS*k)).toFixed(2)+'%')                 // (the lathe's rings: never closer than four of the screen's own pixels at home, or they shimmer)
 PUT(dlg,dial.offsetLeft,dial.offsetTop,dial.offsetWidth,dial.offsetHeight),DLW=dial.clientWidth||cw,SPX=Math.max(24,Math.min(38,DLW/9.5)),SLIDE=Math.round(Math.min(VW-58,Math.max(250,VW*.8),400)),document.documentElement.style.setProperty('--sl',SLIDE+'px')
-dsp.width=Math.round(dw*k),dsp.height=Math.round(dh*k),DNOW.fill(9),DFLUSH(),dial.width=Math.round(DLW*k),dial.height=Math.round(DLH*k),DIALDRAW()}
+dsp.width=Math.round(dw*k),dsp.height=Math.round(dh*k),DNOW.fill(9),DFLUSH(),dial.width=Math.round(DLW*k),dial.height=Math.round(DLH*k),DIALDRAW(),NAMES()}
 addEventListener('resize',_=>FIT())
+con.addEventListener('scroll',_=>{con.scrollTop=con.scrollLeft=0})                 // (the console is never scrolled inside itself: where a browser can still do it, it is put straight back)
 // (a key is down from the moment the finger lands on it, and stays down long enough to be seen however short the tap)
 const DN=new Map(),DNUP=ev=>{const k=DN.get(ev.pointerId);if(!k)return;DN.delete(ev.pointerId);const w=110-(performance.now()-k.dnt);w>0?setTimeout(_=>[...DN.values()].includes(k)||k.classList.remove('dn'),w):k.classList.remove('dn')}
 addEventListener('pointerdown',ev=>{const k=ev.target.closest&&ev.target.closest('.cb,.key,.sk,#ply');k&&(k.classList.add('dn'),k.dnt=performance.now(),DN.set(ev.pointerId,k))},true),addEventListener('pointerup',DNUP,true),addEventListener('pointercancel',DNUP,true)
+// A key acts when the finger leaves it, if the finger is still on it, however long it stayed there. (A browser makes its click only
+// of a short touch: after a long one nothing came, so a key held and let go did nothing.) A key's onclick is kept for the
+// keyboard and for the tests; the click a browser does make of a touch that has already acted is let pass
+const ACT=(el,fn)=>{let id=-1;el.addEventListener('pointerdown',ev=>{ev.button||(id=ev.pointerId)}),el.addEventListener('pointercancel',_=>{id=-1})
+el.addEventListener('pointerup',ev=>{if(ev.pointerId!=id)return;id=-1;const r=el.getBoundingClientRect(),m=8;ev.clientX>=r.left-m&&ev.clientX<=r.right+m&&ev.clientY>=r.top-m&&ev.clientY<=r.bottom+m&&(el.act=ev.timeStamp,fn(ev))})
+el.onclick=ev=>{ev&&ev.isTrusted&&ev.detail&&ev.timeStamp-(el.act||-1e9)<900||fn(ev)}}
+// (A long touch is otherwise the browser's to answer, with a buzz of its own and a menu. On the console's own controls it is not
+// let: the touch is taken from the browser as it begins.)
+for(const el of [con,zo,st])el.addEventListener('touchstart',ev=>{ev.cancelable&&ev.target.closest&&ev.target.closest('.cb,.key,.sk,.pj,.knb,#ply')&&ev.preventDefault()},{passive:false})
+addEventListener('contextmenu',ev=>{ev.target.closest&&ev.target.closest('#con,#pl,#st,#zo,#cat')&&ev.preventDefault()})
 
 // ---------- sound in ----------
 // RUN = the console is in use (not the title card); LSN = listening (the microphone is on); PLAYING = the instrument is sounding. The two
@@ -600,16 +643,29 @@ catch(e){const n=e&&e.name;TOAST(n=='NotAllowedError'||n=='SecurityError'?'The m
 const TONEF=_=>A4*Math.pow(2,(TP-69)/12+BEND/1200)
 
 // ---------- the instruments (playing) ----------
-// Three stringed voices, each a small section rather than one player. The bowed ones are five strings: one on the note and two quieter
-// pairs a few cents either side of it, each string with its own vibrato, in a wave softer than a sawtooth (each overtone weaker than a
-// sawtooth's), through the resonances of a body. The strings of a pair always stand the same distance above and below the note, so the
-// five together swell and fade slowly, never quite the same way twice, but their pitch stays on the note. The plucked voice is a string worked out sample by sample (a
-// loop of noise, blended as it goes round), sounded twice a few cents apart, through a body. A little room is added to all of them.
-//   bow  1 bowed, 0 plucked     hp, lp  the body passes nothing below hp or above lp (Hz)     pk  its resonances: [Hz, dB, sharpness]
-//   lv   how loud               vr, vd  vibrato: beats a second, and how wide in cents (it comes in only once a note has been held)
+// Nine voices. Each is a source through the resonances of a body, with a little room added.
+// The bowed strings are small sections rather than one player: five strings, one on the note and two quieter pairs a few cents either
+// side of it, each with its own vibrato, in a wave softer than a sawtooth (each overtone weaker than a sawtooth's). The strings of a
+// pair always stand the same distance above and below the note, so the five together swell and fade slowly, never quite the same way
+// twice, but their pitch stays on the note. The winds, the brass and the voice are made the same way with waves and bodies of their
+// own, and nearly alone: one player with two very faint others (sec), which keeps the sound alive without making a section of it.
+// The flute has breath in it (nz). The plucked voice is a string worked out sample by sample (a loop of noise, blended as it goes
+// round), sounded twice a few cents apart; the piano is the same string struck with something soft, ringing longer (ks).
+//   bow  1 held (bowed or blown), 0 plucked or struck     hp, lp  the body passes nothing below hp or above lp (Hz)
+//   pk   its resonances: [Hz, dB, sharpness]              lv      how loud          at  how quickly a held note comes up (s)
+//   vr, vd  vibrato: beats a second, and how wide in cents (it comes in only once a note has been held)
+//   w    its wave, where it is not the strings': its overtones' strengths one by one, or a number p (overtone h is 1/h^p as strong as the first)
+//   ks   a struck string: hm how long the hammer's blow lasts (s), np and nt where along the string it falls and how much that tells, t6 how many times longer it rings, dl and g2 the second string's lateness and loudness (the piano's two start together, as under one hammer: a late one took whole overtones out of the sound)
+const SOLO=[[-1,.07,.94],[0,1,1],[1,.07,1.06]],TRIO=[[-1,.2,.93],[0,1,1],[1,.2,1.07]]
 const VOICES=[{n:'violin',bow:1,hp:185,lp:4200,pk:[[290,3.5,3],[470,3.5,4],[1050,2,2.5],[2400,2.5,1.2]],lv:.085,vr:5.6,vd:13},
 {n:'cello',bow:1,hp:62,lp:2700,pk:[[98,3.5,3],[178,3.5,4],[290,3,3],[540,2,2.5],[1400,2,1.5]],lv:.1,vr:5,vd:10},
-{n:'guitar',bow:0,hp:70,lp:4800,pk:[[105,3,2],[215,3,2.5]],lv:.8,vr:5.2,vd:8}]
+{n:'guitar',bow:0,hp:70,lp:4800,pk:[[105,3,2],[215,3,2.5]],lv:.8,vr:5.2,vd:8},
+{n:'piano',bow:0,hp:26,lp:5200,pk:[[130,2,1.2],[420,1.5,1],[2600,2,1]],lv:.55,vr:5,vd:0,ks:{hm:.0009,np:.125,nt:.3,t6:1.7,dl:0,g2:.7}},
+{n:'flute',bow:1,hp:230,lp:5200,pk:[[900,1.5,1]],lv:.11,vr:5.2,vd:9,at:.06,sec:SOLO,nz:.05,w:[1,.42,.15,.09,.04,.025,.012,.008]},
+{n:'clarinet',bow:1,hp:130,lp:3600,pk:[[1500,2,1.2]],lv:.125,vr:5,vd:3,at:.045,sec:SOLO,w:[1,.03,.6,.04,.34,.05,.2,.05,.13,.04,.09,.03,.06,.02,.04]},
+{n:'trumpet',bow:1,hp:160,lp:4600,pk:[[1250,6,1.6],[2300,4,2]],lv:.115,vr:5.4,vd:5,at:.03,sec:SOLO,w:1},
+{n:'trombone',bow:1,hp:55,lp:2600,pk:[[520,6,1.6],[1500,3.5,2]],lv:.1,vr:5,vd:4,at:.04,sec:SOLO,w:1.12},
+{n:'voice',bow:1,hp:80,lp:4200,pk:[[730,11,5],[1090,9,6],[2440,6,6]],lv:.1,vr:5.5,vd:18,at:.08,sec:TRIO,w:1.7}]
 // the five strings of a bowed section: how far to which side of the note (in SIDEs: -1 below, 0 on it, 1 above), how loud, and how its vibrato's rate differs
 const SECT=[[-1.9,.14,.9],[-1,.24,.95],[0,1,1],[1,.24,1.06],[1.9,.14,1.12]]
 // how far a side string stands off the note, in cents: wide for low notes and narrow for high ones, so that the swell it makes is slow
@@ -617,26 +673,33 @@ const SECT=[[-1.9,.14,.9],[-1,.24,.95],[0,1,1],[1,.24,1.06],[1.9,.14,1.12]]
 const SIDE=f=>{const c=1731*Math.log(1+(.3+.0011*f)/f);return c<2?2:c>8?8:c}
 // VOICE = which one; TPL = when the strings were last plucked, PP = at what note, TQ = how long that note rings; TMOVE = when the note
 // last moved (vibrato waits on it). Several notes can sound at once. VXS = the ones sounding now, each with its own sounding parts,
-// kept by how many semitones it stands from the dial's note (0 is the dial's own); so when the dial moves, they all move. CH = the
-// chord: the notes that stay on while play is down. HELD = the notes fingers are holding while play is up (by which finger)
-let VOICE=0,MOUT=null,BWAVE=null,TPL=-9,PP=69,TQ=2,TMOVE=0,CH=[0]
+// kept by how many semitones it stands from the dial's note (0 is the dial's own); so when the dial moves, they all move.
+// HELD = the notes fingers are holding (by which finger)
+let VOICE=0,MOUT=null,BWAVE=null,TPL=-9,PP=69,TQ=2,TMOVE=0,NDT=-9,NDL=0
 const VXS=new Map(),HELD=new Map(),SND=_=>PLAYING||HELD.size>0,FOF=d=>TONEF()*Math.pow(2,d/12)
 try{const v=+localStorage.getItem('sst.voice');v>=0&&v<VOICES.length&&(VOICE=v|0)}catch(e){}
 // how long a plucked note rings (seconds to fall 60 dB): long for low notes, short for high ones
 const T60=f=>{const t=3.4*Math.pow(82.4/f,.3466);return t<.8?.8:t>4.2?4.2:t}
+const VT=(v,f)=>T60(f)*(v.ks?v.ks.t6:1)                                 // (and for this voice)
+// a voice's wave: the strings' own unless it has one (made once for each place sound is made in). NOISE = a second and a half of hiss, for breath
+const VWAVE=(ac,v)=>{if(v.w==null)return BWAVE;if(v.pc!=ac){const num=typeof v.w=='number',n=num?40:v.w.length,re=new Float32Array(n+1),im=new Float32Array(n+1);for(let h=1;h<=n;h++)im[h]=num?1/Math.pow(h,v.w):v.w[h-1];v.pw=ac.createPeriodicWave(re,im),v.pc=ac}return v.pw}
+const NOISE=ac=>{if(!ac.nzb){const n=ac.sampleRate*1.5|0,b=ac.nzb=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);let z=0x2545F491;for(let i=0;i<n;i++)z^=z<<13,z^=z>>>17,z^=z<<5,d[i]=(z>>>0)/2147483648-1}return ac.nzb}
 // a plucked string: one period of softened noise (softer for a low string), with the notch of a string plucked a fifth of the way along,
 // then round and round a loop that blends each sample with its neighbour (sh of the neighbour: half for low strings, which keeps them
 // from jangling; little for high ones, which would otherwise die at once), losing a little each time round so that it rings for t60.
-// The loop is a whole number of samples long, so the note comes out a hair off; rate puts it right
-const KS=(f,fs,t60)=>{let sh=.5*Math.pow(330/f,1.5);sh=sh>.5?.5:sh;const N=Math.max(2,Math.floor(fs/f-sh)),n=Math.ceil(fs*Math.min(4,t60*1.15)),y=new Float32Array(n),w=2*Math.PI*f/fs,
+// The loop is a whole number of samples long, so the note comes out a hair off; rate puts it right. (o: a struck string instead, see VOICES)
+const KS=(f,fs,t60,o)=>{o=o||{};let sh=.5*Math.pow(330/f,1.5);sh=sh>.5?.5:sh;const N=Math.max(2,Math.floor(fs/f-sh)),n=Math.ceil(fs*Math.min(4,t60*1.15)),y=new Float32Array(n),w=2*Math.PI*f/fs,
 fl=-10*Math.log10((1-sh)*(1-sh)+sh*sh+2*sh*(1-sh)*Math.cos(w))*f,rho=Math.min(.99999,Math.pow(10,-Math.max(0,60/t60-fl)/(20*f))),a=1-Math.exp(-2*Math.PI*Math.max(900,Math.min(6000,f*9))/fs)
 let z=0x9E3779B9^N,l1=0,l2=0,mean=0,pk=0
 for(let i=0;i<N;i++)z^=z<<13,z^=z>>>17,z^=z<<5,l1+=((z>>>0)/2147483648-1-l1)*a,l2+=(l1-l2)*a,y[i]=l2,mean+=l2/N
+if(o.hm){const W=Math.max(2,Math.min(o.hm*fs,N*.5));mean=0;for(let i=0;i<N;i++){const u=(i-N/2)/W,v=(u>-.5&&u<.5?.5+.5*Math.cos(6.2832*u):0)+.05*y[i];y[i]=v,mean+=v/N}}          // (a struck string: the hammer's blow, and only a trace of the noise)
 for(let i=0;i<N;i++)y[i]-=mean
-const d=Math.max(1,N*.19|0);for(let i=N-1;i>=d;i--)y[i]-=y[i-d]*.7
+const d=Math.max(1,N*(o.np||.19)|0),nt=o.nt==null?.7:o.nt;for(let i=N-1;i>=d;i--)y[i]-=y[i-d]*nt
 y[N]=rho*y[0];for(let i=N+1;i<n;i++)y[i]=rho*((1-sh)*y[i-N]+sh*y[i-N-1])
 for(let i=0;i<n;i++){const v=y[i]<0?-y[i]:y[i];v>pk&&(pk=v)}
-pk=.9/(pk||1);for(let i=0;i<n;i++)y[i]*=pk
+if(o.hm){let q=0;const m=Math.min(n,2*N);for(let i=0;i<m;i++)q+=y[i]*y[i];pk=Math.min(1/(pk||1),.3/Math.sqrt(q/m||1))}else pk=.9/(pk||1)       // (as loud as: a plucked string by its highest point; a struck one by its first two rounds, which a narrow blow leaves much lower than its point)
+for(let i=0;i<n;i++)y[i]*=pk
+{const m=Math.min(n,fs*.05|0);for(let i=0;i<m;i++)y[n-1-i]*=i/m}
 return{y,rate:f*(N+sh)/fs}}
 // everything goes out through one gentle limiter, with a little of it sent round a room on the way (a second and a half of dying noise)
 const AOUT=ac=>{MOUT=ac.createGain(),MOUT.gain.value=.85;const cp=ac.createDynamicsCompressor(),cv=ac.createConvolver(),wg=ac.createGain(),n=ac.sampleRate*1.6|0,ir=ac.createBuffer(1,n,ac.sampleRate),d=ir.getChannelData(0)
@@ -648,29 +711,30 @@ const BODY=(ac,v)=>{const inp=ac.createGain(),out=ac.createGain();let n=inp
 const add=(type,f,q,g)=>{const b=ac.createBiquadFilter();b.type=type,b.frequency.value=f,b.Q.value=q,g&&(b.gain.value=g),n.connect(b),n=b}
 add('highpass',v.hp,.7);const hpf=n;for(const [f,g,q] of v.pk)add('peaking',f,q,g);add('lowpass',v.lp,.7),n.connect(out),out.connect(MOUT);return{inp,out,hpf}}
 const VSTOP=d=>{if(d==null){for(const k of [...VXS.keys()])VSTOP(k);return}const x=VXS.get(d);if(!x||!AC)return;VXS.delete(d);const t=AC.currentTime;try{x.b.out.gain.cancelScheduledValues(t),x.b.out.gain.setTargetAtTime(0,t,.06)}catch(e){}
-setTimeout(_=>{try{for(const q of x.os)q.o.stop(),q.l.stop();for(const q of x.src)q.s.stop();x.lfo.stop(),x.dl.stop(),x.b.out.disconnect()}catch(e){}},600)}
+setTimeout(_=>{for(const q of x.xs)try{q.stop()}catch(e){}try{for(const q of x.os)q.o.stop(),q.l.stop();for(const q of x.src)q.s.stop();x.lfo.stop(),x.dl.stop(),x.b.out.disconnect()}catch(e){}},600)}
 // (several notes at once are each made quieter, so that a chord is not much louder than one note)
-const VBAL=_=>{if(!AC)return;const g=1/Math.sqrt(Math.max(1,VXS.size)),t=AC.currentTime;for(const x of VXS.values())try{x.b.out.gain.setTargetAtTime(x.v.lv*g,t,.07)}catch(e){}}
+const VBAL=_=>{if(!AC)return;const g=1/Math.sqrt(Math.max(1,VXS.size)),t=AC.currentTime;for(const x of VXS.values())try{x.b.out.gain.setTargetAtTime(x.v.lv*g,t,x.v.at||.07)}catch(e){}}
 // set a note sounding, d semitones from the dial's. os = its bowed strings, each {o: its oscillator, sd: which side of the note, l and
 // lg: its vibrato}; dl = the slow drift that widens and narrows the two side strings together; src = its plucked ones; lfo, lg = the
 // plucked voice's vibrato; ag = how much the loudness breathes with the vibrato; pp = the note it was last plucked at
-const VSTART=(d=0)=>{const ac=CTX();if(!ac)return;MOUT&&MOUT.context==ac||AOUT(ac),VSTOP(d);const v=VOICES[VOICE],b=BODY(ac,v),lfo=ac.createOscillator(),lg=ac.createGain(),ag=ac.createGain(),dl=ac.createOscillator(),f=FOF(d),os=[]
+const VSTART=(d=0)=>{const ac=CTX();if(!ac)return;MOUT&&MOUT.context==ac||AOUT(ac),VSTOP(d);const v=VOICES[VOICE],b=BODY(ac,v),lfo=ac.createOscillator(),lg=ac.createGain(),ag=ac.createGain(),dl=ac.createOscillator(),f=FOF(d),os=[],xs=[]
 lfo.frequency.value=v.vr,dl.frequency.value=.21,lg.gain.value=ag.gain.value=0,lfo.connect(lg),lfo.connect(ag),ag.connect(b.out.gain),b.hpf.frequency.value=Math.min(v.hp,f*.85);try{lfo.start(),dl.start()}catch(e){}
-if(v.bow){for(const [sd,gn,vr] of SECT){const o=ac.createOscillator(),g=ac.createGain(),l=ac.createOscillator(),xg=ac.createGain()
-o.setPeriodicWave(BWAVE),o.frequency.value=f,o.detune.value=sd*SIDE(f),g.gain.value=gn,l.frequency.value=v.vr*vr,xg.gain.value=0,l.connect(xg),xg.connect(o.detune),o.connect(g),g.connect(b.inp)
+if(v.bow){const wv=VWAVE(ac,v);for(const [sd,gn,vr] of v.sec||SECT){const o=ac.createOscillator(),g=ac.createGain(),l=ac.createOscillator(),xg=ac.createGain()
+o.setPeriodicWave(wv),o.frequency.value=f,o.detune.value=sd*SIDE(f),g.gain.value=gn,l.frequency.value=v.vr*vr,xg.gain.value=0,l.connect(xg),xg.connect(o.detune),o.connect(g),g.connect(b.inp)
 if(sd){const dg=ac.createGain();dg.gain.value=sd*1.2,dl.connect(dg),dg.connect(o.detune)}try{o.start(),l.start()}catch(e){}os.push({o,sd,l,lg:xg})}
+if(v.nz){const s=ac.createBufferSource(),bp=ac.createBiquadFilter(),g=ac.createGain();s.buffer=NOISE(ac),s.loop=true,bp.type='bandpass',bp.frequency.value=Math.max(1100,Math.min(3600,f*3)),bp.Q.value=.8,g.gain.value=v.nz,s.connect(bp),bp.connect(g),g.connect(b.inp);try{s.start()}catch(e){}xs.push(s)}     // (breath)
 b.out.gain.value=0}else b.out.gain.value=v.lv
-VXS.set(d,{v,b,lfo,lg,ag,dl,os,src:[],r0:1,d,pp:TP+BEND/100}),VBAL()}
+VXS.set(d,{v,b,lfo,lg,ag,dl,os,xs,src:[],r0:1,d,pp:TP+BEND/100}),VBAL()}
 // pluck one note's strings (plucked voices only), d0 seconds from now: the same string twice, a few cents either side of the note, the
 // second quieter and a hundredth of a second late
-const PLK=(x,d0)=>{const ac=AC;if(!x||!ac||x.v.bow)return;const f=FOF(x.d),k=KS(f,ac.sampleRate,T60(f)),bf=ac.createBuffer(1,k.y.length,ac.sampleRate),old=x.src,now=ac.currentTime;bf.getChannelData(0).set(k.y),x.pp=TP+BEND/100
+const PLK=(x,d0)=>{const ac=AC;if(!x||!ac||x.v.bow)return;const f=FOF(x.d),k=KS(f,ac.sampleRate,VT(x.v,f),x.v.ks),bf=ac.createBuffer(1,k.y.length,ac.sampleRate),old=x.src,now=ac.currentTime;bf.getChannelData(0).set(k.y),x.pp=TP+BEND/100
 for(const q of old)try{q.g.gain.setTargetAtTime(0,now+d0,.012)}catch(e){}
 setTimeout(_=>{for(const q of old)try{q.s.stop()}catch(e){}},200+d0*1000),x.src=[],x.r0=k.rate
-const sd=SIDE(f)*.4;for(const [ct,dly,gn] of [[-sd*.31,0,1],[sd*.69,.011,.45]]){const s=ac.createBufferSource(),g=ac.createGain(),vg=ac.createGain(),r=k.rate*Math.pow(2,ct/1200);s.buffer=bf,s.playbackRate.value=r,g.gain.value=gn,vg.gain.value=r*5.776e-4,x.lg.connect(vg),vg.connect(s.playbackRate),s.connect(g),g.connect(x.b.inp)
+const sd=SIDE(f)*.4;for(const [ct,dly,gn] of [[-sd*.31,0,1],[sd*.69,x.v.ks?x.v.ks.dl:.011,x.v.ks?x.v.ks.g2:.45]]){const s=ac.createBufferSource(),g=ac.createGain(),vg=ac.createGain(),r=k.rate*Math.pow(2,ct/1200);s.buffer=bf,s.playbackRate.value=r,g.gain.value=gn,vg.gain.value=r*5.776e-4,x.lg.connect(vg),vg.connect(s.playbackRate),s.connect(g),g.connect(x.b.inp)
 try{s.start(now+d0+dly)}catch(e){}x.src.push({s,g,r})}}
 // pluck every note that is sounding, lowest first and a sixtieth of a second apart, as a hand goes across strings.
 // Not more often than every 70 ms unless made to
-const PLUCK=(t,must)=>{if(!SND()||VOICES[VOICE].bow||!must&&t-TPL<.07)return;TPL=t,PP=TP+BEND/100,TQ=T60(TONEF());let n=0;for(const x of [...VXS.values()].sort((a,b)=>a.d-b.d))PLK(x,n++*.016)}
+const PLUCK=(t,must)=>{if(!SND()||VOICES[VOICE].bow||!must&&t-TPL<.07)return;TPL=t,PP=TP+BEND/100,TQ=VT(VOICES[VOICE],TONEF());let n=0;for(const x of [...VXS.values()].sort((a,b)=>a.d-b.d))PLK(x,n++*.016)}
 // about thirty times a second every sounding note is brought up to the dial: its pitch, and its vibrato, which comes in over a few tenths
 // of a second once the note has stood still for .45 s and goes at once when the note moves. The vibrato is only in what is heard: the
 // plate is driven by the note itself (READ), so it never makes a note read out of tune. (A note below an instrument's own lowest is let
@@ -679,28 +743,26 @@ const VTICK=t=>{const ac=AC;if(!ac||!VXS.size)return;const now=ac.currentTime,st
 x.b.hpf.frequency.setTargetAtTime(Math.min(x.v.hp,f*.85),now,.05)
 for(const q of x.os)q.o.frequency.setTargetAtTime(f,now,.012),q.sd&&q.o.detune.setTargetAtTime(q.sd*SIDE(f),now,.05),q.lg.gain.setTargetAtTime(vd,now,tc)
 const bend=Math.pow(2,(TP+BEND/100-x.pp)/12);for(const q of x.src)q.s.playbackRate.setTargetAtTime(q.r*bend,now,.012)}catch(e){}}}
-// The play button shows what a press would do, and holds: down, the dial's note sounds until it is let up, and any note key pressed
-// stays on with it (a chord). A bowed voice holds its notes; a plucked one is plucked again each time its note has died away (READ).
-// Let up, everything stops and the chord is forgotten
-const PLAYSET=on=>{PLAYING=on?1:0,MODE(),ply.innerHTML=SV(PLAYING?'pause':'play'),ply.classList.toggle('on',!PLAYING),ply.title=ply.ariaLabel=PLAYING?'stop':'play',HELD.clear(),VSTOP(),CH=[0];if(PLAYING)VSTART(0),PLUCK(performance.now()/1000,1)}
-// The twelve note keys (h: 0 is C). A key's note is the one of that name in the octave the dial stands in. While play is down, a
-// press puts the note on if it was off and off if it was on (up to six; with the last one off, play lets go). While play is up, the
-// note sounds for as long as the key is held: the first key held takes the dial to its note, and others held with it sound round it
+// The play button shows what a press would do, and holds: down, the dial's note sounds until it is let up. A bowed or blown voice
+// holds its note; a plucked or struck one is sounded again each time its note has died away (READ). Let up, everything stops
+const PLAYSET=on=>{PLAYING=on?1:0,MODE(),ply.innerHTML=SV(PLAYING?'pause':'play'),ply.classList.toggle('on',!PLAYING),ply.title=ply.ariaLabel=PLAYING?'stop':'play',HELD.clear(),VSTOP();if(PLAYING)VSTART(0),PLUCK(performance.now()/1000,1)}
+// The twelve note keys (h: 0 is C). A key's note is the one of that name in the octave the dial stands in, and it sounds for as long
+// as the key is held and no longer. While play is up, the first key held takes the dial to its note, and others held with it sound
+// round it. While play is down the dial's note goes on sounding where it is, and the keys held sound with it
 const NDOWN=(h,id)=>{if(!RUN)return;const t=performance.now()/1000,r=Math.round(TP);let n=Math.floor(r/12)*12+h;n<28?n+=12:n>103&&(n-=12)
-if(PLAYING){const d=n-r,i=CH.indexOf(d);if(i>=0){CH.splice(i,1),VSTOP(d),VBAL();CH.length||PLAYSET(0)}else if(CH.length<6)CH.push(d),VSTART(d),PLK(VXS.get(d),0)}
-else{let d=0;if(HELD.size)d=n-r;else TGT=null,COAST=VEL=BEND=0,TP=LASTN=n,TMOVE=t;HELD.set(id,d),VXS.has(d)||VSTART(d),PLK(VXS.get(d),0),VOICES[VOICE].bow||(TPL=t,TQ=T60(TONEF()))}}
-const NUP=id=>{if(!HELD.has(id))return;const d=HELD.get(id);HELD.delete(id);[...HELD.values()].includes(d)||(VSTOP(d),VBAL())}
+let d=n-r;PLAYING||HELD.size||(d=0,TGT=null,COAST=VEL=BEND=0,TP=LASTN=n,TMOVE=t);NDL=t-NDT<.02?NDL+1:0,NDT=t,HELD.set(id,d),VXS.has(d)||VSTART(d),PLK(VXS.get(d),NDL*.012),VOICES[VOICE].bow||PLAYING||(TPL=t,TQ=VT(VOICES[VOICE],TONEF()))}        // (strings struck in the same instant are spread a hundredth of a second apart, as a hand spreads them, so that their first peaks do not pile up)
+const NUP=id=>{if(!HELD.has(id))return;const d=HELD.get(id);HELD.delete(id);[...HELD.values()].includes(d)||PLAYING&&!d||(VSTOP(d),VBAL())}
 // the chord's name for the readout, if it has one (the lowest note is tried first as its root); otherwise its notes
 const CHT={'0,4,7':'MAJOR','0,3,7':'MINOR','0,3,6':'DIM','0,4,8':'AUG','0,2,7':'SUS2','0,5,7':'SUS4','0,4,7,10':'7','0,4,7,11':'MAJ7','0,3,7,10':'MIN7','0,3,6,9':'DIM7','0,3,6,10':'MIN7-5','0,4,7,9':'6','0,3,7,9':'MIN6','0,7':'5TH','0,5':'4TH','0,4':'MAJ 3RD','0,3':'MIN 3RD','0,2':'2ND','0,6':'TRITONE','0':'OCTAVES'}
 const CHNAME=_=>{if(VXS.size<2)return'';const ns=[...VXS.keys()].map(d=>Math.round(TP)+d).sort((a,b)=>a-b),pcs=[...new Set(ns.map(n=>(n%12+12)%12))],nm=p=>NOTES[p].replace('♯','#')
 for(const r of [(ns[0]%12+12)%12,...pcs]){const k=pcs.map(p=>(p-r+12)%12).sort((a,b)=>a-b).join(',');if(CHT[k])return nm(r)+' '+CHT[k]}return pcs.map(nm).join(' ')}
-// the source keys (SKS on the console, TKS on the title card). The microphone's is lit, and down, while it listens. The key of the
-// instrument chosen is lit, and down, while it sounds, and also whenever the microphone is off (it is then the only source there is)
-const SRCUI=_=>{for(const row of [SKS,TKS])row.forEach((b,k)=>b.classList.toggle('on',k?RUN&&VOICE==k-1&&(PLAYING||!LSN):!!LSN))}
+// the microphone's keys (MKS: on the console and on the title card) are lit, and down, while it listens
+const SRCUI=_=>{for(const b of MKS)b.classList.toggle('on',!!LSN)}
 const MODE=_=>{mode=!RUN?'':LSN?PLAYING?'both':'mic':'tone',SRCUI()}
 const VSAVE=_=>{try{localStorage.setItem('sst.voice',VOICE)}catch(e){}}
-// an instrument's key always sets that instrument sounding
-const VOICESET=v=>{VOICE=(v%VOICES.length+VOICES.length)%VOICES.length,VSAVE();if(PLAYING){const ds=[...VXS.keys()];VSTOP();for(const d of ds)VSTART(d);PLUCK(performance.now()/1000,1),MODE()}else PLAYSET(1)}      // (a chord that is sounding goes over to the new instrument whole)
+// The knob chooses the instrument. Whatever is sounding goes over to it whole, a moment after the knob comes to rest (so that a
+// quick turn past several instruments does not start each of them)
+const VPICK=v=>{const n=VOICES.length;v=(v%n+n)%n;if(v==VOICE)return;VOICE=v,VSAVE(),KNUI(),clearTimeout(VPICK.t),VPICK.t=setTimeout(_=>{if(!VXS.size)return;const ds=[...VXS.keys()];VSTOP();for(const d of ds)VSTART(d);PLUCK(performance.now()/1000,1)},90)}
 // the microphone on or off, whatever else is going on. (If it is asked for and cannot be had, nothing changes but the message saying why.)
 const LISTEN=async on=>{if(on){if(!(await MIC()))return 0;LSN=1}else MICOFF(),LSN=0,RM={on:0,held:0};SHOWN='',MODE(),WAKE();return 1}
 // While only listening, the dial follows the note that is heard. A touch on the dial or on a key of its row then takes the note over:
@@ -992,16 +1054,16 @@ const gsh=NGL>0?1:0;gsh!=GSH&&(GSH=gsh,cg.style.display=gsh?'':'none')}
 let WHA=0,WHT=0,WHL=0
 addEventListener('wheel',ev=>{if(!ZL&&ev.target!=fld)return;ev.preventDefault();const now=performance.now();now-WHL>350&&(WHA=0);WHL=now,WHA+=ev.deltaY*(ev.deltaMode?30:1)
 if(Math.abs(WHA)>=40&&now-WHT>320)ZGO(ZL+(WHA<0?1:-1),ev.clientX,ev.clientY),WHA=0,WHT=now},{passive:false})
-pzm.onclick=_=>ZGO(ZL?0:1),zo.onclick=_=>ZGO(0)
+ACT(pzm,_=>ZGO(ZL?0:1)),ACT(zo,_=>ZGO(0))
 // ---------- the flat and sharp keys (playing) ----------
 // Held, one bends the note down and the other up, by up to half a semitone in about a third of a second; let go and the note springs
 // back (DIALSTEP does both). BDIR = which is held: -1 flat, 1 sharp, 0 neither
 let BDIR=0
 for(const [el,d] of [[tfl,-1],[tsh,1]]){const up=_=>{BDIR==d&&(BDIR=0)};el.addEventListener('pointerdown',ev=>{VB(5),TAKE(),mode&&(BDIR=d);try{el.setPointerCapture(ev.pointerId)}catch(e){}}),el.addEventListener('pointerup',up),el.addEventListener('pointercancel',up)}
 // the octave keys (listening, a press on either goes over to the instrument first, as a touch on the dial or on flat or sharp does)
-tdn.onclick=_=>{VB(5),TAKE(),STEP(-12)},tup.onclick=_=>{VB(5),TAKE(),STEP(12)}
+ACT(tdn,_=>{VB(5),TAKE(),STEP(-12)}),ACT(tup,_=>{VB(5),TAKE(),STEP(12)})
 // play: starts and stops the instrument (and, listening, goes over to it)
-ply.onclick=_=>{VB(8),RUN&&(LSN&&!PLAYING?TAKE():PLAYSET(!PLAYING))}
+ACT(ply,_=>{VB(8),RUN&&(LSN&&!PLAYING?TAKE():PLAYSET(!PLAYING))})
 addEventListener('keydown',ev=>{const k=ev.key;if(k=='Escape')return ZL?ZGO(0):PM(!OPEN);if(!mode||OPEN)return
 if(k=='+'||k=='=')return ZGO(ZL+1);if(k=='-'||k=='_')return ZGO(ZL-1);if(k==' ')return ev.preventDefault(),ply.onclick()
 if(!/^(Arrow|Page)/.test(k))return;TAKE()
@@ -1015,7 +1077,7 @@ try{const a=JSON.parse(localStorage.getItem('sst.accent')||'null');Array.isArray
 const ACUI=_=>{[fdr,fdg,fdb].forEach((el,j)=>{const c=ACR.map((x,i)=>i==j?0:x),d=ACR.map((x,i)=>i==j?255:x);el.firstElementChild.style.background='linear-gradient(to right,rgb('+c+'),rgb('+d+'))',el.lastElementChild.style.left=ACR[j]/2.55+'%'})}
 const ACAP=save=>{let [r,g,b]=ACR;const top=Math.max(r,g,b),lo=Math.min(r,g,b);if(top<110){const q=110/(top||1);r=Math.min(255,r*q||110)|0,g=Math.min(255,g*q||110)|0,b=Math.min(255,b*q||110)|0}
 const R=document.documentElement.style,f=x=>top==lo?255:Math.round((x-lo)/(top-lo)*255);R.setProperty('--ac','rgb('+r+','+g+','+b+')'),R.setProperty('--ach','rgb('+f(ACR[0])+','+f(ACR[1])+','+f(ACR[2])+')')
-DRGB=r+','+g+','+b,DCOL=DCA.map(a=>'rgba('+DRGB+','+a+')'),DNOW.fill(9),DFLUSH(),DIALDRAW();if(save)try{localStorage.setItem('sst.accent',JSON.stringify(ACR))}catch(e){}}
+DRGB=r+','+g+','+b,DCOL=DCA.map(a=>'rgba('+DRGB+','+a+')'),DNOW.fill(9),DFLUSH(),DIALDRAW(),NAMES();if(save)try{localStorage.setItem('sst.accent',JSON.stringify(ACR))}catch(e){}}
 const ACDRAG=(el,j)=>{let on=0;const at=ev=>{const r=el.getBoundingClientRect();ACR[j]=Math.round(Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width))*255),ACAP(),ACUI()};el.onpointerdown=ev=>{on=1;try{el.setPointerCapture(ev.pointerId)}catch(e){}at(ev)},el.onpointermove=ev=>on&&at(ev),el.onpointerup=el.onpointercancel=_=>{on&&ACAP(1),on=0}}
 ACDRAG(fdr,0),ACDRAG(fdg,1),ACDRAG(fdb,2),pac.onclick=_=>{acc.hidden=!acc.hidden,acc.hidden||ACUI()},acr.onclick=_=>{ACR=[255,180,84],ACAP(1),ACUI()}
 // ---------- title, the menu (the inside of the machine), the corner buttons, the powder keys ----------
@@ -1043,48 +1105,76 @@ addEventListener('click',ev=>{ev.timeStamp-MDT<350&&(ev.stopPropagation(),ev.pre
 const ASET=a=>{A4=a<415?415:a>466?466:a,aval.textContent=A4+' Hz',ard.hidden=A4==440,SHOWN='';try{localStorage.setItem('sst.a4',A4)}catch(e){}}
 const BEGIN=async m=>{RUN=1;if(m=='mic')PLAYSET(0),await LISTEN(1);else LSN&&await LISTEN(0),TGT=PCLAMP(Math.round(TP)),PLAYSET(1);MODE(),WAKE();document.body.classList.remove('pre'),st.classList.add('out'),setTimeout(_=>st.hidden=true,560)}
 document.body.classList.add('pre'),ASET(A4)
-// The source keys, on the console and on the title card: the microphone, then each instrument, each with its sign and its name. On the
-// title card a press starts the page with that source; on the console it changes the source
+// The microphone's key and the instrument knob, on the console and on the title card. On the console the key turns listening on
+// and off and the knob changes the instrument. On the title card either one starts the page: the key listening, the knob playing
+// the instrument it is left pointing to
 const NOMIC=_=>TOAST('This preview page cannot use the microphone. The full page can.')
-const SKEYS=(host,ids,fn)=>['mic',...VOICES.map(v=>v.n)].map((n,k)=>{const b=document.createElement('button');b.className='sk',b.id=ids[k],b.innerHTML=SV(n)+'<b>'+n+'</b>',b.title=b.ariaLabel=k?'play the '+n:'listen with the microphone',b.onclick=_=>{VB(6),fn(k)},host.appendChild(b);return b})
-const SKS=SKEYS(src,['smc','sv0','sv1','sv2'],k=>{if(!mode)return;if(!k)return PREVIEW?NOMIC():LISTEN(!LSN);VOICE==k-1&&PLAYING?PLAYSET(0):(LSN&&!PLAYING&&(TGT=PCLAMP(Math.round(TP)),COAST=0,VEL=0),VOICESET(k-1))})                // (the microphone's key turns listening on and off; an instrument's sets it sounding, and pressed while it sounds, stops it)
-const TKS=SKEYS(stk,['sgo','sto','st1','st2'],k=>{if(!k)return PREVIEW?NOMIC():BEGIN('mic');VOICE=k-1,VSAVE(),BEGIN('tone')})
-if(PREVIEW)SKS[0].classList.add('no'),TKS[0].classList.add('no'),scp.innerHTML='This preview page cannot use the microphone, so it only plays.<br>The full page also listens.'
-mnb.onclick=_=>{ZL||(VB(6),PM(1))},pmx.onclick=_=>PM(0)
+const MKS=[smc,sgo];for(const b of MKS)b.innerHTML=SV('mic')+'<b>mic</b>',b.title=b.ariaLabel='listen with the microphone'
+ACT(smc,_=>{VB(6);if(!mode)return;PREVIEW?NOMIC():LISTEN(!LSN)}),ACT(sgo,_=>{VB(6),PREVIEW?NOMIC():BEGIN('mic')})
+// A knob: the instruments' signs in their order, clockwise from the top. A finger out among the signs: the knob points to the sign
+// nearest the way the finger lies from its middle, and follows the finger round. A finger that lands on the knob itself has it by
+// the grip: nothing moves until the finger goes round, and then the knob turns as far as the finger has gone (and if the finger
+// goes out among the signs, it points there). A tick is felt at each sign passed. done = what happens when the finger leaves.
+// KNS = the knobs; NMC = the windows with the name in
+const KNS=[],NMC=[...document.querySelectorAll('.nmw canvas')]
+const KNOB=(el,done)=>{const n=VOICES.length;el.innerHTML=VOICES.map(v=>SV(v.n)).join('')+'<i class="cb kn"><u></u></i>',el.tabIndex=0,el.setAttribute('role','slider'),el.ariaLabel='instrument',el.setAttribute('aria-valuemin',1),el.setAttribute('aria-valuemax',n)
+const ic=[...el.querySelectorAll(':scope>svg')],u=el.querySelector('u');ic.forEach((q,i)=>{const a=i*2*Math.PI/n;q.dataset.v=i,q.style.translate='calc(var(--kn,100px)*'+(.4*Math.sin(a)).toFixed(4)+') calc(var(--kn,100px)*'+(-.4*Math.cos(a)).toFixed(4)+')'})
+let on=0,g=null;const st=2*Math.PI/n,at=(ev,dn)=>{const r=el.getBoundingClientRect(),w=r.width,dx=ev.clientX-r.left-w/2,dy=ev.clientY-r.top-w/2,q=Math.hypot(dx,dy),a=Math.atan2(dx,-dy);let i=VOICE
+if(dn)g=q<w*.3?{a:null,t:0,v:VOICE}:null                    // (g: the finger landed on the knob, and has it by the grip: a = which way it lay from the middle last, t = how far round it has gone since, v = the instrument it began at)
+if(q>w*.3)g=null,i=Math.round(a/st);else if(g){if(q<5)return;if(g.a!=null){let d=a-g.a;d>Math.PI?d-=2*Math.PI:d<-Math.PI&&(d+=2*Math.PI);g.t+=d}g.a=a,i=g.v+Math.round(g.t/st)}else return
+i=(i%n+n)%n,i!=VOICE&&(VB(4),VPICK(i))}
+el.addEventListener('pointerdown',ev=>{if(ev.button)return;on=1;try{el.setPointerCapture(ev.pointerId)}catch(e){}at(ev,1)}),el.addEventListener('pointermove',ev=>{on&&at(ev)}),el.addEventListener('pointerup',_=>{if(!on)return;on=0,done&&done()}),el.addEventListener('pointercancel',_=>{on=0})
+el.addEventListener('keydown',ev=>{const k=ev.key,d=k=='ArrowRight'||k=='ArrowUp'?1:k=='ArrowLeft'||k=='ArrowDown'?-1:0;if(d)ev.preventDefault(),ev.stopPropagation(),VPICK(VOICE+d);else if((k=='Enter'||k==' ')&&done)ev.preventDefault(),ev.stopPropagation(),done()})
+KNS.push({el,ic,u,a:null})}
+// the name windows: the instrument's name in the readout's letters, five dots by seven, on a field of faint dots (room for eight letters)
+const NAMES=_=>{const s=VOICES[VOICE].n.toUpperCase(),k=DPR(),c0=49-(s.length*6-1)>>1;for(const cv of NMC){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)continue;cv.width=Math.round(w*k),cv.height=Math.round(h*k);const x=cv.getContext('2d'),q=Math.min((w-8)/49,(h-8)/9)*k,ox=(cv.width-49*q)/2,oy=(cv.height-9*q)/2
+for(let r=0;r<9;r++)for(let c=0;c<49;c++){const cc=c-c0,g=cc>=0&&r>=1&&r<8&&cc%6<5?GL[s[cc/6|0]]:null,lit=g&&g[r-1]>>4-cc%6&1;x.fillStyle='rgba('+DRGB+','+(lit?1:.06)+')',x.beginPath(),x.arc(ox+(c+.5)*q,oy+(r+.5)*q,q*.38,0,6.2832),x.fill()}}}
+// the knobs and the name windows as the instrument now chosen. A knob turns the short way round to it
+const KNUI=_=>{const st=360/VOICES.length;for(const k of KNS){let a=VOICE*st;k.a!=null&&(a=k.a+(((a-k.a)%360+540)%360-180));k.a=a,k.u.style.rotate=a+'deg',k.ic.forEach((q,i)=>q.classList.toggle('on',i==VOICE)),k.el.setAttribute('aria-valuenow',VOICE+1),k.el.setAttribute('aria-valuetext',VOICES[VOICE].n)}NAMES()}
+KNOB(knb,null),KNOB(tkn,_=>{VSAVE(),BEGIN('tone')})
+if(PREVIEW)smc.classList.add('no'),sgo.classList.add('no'),scp.innerHTML='This preview page cannot use the microphone, so it only plays.<br>The full page also listens.'
+ACT(mnb,_=>{ZL||(VB(6),PM(1))}),pmx.onclick=_=>PM(0)
 adn.onclick=_=>ASET(A4-1),aup.onclick=_=>ASET(A4+1),ard.onclick=_=>ASET(440)
 pt.onclick=_=>{PM(0),MICOFF(),LSN=RUN=0,PLAYSET(0),R0=RM=RT={on:0,held:0},RDG=makeReading(),SHOWN='',st.hidden=false,document.body.classList.add('pre'),requestAnimationFrame(_=>st.classList.remove('out'))}
 // full screen, where the browser allows it (as on Nano)
 addEventListener('fullscreenchange',_=>{const f=!!document.fullscreenElement;pfs.querySelector('svg').outerHTML=SV(f?'unfull':'full'),pfs.classList.toggle('on',f)}),pfs.hidden=!document.fullscreenEnabled
-pfs.onclick=_=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}catch(e){}}
-// the powder orbs: one for each kind, set in the bezel (FIT places them). A press sprays in a quarter of a plateful, and the orb
-// flares for a moment and is then spent for a moment more. The broom sweeps the plate clear. ORB = an orb's colours, worked out from the kind's one colour
-const ORB=m=>{if(m.iri)return'--p:#dfe3ee;--hi:rgba(255,255,255,.9);--lo:#9aa0b8;--dk:#3c4058;--gl:rgba(205,215,255,.4)';const o=m.o,dark=Math.max(...o)<60
-return'--p:rgb('+o+');--hi:rgba('+o.map(c=>Math.round(c+(255-c)*.55))+','+(dark?.4:.85)+');--lo:rgb('+o.map(c=>c*.42|0)+');--dk:rgb('+o.map(c=>c*.1|0)+');--gl:rgba('+o+','+(dark?0:.5)+')'}
-// SPR = the orbs being held while the powders are on, each with when it sprays next; COL, NTS = the two switches (powders, notes)
-const SPR=new Map();let COL=1,NTS=1,KMASK=-1,KHD=-2
+ACT(pfs,_=>{VB(6);try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}catch(e){}})
+// the powder orbs: one for each kind, set in the bezel (FIT places them). The broom sweeps the plate clear. ORB = an orb's colours, worked out from the kind's one colour
+const ORB=m=>{if(m.iri)return'--p:#dfe3ee;--hi:rgba(255,255,255,.9);--lo:#9aa0b8;--dk:#3c4058;--gl:rgba(205,215,255,.4);--gt:rgba(215,222,255,.8)';const o=m.o,dark=Math.max(...o)<60
+return'--p:rgb('+o+');--hi:rgba('+o.map(c=>Math.round(c+(255-c)*.55))+','+(dark?.4:.85)+');--lo:rgb('+o.map(c=>c*.42|0)+');--dk:rgb('+o.map(c=>c*.1|0)+');--gl:rgba('+o+','+(dark?0:.5)+');--gt:'+(dark?'rgba(190,196,208,.5)':'rgba('+o.map(c=>Math.round(c+(255-c)*.2))+',.85)')}       // (--gt: the glow of an orb that is touched; a black one glows a little grey)
+// SPR = the orbs spraying, each with when it sprays next; COL, NTS = the two switches (powders, notes); OB = which orb each finger
+// on the ring is on (-1: between orbs); OXY = where the orbs are on the screen (FIT)
+const SPR=new Map(),OB=new Map(),OXY=new Float32Array(24);let COL=1,NTS=1,KMASK=-1,KHD=-2
 try{const c=localStorage.getItem('sst.col'),n=localStorage.getItem('sst.nts');c!=null&&(COL=+c?1:0),n!=null&&(NTS=+n?1:0)}catch(e){}
+// A finger on an orb (OON): the orb glows; with the powders on it sprays (a quarter of a plateful at once, and then, for as long as
+// the finger stays, a sixteenth every eighth of a second); with the notes on its note sounds. One tick is felt. Off it again (OOFF):
+// the note stops, the spraying stops, and an orb that sprayed is spent for a moment. A finger that stays down can go on round the
+// ring: each orb it comes to is pressed and the one it left is let go, and between orbs nothing is. (It has left an orb 30 px from
+// the orb's middle and reached another at 22.)
+const OON=(k,id)=>{const b=PJ[k],t=performance.now()/1000;OB.set(id,k),VB(COL?6:5),clearTimeout(b.t),b.classList.remove('spent'),b.classList.add('tch'),b.t0=t;COL&&(POUR(k,t),SPR.set(k,t+.3));NTS&&NDOWN((11-k+12)%12,id)}
+const OOFF=id=>{const k=OB.get(id);if(!(k>=0))return;const b=PJ[k];OB.set(id,-1),NUP(id);if([...OB.values()].includes(k))return;const sp=SPR.delete(k);clearTimeout(b.t),b.t=setTimeout(_=>{b.classList.remove('tch'),sp&&(b.classList.add('spent'),b.t=setTimeout(_=>b.classList.remove('spent'),1600))},Math.max(0,(b.t0+.2)*1000-performance.now()))}
+const ODOWN=ev=>{if(!RUN||ev.button||!COL&&!NTS)return;const b=ev.currentTarget,id=ev.pointerId;try{b.setPointerCapture(id)}catch(e){}OB.has(id)&&OOFF(id),OON(+b.dataset.m,id)}
+const OMOVE=ev=>{const id=ev.pointerId;if(!OB.has(id))return;const x=ev.clientX,y=ev.clientY,was=OB.get(id);if(was>=0){const dx=x-OXY[2*was],dy=y-OXY[2*was+1];if(dx*dx+dy*dy<900)return}
+let k=-1,bd=484;for(let i=0;i<12;i++){const dx=x-OXY[2*i],dy=y-OXY[2*i+1],d=dx*dx+dy*dy;d<bd&&(bd=d,k=i)}if(k==was)return;OOFF(id);k>=0&&(COL||NTS)&&OON(k,id)}
+const OUP=ev=>{OB.has(ev.pointerId)&&(OOFF(ev.pointerId),OB.delete(ev.pointerId))}
 const PJ=MATS.map((m,k)=>{const b=document.createElement('button'),h=(11-k+12)%12,nn=NOTES[h];b.className='pj'+(m.iri?' iri':''),b.dataset.m=k,b.title=b.ariaLabel=nn+' · '+m.n,b.style.cssText=ORB(m)+';--h:'+h+';--cx:'+(50-Math.sin(PJA[k])*46).toFixed(1)+'%;--cy:'+(50+Math.cos(PJA[k])*46).toFixed(1)+'%',b.appendChild(document.createElement('i')).innerHTML='<u></u><s></s>',b.insertAdjacentHTML('beforeend','<b>'+nn[0]+(nn[1]?'<sup>'+nn[1]+'</sup>':'')+'</b>')
-// pressed: with the powders on it sprays (a quarter of a plateful at once, and then, while it is held, a sixteenth every eighth of a
-// second) and flares; with the notes on its note sounds. Let go, the orb is spent for a moment and the held note stops
-const up=ev=>{SPR.delete(k)&&(clearTimeout(b.t),b.t=setTimeout(_=>{b.classList.remove('fire'),b.classList.add('spent'),b.t=setTimeout(_=>b.classList.remove('spent'),1600)},300));NUP(ev.pointerId)}
-b.onpointerdown=ev=>{if(!RUN||ev.button||!COL&&!NTS)return;const t=performance.now()/1000;try{b.setPointerCapture(ev.pointerId)}catch(e){}VB(COL?6:5)
-COL&&(POUR(k,t),SPR.set(k,t+.3),clearTimeout(b.t),b.classList.remove('spent'),b.classList.add('fire'));NTS&&NDOWN(h,ev.pointerId)},b.onpointerup=b.onpointercancel=up
-b.onclick=ev=>{ev.detail||!RUN||(COL&&POUR(k,performance.now()/1000),NTS&&(NDOWN(h,-1),PLAYING||setTimeout(_=>NUP(-1),450)))}                                // (from a keyboard)
-con.appendChild(b);return b}),PJS=PJ.map(b=>b.querySelector('s')),RIMS=[pnt,pcl,pzm,pvt,ply,well]            // (what has polish that goes round with the light)
-// which keys are lit (their notes are sounding: all of them move round the ring as the dial moves), and which is marked as heard
-const KEYS=_=>{let m=0;if(SND())for(const d of VXS.keys())m|=1<<((Math.round(TP)+d)%12+12)%12;m!=KMASK&&(KMASK=m,PJ.forEach((b,k)=>b.classList.toggle('snd',!!(m>>(11-k+12)%12&1))))
+b.onpointerdown=ODOWN,b.onpointermove=OMOVE,b.onpointerup=b.onpointercancel=OUP
+b.onclick=ev=>{ev.detail||!RUN||(COL&&POUR(k,performance.now()/1000),NTS&&(NDOWN(h,-1),setTimeout(_=>NUP(-1),450)))}                                // (from a keyboard)
+con.appendChild(b);return b}),PJS=PJ.map(b=>b.querySelector('s')),RIMS=[pnt,pcl,pzm,pvt,ply,well,...document.querySelectorAll('.kn')]            // (what has polish that goes round with the light)
+// which orbs glow because their notes are sounding (all of them move round the ring as the dial moves), and which is marked as heard
+const KEYS=_=>{let m=0;if(NTS&&SND())for(const d of VXS.keys())m|=1<<((Math.round(TP)+d)%12+12)%12;m!=KMASK&&(KMASK=m,PJ.forEach((b,k)=>b.classList.toggle('snd',!!(m>>(11-k+12)%12&1))))
 const hd=LSN&&RM.held?(RM.midi%12+12)%12:-1;hd!=KHD&&(KHD=hd,PJ.forEach((b,k)=>b.classList.toggle('hd',(11-k+12)%12==hd)))}
 // the two switches. Thrown, the twelve answer one after another round the ring (#con.seq, for as long as that takes), and it is felt
 const TOG=live=>{con.classList.toggle('cof',!COL),con.classList.toggle('nof',!NTS),pcl.classList.toggle('on',!!COL),pnt.classList.toggle('on',!!NTS);if(!live)return
 con.classList.add('seq'),clearTimeout(TOG.t),TOG.t=setTimeout(_=>con.classList.remove('seq'),1000),VB([4,30,4,30,4,30,4,30,4,30,4,30,4,30,4,30,4,30,4,30,4,30,4]);try{localStorage.setItem('sst.col',COL),localStorage.setItem('sst.nts',NTS)}catch(e){}}
-pcl.onclick=_=>{COL^=1,COL||SPR.clear(),TOG(1)},pnt.onclick=_=>{NTS^=1;if(!NTS)for(const id of [...HELD.keys()])NUP(id);TOG(1)},TOG()
-for(const b of [...document.querySelectorAll('.key,.sk'),dspw,dlg])b.insertAdjacentHTML('beforeend','<i class=gs></i>')
+ACT(pcl,_=>{COL^=1,COL||SPR.clear(),TOG(1)}),ACT(pnt,_=>{NTS^=1;if(!NTS)for(const id of [...HELD.keys()])NUP(id);TOG(1)}),TOG()
+for(const b of [...document.querySelectorAll('.key,.sk,.nmw'),dspw,dlg])b.insertAdjacentHTML('beforeend','<i class=gs></i>')
 const GSS=[...document.querySelectorAll('.gs')]                                             // (the streaks that slide with it)
-pvt.onclick=_=>{VB(10),VENT(performance.now()/1000),pvt.classList.add('on'),clearTimeout(pvt.t),pvt.t=setTimeout(_=>pvt.classList.remove('on'),700)}
+ACT(pvt,_=>{VB(10),VENT(performance.now()/1000),pvt.classList.add('fl'),clearTimeout(pvt.t),pvt.t=setTimeout(_=>pvt.classList.remove('fl'),700)})
 // the page gives the microphone back while it is out of sight and takes it up again on return
 document.addEventListener('visibilitychange',_=>{try{if(document.hidden){AC&&AC.state=='running'&&AC.suspend()}else{AC&&AC.resume().catch(_=>{}),mode&&WAKE()}}catch(e){}})
 // for the tests: the page's state; and the dial as two numbers, a note (TM) and cents off it (TB)
-window.__T=_=>({mode,r:R0,inn:IN,off:OFF,lx:LX,ly:LY,live:LIVE,amp:P.amp(),lam:LAMP,a4:A4,tp:TP,bend:BEND,tb:(TP-Math.round(TP))*100+BEND,tm:Math.round(TP),playing:PLAYING,env:ENV,voice:VOICES[VOICE].n,fs:LSN?FSM:DFS,lsn:LSN,col:COL,nts:NTS,ch:CH.slice(),vx:[...VXS.keys()],held:[...HELD.values()],chord:CHNAME(),lit:PJ.map((b,k)=>b.classList.contains('snd')?NOTES[(11-k+12)%12]:'').filter(x=>x).join(' '),open:OPEN,busy:BUSY,glow:NGL,acc:ACR,light:[+TLX.toFixed(3),+TLY.toFixed(3),GLX,GLY,LK],ga:GA,glints:(_=>{let n=0;for(let i=0;i<NG;i++){if(GS[i])continue;const a=GFX[i]-GLX,b=GFY[i]-GLY;a*a+b*b<GR2&&GLS[MT[i]]&&n++}return n})(),shock:+SHOCK.toFixed(3),zup:ZUP,zw:+ZW.toFixed(4),zt:ZT,scu:+Math.min(1,ZW).toFixed(4),rot:scw.style.getPropertyValue('--r'),fading:GS.reduce((a,g)=>a+(g==5),0),ghosts:NGH,swept:GS.reduce((a,g)=>a+(g==1),0),z:ZV,zl:ZL,zm:ZM,zk:ZK,zx:ZX,zy:ZY,fon:FON,onp:GS.reduce((a,g)=>a+(g==0),0),kinds:MATS.map((m,k)=>{let n=0;for(let i=0;i<NG;i++)GS[i]==0&&MT[i]==k&&n++;return m.n+':'+n}).join(' ')})
+window.__T=_=>({mode,r:R0,inn:IN,off:OFF,lx:LX,ly:LY,live:LIVE,amp:P.amp(),lam:LAMP,a4:A4,tp:TP,bend:BEND,tb:(TP-Math.round(TP))*100+BEND,tm:Math.round(TP),playing:PLAYING,env:ENV,voice:VOICES[VOICE].n,vi:VOICE,fs:LSN?FSM:DFS,lsn:LSN,col:COL,nts:NTS,ob:[...OB.values()],vx:[...VXS.keys()],held:[...HELD.values()],chord:CHNAME(),lit:PJ.map((b,k)=>b.classList.contains('snd')?NOTES[(11-k+12)%12]:'').filter(x=>x).join(' '),open:OPEN,busy:BUSY,glow:NGL,acc:ACR,light:[+TLX.toFixed(3),+TLY.toFixed(3),GLX,GLY,LK],ga:GA,glints:(_=>{let n=0;for(let i=0;i<NG;i++){if(GS[i])continue;const a=GFX[i]-GLX,b=GFY[i]-GLY;a*a+b*b<GR2&&GLS[MT[i]]&&n++}return n})(),shock:+SHOCK.toFixed(3),zup:ZUP,zw:+ZW.toFixed(4),zt:ZT,scu:+Math.min(1,ZW).toFixed(4),rot:scw.style.getPropertyValue('--r'),fading:GS.reduce((a,g)=>a+(g==5),0),ghosts:NGH,swept:GS.reduce((a,g)=>a+(g==1),0),z:ZV,zl:ZL,zm:ZM,zk:ZK,zx:ZX,zy:ZY,fon:FON,onp:GS.reduce((a,g)=>a+(g==0),0),kinds:MATS.map((m,k)=>{let n=0;for(let i=0;i<NG;i++)GS[i]==0&&MT[i]==k&&n++;return m.n+':'+n}).join(' ')})
 let TMX=69,TBX=0;Object.defineProperty(window,'TM',{get:_=>TMX,set:v=>{TMX=v,TP=v+TBX/100,TGT=null,COAST=0,TMOVE=performance.now()/1000}}),Object.defineProperty(window,'TB',{get:_=>TBX,set:v=>{TBX=v,TP=TMX+v/100,TGT=null,COAST=0,TMOVE=performance.now()/1000}})
 // Textures, made once, each a picture of light and shade to lay over a colour: a field of small bumps lit from the upper left (white
 // where a slope faces the light, black where it faces away). --gp is the console's paint, a wrinkle finish: bumps of two sizes.
@@ -1102,5 +1192,5 @@ x.putImageData(im,0,0);return cv}
 const give=(name,cv)=>{const sz=' 0 0/'+(N/k).toFixed(2)+'px '+(N/k).toFixed(2)+'px',R=document.documentElement.style,long=_=>{try{R.setProperty(name,'url("'+cv.toDataURL('image/png')+'")'+sz)}catch(e){}}
 try{cv.toBlob(b=>{if(!b)return long();const u=URL.createObjectURL(b),im=new Image();im.onload=_=>R.setProperty(name,'url("'+u+'")'+sz),im.onerror=long,im.src=u},'image/png')}catch(e){long()}}
 try{give('--gp',mk(7,Math.max(1,Math.round(k*.5)),Math.max(2,Math.round(k*1.5)),1.6,.17)),give('--gk',mk(99,Math.max(1,Math.round(k*.34)),Math.max(1,Math.round(k*.8)),1,.13))}catch(e){}}
-ACAP(),SRCUI(),PLAYSET(0),FIT(),GSET(GA),requestAnimationFrame(FRAME)
+ACAP(),SRCUI(),PLAYSET(0),FIT(),KNUI(),GSET(GA),requestAnimationFrame(FRAME)
 </script>
