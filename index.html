@@ -8,27 +8,40 @@ button{font:inherit;color:#fff;background:none;border:0;padding:0;cursor:pointer
 svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* the console: one panel of black brushed metal with everything set into it. It slides aside to show the inside of the machine, which is the menu.
    (The brushing, --mt, is a picture the script makes once: see the end of the script.) */
-#con{position:fixed;inset:0;z-index:1;overflow:hidden;background:radial-gradient(140% 70% at 50% -12%,rgba(255,255,255,.085),rgba(255,255,255,0) 62%),linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.3)),var(--mt,none),#0d0e11;transition:translate .42s cubic-bezier(.2,.8,.2,1)}
+#con{position:fixed;inset:0;z-index:1;overflow:hidden;background:radial-gradient(140% 70% at 50% -12%,rgba(255,255,255,.065),rgba(255,255,255,0) 62%),linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.3)),var(--mt,none),#0d0e11;transition:translate .42s cubic-bezier(.2,.8,.2,1)}
 #con>*,#pl>*{position:absolute}
 /* over the console, a sheet with the plate on it: its face, its edge seen shaking, the sand, the bolt, and the field a finger works in.
    Looking closer makes this plate grow out of the console; the console itself never changes. The sheet goes aside with the console */
 #pl{position:fixed;inset:0;z-index:2;pointer-events:none;transition:translate .42s cubic-bezier(.2,.8,.2,1)}body.open #pl{translate:var(--sl,300px) 0}body.open #pl>*{pointer-events:none!important}
-body.open #con{translate:var(--sl,300px) 0;box-shadow:-22px 0 46px #000;cursor:pointer}body.open #con>*{pointer-events:none!important}
+body.open #con{translate:var(--sl,300px) 0;box-shadow:-22px 0 46px #000}body.open #con>*{pointer-events:none!important}
+/* while the menu is open, what shows of the console is one thing to touch, #cat: a tap on it closes the menu, and it (or the menu) can
+   be taken hold of and dragged left, the console coming with the finger */
+#cat{position:fixed;top:0;bottom:0;right:0;left:var(--sl,300px);z-index:4;display:none;touch-action:none;cursor:pointer}body.open #cat{display:block}
+body.drag #con,body.drag #pl{transition:none;will-change:translate}
 #sa{position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+/* light. Everything is lit from the upper left, and the light moves a little when the phone is tilted (with a mouse, as the pointer
+   moves): #lit is a soft patch of it on the panel; #shn is the plate's sheen (a turned plate shows two faint bright wedges, one toward
+   the light and one away from it, and fine rings from the lathe), which the bezel round the plate has too (#well:after); and the bright reflection in each orb is a thing of its own (.pj s), so that it can move */
+#lit{left:-25%;top:-16%;width:150%;height:66%;background:radial-gradient(closest-side,rgba(255,255,255,.045),rgba(255,255,255,0));pointer-events:none;will-change:translate}
+#shn{border-radius:50%;background:repeating-radial-gradient(circle closest-side,rgba(255,255,255,.02) 0 calc(var(--rg,1.05%)*.3),rgba(255,255,255,0) calc(var(--rg,1.05%)*.3) var(--rg,1.05%)),conic-gradient(from 315deg,rgba(255,255,255,.05),rgba(255,255,255,0) 11%,rgba(255,255,255,0) 39%,rgba(255,255,255,.028) 50%,rgba(255,255,255,0) 61%,rgba(255,255,255,0) 89%,rgba(255,255,255,.05));pointer-events:none}
 #face{inset:5px;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),inset 0 1px 0 rgba(255,255,255,.13),inset 0 0 30px rgba(0,0,0,.5);pointer-events:none}
 .scr{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#40444c,#17181c 70%);box-shadow:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.07);pointer-events:none}
 .scr:after{content:'';position:absolute;left:1.5px;right:1.5px;top:4px;height:1px;background:#000;rotate:var(--r,35deg)}
 #brand{color:rgba(228,233,242,.72);pointer-events:none}#brand svg{width:100%;height:100%;stroke:none;display:block}
 /* windows let into the panel: the readout and the dial. The readout is a dot-matrix display drawn on a canvas; #sr says the same in words */
 .win{border-radius:7px;background:#040506;box-shadow:inset 0 2px 7px #000,inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.08),0 -1px 0 rgba(0,0,0,.6)}
-#dspw{pointer-events:none}#dsp{display:block;width:100%;height:100%;filter:drop-shadow(0 0 3px color-mix(in srgb,var(--ac) 60%,transparent))}
+#dspw{pointer-events:none;box-shadow:inset 0 2px 7px #000,inset 0 0 0 1px #000,0 1px 0 rgba(255,255,255,.08),0 -1px 0 rgba(0,0,0,.6),0 0 16px 1px color-mix(in srgb,var(--ac) 7%,transparent)}       /* (its light falls a little on the metal round it) */
+#dspw:after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(172deg,rgba(255,255,255,.07),rgba(255,255,255,.018) 30%,rgba(255,255,255,0) 50%);pointer-events:none}       /* (the glass over it) */#dsp{display:block;width:100%;height:100%;filter:drop-shadow(0 0 3px color-mix(in srgb,var(--ac) 60%,transparent))}
 .vh{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 /* the plate in its well: a bezel with the powder orbs set round it, a ring of light inside the bezel that comes on in tune, and the plate standing a little proud on its bolt.
    #rimb is the plate's edge seen shaking (a soft double of it); #cg is the light given off by powders that glow */
 #well{border-radius:50%;background:radial-gradient(closest-side,#030405 calc(100% - 17px),#000 calc(100% - 16.5px),#343840 calc(100% - 15.5px),#1c1e23 calc(100% - 8px),#101114 calc(100% - 1.5px),#000 calc(100% - 1px));box-shadow:0 1px 0 rgba(255,255,255,.1),0 -1px 0 rgba(0,0,0,.7),0 6px 16px rgba(0,0,0,.45);pointer-events:none}
+#well:after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 315deg,rgba(255,255,255,.085),rgba(255,255,255,0) 10%,rgba(255,255,255,0) 40%,rgba(255,255,255,.05) 50%,rgba(255,255,255,0) 60%,rgba(255,255,255,0) 90%,rgba(255,255,255,.085));-webkit-mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 16px),#000 calc(100% - 15px),#000 calc(100% - 1.5px),rgba(0,0,0,0) calc(100% - 1px));mask:radial-gradient(closest-side,rgba(0,0,0,0) calc(100% - 16px),#000 calc(100% - 15px),#000 calc(100% - 1.5px),rgba(0,0,0,0) calc(100% - 1px));rotate:var(--sr,0deg)}
 #led{border-radius:50%;border:2.5px solid rgba(255,255,255,.075);transition:border-color .35s,box-shadow .35s;pointer-events:none}
 #led.in{border-color:var(--ac);box-shadow:0 0 9px color-mix(in srgb,var(--ac) 75%,transparent),0 0 24px color-mix(in srgb,var(--ac) 38%,transparent),inset 0 0 9px color-mix(in srgb,var(--ac) 55%,transparent)}
-#ring{border-radius:50%;border:1.5px solid rgba(160,185,220,.22);background:radial-gradient(circle at 36% 30%,#17191e,#0b0c0f 62%,#060709);box-shadow:inset 0 0 22px rgba(0,0,0,.8),0 0 0 1px #000,0 10px 22px rgba(0,0,0,.7);pointer-events:none}
+#ring{border-radius:50%;border:1.5px solid rgba(160,185,220,.1);background:radial-gradient(circle at 36% 30%,#17191e,#0b0c0f 62%,#060709);box-shadow:inset 1.6px 1.6px 0 -.4px rgba(196,212,240,.3),inset -1.2px -1.2px 0 -.4px rgba(0,0,0,.55),inset 0 0 22px rgba(0,0,0,.8),0 0 0 1px #000,0 10px 22px rgba(0,0,0,.7);pointer-events:none}        /* (its rim is lit on the side toward the light) */
+/* the shadow the plate throws on the console once it is lifted off: it spreads, softens and moves down and to the right as the plate comes up */
+#psh{border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.66) 80%,rgba(0,0,0,0));visibility:hidden;pointer-events:none}
 #rimb{border-radius:50%;border:2.5px solid rgba(205,218,240,.62);filter:blur(2.6px);opacity:0;pointer-events:none}
 #c,#cg{pointer-events:none}#cg{filter:blur(3.5px) saturate(1.5) brightness(1.3);mix-blend-mode:screen}
 /* in the middle of the plate, the hole it is held by, and in the hole a slotted screw, flat-headed like the panel's. To look closer the
@@ -54,15 +67,23 @@ body.open #con{translate:var(--sl,300px) 0;box-shadow:-22px 0 46px #000;cursor:p
 .sk.no{opacity:.32}
 /* the powders: glass orbs in sockets round the plate's bezel, each the colour of its powder and faintly lit by it. A press sprays some
    of that powder onto the plate from where the orb is. (.pj is the place a finger can press; its :before is the socket, a metal ring
-   with a dark seat; the i is the orb, of glass: a hard bright reflection at the upper left with a soft bloom round it, a small glint
+   with a dark seat; the i is the orb, of glass: a hard bright reflection at the upper left with a soft bloom round it (the s), a small glint
    at the lower right, a dark band just inside the edge and a line of light on the edge itself, light gathered low in the glass, and
    the colour, deepest at the top. --p, --hi, --lo, --dk and --gl are the orb's colour, its lighter and darker shades and its glow.) */
 .pj{width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .pj:before{content:'';position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:radial-gradient(circle,#010203 0 62%,rgba(1,2,3,0) 66%),linear-gradient(150deg,#5b606b,#22252a 50%,#0b0c0e);box-shadow:0 1px 3px rgba(0,0,0,.9),inset 0 0 0 .5px rgba(255,255,255,.12)}
-.pj i{position:relative;width:18px;height:18px;border-radius:50%;background:radial-gradient(ellipse 22% 15% at 31% 24%,#fff 0,#fff 55%,rgba(255,255,255,0) 100%),radial-gradient(ellipse 46% 34% at 33% 27%,rgba(255,255,255,.5) 0,rgba(255,255,255,0) 100%),radial-gradient(circle at 71% 73%,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 7%),radial-gradient(closest-side,rgba(0,0,0,0) 62%,rgba(0,0,0,.42) 86%,rgba(0,0,0,.1) 92%,rgba(255,255,255,.4) 97%,rgba(255,255,255,.1) 100%),radial-gradient(ellipse 60% 42% at 54% 84%,var(--hi) 0,rgba(255,255,255,0) 100%),radial-gradient(circle at 50% 66%,var(--p) 0,var(--lo) 55%,var(--dk) 100%);box-shadow:0 0 7px 1px var(--gl),inset 0 0 1px rgba(0,0,0,.8);transition:filter .3s,scale .08s,box-shadow .3s;pointer-events:none}
-.pj.iri i{background:radial-gradient(ellipse 22% 15% at 31% 24%,#fff 0,#fff 55%,rgba(255,255,255,0) 100%),radial-gradient(ellipse 46% 34% at 33% 27%,rgba(255,255,255,.5) 0,rgba(255,255,255,0) 100%),radial-gradient(circle at 71% 73%,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 7%),radial-gradient(closest-side,rgba(0,0,0,0) 62%,rgba(0,0,0,.42) 86%,rgba(0,0,0,.1) 92%,rgba(255,255,255,.45) 97%,rgba(255,255,255,.1) 100%),radial-gradient(circle at 50% 60%,rgba(30,26,60,0) 0,rgba(30,26,60,.5) 100%),conic-gradient(from 200deg,#ff9ccb,#a9b4ff,#96f0d4,#ffe39a,#ff9ccb)}
+.pj i{position:relative;width:18px;height:18px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 71% 73%,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 7%),radial-gradient(closest-side,rgba(0,0,0,0) 62%,rgba(0,0,0,.42) 86%,rgba(0,0,0,.1) 92%,rgba(255,255,255,.4) 97%,rgba(255,255,255,.1) 100%),radial-gradient(ellipse 60% 42% at 54% 84%,var(--hi) 0,rgba(255,255,255,0) 100%),radial-gradient(circle at 50% 66%,var(--p) 0,var(--lo) 55%,var(--dk) 100%);box-shadow:0 0 7px 1px var(--gl),inset 0 0 1px rgba(0,0,0,.8);transition:filter .3s,scale .08s,box-shadow .3s;pointer-events:none}
+.pj.iri i{background:radial-gradient(circle at 71% 73%,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 7%),radial-gradient(closest-side,rgba(0,0,0,0) 62%,rgba(0,0,0,.42) 86%,rgba(0,0,0,.1) 92%,rgba(255,255,255,.45) 97%,rgba(255,255,255,.1) 100%),radial-gradient(circle at 50% 60%,rgba(30,26,60,0) 0,rgba(30,26,60,.5) 100%),conic-gradient(from 200deg,#ff9ccb,#a9b4ff,#96f0d4,#ffe39a,#ff9ccb)}
+.pj s{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse 22% 15% at 31% 24%,#fff 0,#fff 55%,rgba(255,255,255,0) 100%),radial-gradient(ellipse 46% 34% at 33% 27%,rgba(255,255,255,.5) 0,rgba(255,255,255,0) 100%);pointer-events:none}
 .pj:active i{scale:.88;filter:brightness(.8)}
 .pj.fire i{filter:brightness(1.4) saturate(1.2);box-shadow:0 0 13px 3px var(--gl),inset 0 0 1px rgba(0,0,0,.6);transition:none}
+/* an orb that has just sprayed is spent: dim, and coming back over a second and a half */
+@keyframes spent{0%,12%{filter:brightness(.7) saturate(.85);box-shadow:0 0 3px 0 var(--gl),inset 0 0 1px rgba(0,0,0,.8)}}
+.pj.spent i{animation:spent 1.6s ease-in-out}
+/* the ring of light round the plate shows in each orb while it is lit: a spot of its colour on the side of the orb that faces it
+   (--cx, --cy: where that is) */
+.pj u{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at var(--cx) var(--cy),color-mix(in srgb,var(--ac) 78%,#fff),color-mix(in srgb,var(--ac) 42%,transparent) 21%,rgba(0,0,0,0) 47%);opacity:0;transition:opacity .35s;pointer-events:none}
+#con.lit .pj u{opacity:.72}
 /* the deck: the source keys, the dial, and one row of keys: flat, down an octave, play, up an octave, sharp. It is the same whatever the
    plate hears: listening, the keys of that row are dimmed, and a touch on one (or on the dial) goes over to the instrument */
 #dial{display:block;height:48px;cursor:ew-resize}
@@ -70,7 +91,9 @@ body.open #con{translate:var(--sl,300px) 0;box-shadow:-22px 0 46px #000;cursor:p
 /* play, as on Nano: a circle in the middle that shows what a press would do. Stopped, a triangle in the accent colour; sounding, two
    bars, and a light goes round its seat */
 #ply{position:relative;width:56px;height:56px;margin:5px 7px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#dfe4ec;background:linear-gradient(180deg,#2b2e36,#0e0f12);box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(0,0,0,.6),0 3px 6px rgba(0,0,0,.85),0 0 0 1px #000,0 0 0 5px #050608,0 0 0 6px rgba(255,255,255,.07);transition:color .18s,translate .08s,opacity .25s}
-#ply svg{width:26px;height:26px;transition:filter .18s}#ply:active{translate:0 1.5px}
+#ply svg{width:26px;height:26px;transition:filter .18s}
+/* (while it plays the button stays down, as the source key in use does) */
+#ply:not(.on){translate:0 1px;background:linear-gradient(180deg,#17191d,#0b0c0e);box-shadow:inset 0 2px 5px rgba(0,0,0,.85),0 0 0 1px #000,0 0 0 5px #050608,0 0 0 6px rgba(255,255,255,.07)}#ply:active{translate:0 1.5px}
 #ply.on{color:var(--ac)}#ply.on svg{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 65%,transparent))}
 #ply:before{content:'';position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 0deg,rgba(0,0,0,0) 0 50%,var(--ac));-webkit-mask:radial-gradient(farthest-side,rgba(0,0,0,0) calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,rgba(0,0,0,0) calc(100% - 3px),#000 calc(100% - 2px));filter:drop-shadow(0 0 3px var(--ac));animation:spin 2.8s linear infinite;transition:opacity .7s;pointer-events:none}
 #ply.on:before{opacity:0}
@@ -116,7 +139,7 @@ body.cmp #src .sk{height:32px}body.cmp #ply{width:48px;height:48px}
 <p class=h>light</p><button id=pac>accent color<i class=sw></i></button><div id=acc hidden><div class=fad id=fdr><u></u><i></i></div><div class=fad id=fdg><u></u><i></i></div><div class=fad id=fdb><u></u><i></i></div><button id=acr class=sm>back to amber</button></div>
 <button id=pt class=dv>return to title</button>
 <div class=ext><p class=h>more scale space, on other sites</p><div class=links><a href="https://setzstone.itch.io/cymatist" target=_blank rel=noopener><span>Scale Space Cymatist<small>itch.io &#183; cymatics tools</small></span></a><a href="https://setzstone.itch.io/scale-space" target=_blank rel=noopener><span>Scale Space<small>itch.io &#183; early access</small></span></a><a href="https://www.reddit.com/r/ScaleSpace/" target=_blank rel=noopener><span>r/ScaleSpace<small>reddit.com &#183; finds, builds, and the dev log</small></span></a></div></div></div>
-<div id=con><div id=face></div><i class=scr id=s1></i><i class=scr id=s2 style="--r:-20deg"></i><i class=scr id=s3 style="--r:80deg"></i><i class=scr id=s4 style="--r:10deg"></i>
+<div id=con><div id=face></div><div id=lit></div><i class=scr id=s1></i><i class=scr id=s2 style="--r:-20deg"></i><i class=scr id=s3 style="--r:80deg"></i><i class=scr id=s4 style="--r:10deg"></i>
 <div id=brand><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 222" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space Intunist"><g class="lw"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></g><path class="ln" fill="currentColor" d="M1164.750 293.875h5.885v5.885h-5.885zM1170.625 293.875h5.885v5.885h-5.885zM1176.500 293.875h5.885v5.885h-5.885zM1170.625 299.750h5.885v5.885h-5.885zM1170.625 305.625h5.885v5.885h-5.885zM1170.625 311.500h5.885v5.885h-5.885zM1170.625 317.375h5.885v5.885h-5.885zM1170.625 323.250h5.885v5.885h-5.885zM1164.750 329.125h5.885v5.885h-5.885zM1170.625 329.125h5.885v5.885h-5.885zM1176.500 329.125h5.885v5.885h-5.885zM1194.125 293.875h5.885v5.885h-5.885zM1217.625 293.875h5.885v5.885h-5.885zM1194.125 299.750h5.885v5.885h-5.885zM1217.625 299.750h5.885v5.885h-5.885zM1194.125 305.625h5.885v5.885h-5.885zM1200.000 305.625h5.885v5.885h-5.885zM1217.625 305.625h5.885v5.885h-5.885zM1194.125 311.500h5.885v5.885h-5.885zM1205.875 311.500h5.885v5.885h-5.885zM1217.625 311.500h5.885v5.885h-5.885zM1194.125 317.375h5.885v5.885h-5.885zM1211.750 317.375h5.885v5.885h-5.885zM1217.625 317.375h5.885v5.885h-5.885zM1194.125 323.250h5.885v5.885h-5.885zM1217.625 323.250h5.885v5.885h-5.885zM1194.125 329.125h5.885v5.885h-5.885zM1217.625 329.125h5.885v5.885h-5.885zM1229.375 293.875h5.885v5.885h-5.885zM1235.250 293.875h5.885v5.885h-5.885zM1241.125 293.875h5.885v5.885h-5.885zM1247.000 293.875h5.885v5.885h-5.885zM1252.875 293.875h5.885v5.885h-5.885zM1241.125 299.750h5.885v5.885h-5.885zM1241.125 305.625h5.885v5.885h-5.885zM1241.125 311.500h5.885v5.885h-5.885zM1241.125 317.375h5.885v5.885h-5.885zM1241.125 323.250h5.885v5.885h-5.885zM1241.125 329.125h5.885v5.885h-5.885zM1264.625 293.875h5.885v5.885h-5.885zM1288.125 293.875h5.885v5.885h-5.885zM1264.625 299.750h5.885v5.885h-5.885zM1288.125 299.750h5.885v5.885h-5.885zM1264.625 305.625h5.885v5.885h-5.885zM1288.125 305.625h5.885v5.885h-5.885zM1264.625 311.500h5.885v5.885h-5.885zM1288.125 311.500h5.885v5.885h-5.885zM1264.625 317.375h5.885v5.885h-5.885zM1288.125 317.375h5.885v5.885h-5.885zM1264.625 323.250h5.885v5.885h-5.885zM1288.125 323.250h5.885v5.885h-5.885zM1270.500 329.125h5.885v5.885h-5.885zM1276.375 329.125h5.885v5.885h-5.885zM1282.250 329.125h5.885v5.885h-5.885zM1299.875 293.875h5.885v5.885h-5.885zM1323.375 293.875h5.885v5.885h-5.885zM1299.875 299.750h5.885v5.885h-5.885zM1323.375 299.750h5.885v5.885h-5.885zM1299.875 305.625h5.885v5.885h-5.885zM1305.750 305.625h5.885v5.885h-5.885zM1323.375 305.625h5.885v5.885h-5.885zM1299.875 311.500h5.885v5.885h-5.885zM1311.625 311.500h5.885v5.885h-5.885zM1323.375 311.500h5.885v5.885h-5.885zM1299.875 317.375h5.885v5.885h-5.885zM1317.500 317.375h5.885v5.885h-5.885zM1323.375 317.375h5.885v5.885h-5.885zM1299.875 323.250h5.885v5.885h-5.885zM1323.375 323.250h5.885v5.885h-5.885zM1299.875 329.125h5.885v5.885h-5.885zM1323.375 329.125h5.885v5.885h-5.885zM1341.000 293.875h5.885v5.885h-5.885zM1346.875 293.875h5.885v5.885h-5.885zM1352.750 293.875h5.885v5.885h-5.885zM1346.875 299.750h5.885v5.885h-5.885zM1346.875 305.625h5.885v5.885h-5.885zM1346.875 311.500h5.885v5.885h-5.885zM1346.875 317.375h5.885v5.885h-5.885zM1346.875 323.250h5.885v5.885h-5.885zM1341.000 329.125h5.885v5.885h-5.885zM1346.875 329.125h5.885v5.885h-5.885zM1352.750 329.125h5.885v5.885h-5.885zM1376.250 293.875h5.885v5.885h-5.885zM1382.125 293.875h5.885v5.885h-5.885zM1388.000 293.875h5.885v5.885h-5.885zM1393.875 293.875h5.885v5.885h-5.885zM1370.375 299.750h5.885v5.885h-5.885zM1370.375 305.625h5.885v5.885h-5.885zM1376.250 311.500h5.885v5.885h-5.885zM1382.125 311.500h5.885v5.885h-5.885zM1388.000 311.500h5.885v5.885h-5.885zM1393.875 317.375h5.885v5.885h-5.885zM1393.875 323.250h5.885v5.885h-5.885zM1370.375 329.125h5.885v5.885h-5.885zM1376.250 329.125h5.885v5.885h-5.885zM1382.125 329.125h5.885v5.885h-5.885zM1388.000 329.125h5.885v5.885h-5.885zM1405.625 293.875h5.885v5.885h-5.885zM1411.500 293.875h5.885v5.885h-5.885zM1417.375 293.875h5.885v5.885h-5.885zM1423.250 293.875h5.885v5.885h-5.885zM1429.125 293.875h5.885v5.885h-5.885zM1417.375 299.750h5.885v5.885h-5.885zM1417.375 305.625h5.885v5.885h-5.885zM1417.375 311.500h5.885v5.885h-5.885zM1417.375 317.375h5.885v5.885h-5.885zM1417.375 323.250h5.885v5.885h-5.885zM1417.375 329.125h5.885v5.885h-5.885z"/></svg></div>
 <div id=dspw class=win><canvas id=dsp></canvas></div><p id=sr class=vh aria-live=off></p>
 <div id=well></div><div id=led></div>
@@ -125,7 +148,8 @@ body.cmp #src .sk{height:32px}body.cmp #ply{width:48px;height:48px}
 <canvas id=dial class=win aria-label="tuning dial: slide to change the note" role=slider></canvas>
 <div id=trn><button class=key id=tfl aria-label="flat: bends the note down while held" title="flat (hold)"></button><button class=key id=tdn aria-label="down an octave" title="down an octave"></button><button id=ply></button><button class=key id=tup aria-label="up an octave" title="up an octave"></button><button class=key id=tsh aria-label="sharp: bends the note up while held" title="sharp (hold)"></button></div>
 </div>
-<div id=pl><div id=ring></div><div id=rimb></div><canvas id=cg></canvas><canvas id=c></canvas><div id=bolt><i id=scw class=scr></i></div><div id=fld></div></div>
+<div id=pl><div id=psh></div><div id=ring></div><div id=shn></div><div id=rimb></div><canvas id=cg></canvas><canvas id=c></canvas><div id=bolt><i id=scw class=scr></i></div><div id=fld></div></div>
+<div id=cat></div>
 <button class=cb id=zo hidden aria-label="back to the console" title="back to the console"></button>
 <div id=tst role=status></div>
 <div id=st role=dialog aria-modal=true aria-labelledby=stt><div id=stb><div id=stt class=logo><svg xmlns="http://www.w3.org/2000/svg" viewBox="110 124 1340 222" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scale Space Intunist"><g class="lw"><path fill="currentColor" d="M140 136h54v18h-54zM122 154h36v18h-36zM194 154h18v18h-18zM122 172h36v18h-36zM122 190h54v18h-54zM140 208h54v18h-54zM158 226h54v18h-54zM122 244h18v18h-18zM176 244h36v18h-36zM140 262h54v18h-54zM247 136h72v18h-72zM229 154h36v18h-36zM319 154h18v18h-18zM229 172h36v18h-36zM229 190h36v18h-36zM229 208h36v18h-36zM229 226h36v18h-36zM229 244h36v18h-36zM319 244h18v18h-18zM247 262h72v18h-72zM372 136h72v18h-72zM354 154h36v18h-36zM426 154h36v18h-36zM354 172h36v18h-36zM426 172h36v18h-36zM354 190h36v18h-36zM426 190h36v18h-36zM354 208h108v18h-108zM354 226h36v18h-36zM426 226h36v18h-36zM354 244h36v18h-36zM426 244h36v18h-36zM354 262h36v18h-36zM426 262h36v18h-36zM479 136h36v18h-36zM479 154h36v18h-36zM479 172h36v18h-36zM479 190h36v18h-36zM479 208h36v18h-36zM479 226h36v18h-36zM479 244h36v18h-36zM479 262h90v18h-90zM586 136h90v18h-90zM586 154h36v18h-36zM586 172h36v18h-36zM586 190h72v18h-72zM586 208h36v18h-36zM586 226h36v18h-36zM586 244h36v18h-36zM586 262h90v18h-90z"/><path fill="currentColor" d="M882 136h54v18h-54zM864 154h36v18h-36zM936 154h18v18h-18zM864 172h36v18h-36zM864 190h54v18h-54zM882 208h54v18h-54zM900 226h54v18h-54zM864 244h18v18h-18zM918 244h36v18h-36zM882 262h54v18h-54zM971 136h90v18h-90zM971 154h36v18h-36zM1043 154h36v18h-36zM971 172h36v18h-36zM1043 172h36v18h-36zM971 190h36v18h-36zM1043 190h36v18h-36zM971 208h90v18h-90zM971 226h36v18h-36zM971 244h36v18h-36zM971 262h36v18h-36zM1113 136h72v18h-72zM1095 154h36v18h-36zM1167 154h36v18h-36zM1095 172h36v18h-36zM1167 172h36v18h-36zM1095 190h36v18h-36zM1167 190h36v18h-36zM1095 208h108v18h-108zM1095 226h36v18h-36zM1167 226h36v18h-36zM1095 244h36v18h-36zM1167 244h36v18h-36zM1095 262h36v18h-36zM1167 262h36v18h-36zM1238 136h72v18h-72zM1220 154h36v18h-36zM1310 154h18v18h-18zM1220 172h36v18h-36zM1220 190h36v18h-36zM1220 208h36v18h-36zM1220 226h36v18h-36zM1220 244h36v18h-36zM1310 244h18v18h-18zM1238 262h72v18h-72zM1345 136h90v18h-90zM1345 154h36v18h-36zM1345 172h36v18h-36zM1345 190h72v18h-72zM1345 208h36v18h-36zM1345 226h36v18h-36zM1345 244h36v18h-36zM1345 262h90v18h-90z"/><g transform="translate(-22.5,0.5)"><path fill="currentColor" fill-rule="evenodd" transform="translate(126.154,127.235) scale(1.02968) translate(-122.000000,271.046149) scale(0.1,-0.1)" d="M7565 2279 l-7 -21 28 -55 27 -55 -16 -32 -15 -31 -13 -55 -12 -55 -9 -18 -9 -18 -5 -67 -5 -66 -3 -4 -4 -3 -35 31 -36 31 -12 37 -12 37 -32 70 -33 70 -12 38 -12 38 -13 6 -14 5 -74 -35 -75 -35 -7 -11 -7 -12 13 -16 13 -15 43 6 42 5 16 -15 15 -16 -6 -9 -5 -9 20 -55 21 -55 5 -32 6 -33 12 -21 12 -21 37 -56 38 -56 10 -6 10 -6 0 -9 0 -9 -37 0 -38 1 -33 10 -33 10 -19 -17 -18 -16 5 -18 5 -19 23 -12 23 -12 11 7 12 7 12 -10 12 -9 38 -13 38 -12 39 -53 40 -54 26 -18 26 -18 20 -18 20 -19 31 -9 32 -9 37 5 36 6 7 -22 8 -23 -29 -24 -28 -25 24 7 25 7 33 36 32 36 0 19 0 18 39 0 38 0 90 -45 90 -45 12 -26 11 -26 16 6 15 6 27 -14 27 -14 15 16 14 16 1 25 0 26 -51 33 -52 32 -6 15 -5 14 -73 37 -72 36 -46 14 -45 13 -27 78 -28 78 -20 32 -19 32 -40 11 -40 10 -5 18 -5 17 -11 60 -12 61 16 76 16 77 0 40 0 40 11 25 12 25 -36 54 -37 55 -16 6 -16 6 -23 0 -24 0 -6 -21z"/></g></g><path class="ln" fill="currentColor" d="M1164.750 293.875h5.885v5.885h-5.885zM1170.625 293.875h5.885v5.885h-5.885zM1176.500 293.875h5.885v5.885h-5.885zM1170.625 299.750h5.885v5.885h-5.885zM1170.625 305.625h5.885v5.885h-5.885zM1170.625 311.500h5.885v5.885h-5.885zM1170.625 317.375h5.885v5.885h-5.885zM1170.625 323.250h5.885v5.885h-5.885zM1164.750 329.125h5.885v5.885h-5.885zM1170.625 329.125h5.885v5.885h-5.885zM1176.500 329.125h5.885v5.885h-5.885zM1194.125 293.875h5.885v5.885h-5.885zM1217.625 293.875h5.885v5.885h-5.885zM1194.125 299.750h5.885v5.885h-5.885zM1217.625 299.750h5.885v5.885h-5.885zM1194.125 305.625h5.885v5.885h-5.885zM1200.000 305.625h5.885v5.885h-5.885zM1217.625 305.625h5.885v5.885h-5.885zM1194.125 311.500h5.885v5.885h-5.885zM1205.875 311.500h5.885v5.885h-5.885zM1217.625 311.500h5.885v5.885h-5.885zM1194.125 317.375h5.885v5.885h-5.885zM1211.750 317.375h5.885v5.885h-5.885zM1217.625 317.375h5.885v5.885h-5.885zM1194.125 323.250h5.885v5.885h-5.885zM1217.625 323.250h5.885v5.885h-5.885zM1194.125 329.125h5.885v5.885h-5.885zM1217.625 329.125h5.885v5.885h-5.885zM1229.375 293.875h5.885v5.885h-5.885zM1235.250 293.875h5.885v5.885h-5.885zM1241.125 293.875h5.885v5.885h-5.885zM1247.000 293.875h5.885v5.885h-5.885zM1252.875 293.875h5.885v5.885h-5.885zM1241.125 299.750h5.885v5.885h-5.885zM1241.125 305.625h5.885v5.885h-5.885zM1241.125 311.500h5.885v5.885h-5.885zM1241.125 317.375h5.885v5.885h-5.885zM1241.125 323.250h5.885v5.885h-5.885zM1241.125 329.125h5.885v5.885h-5.885zM1264.625 293.875h5.885v5.885h-5.885zM1288.125 293.875h5.885v5.885h-5.885zM1264.625 299.750h5.885v5.885h-5.885zM1288.125 299.750h5.885v5.885h-5.885zM1264.625 305.625h5.885v5.885h-5.885zM1288.125 305.625h5.885v5.885h-5.885zM1264.625 311.500h5.885v5.885h-5.885zM1288.125 311.500h5.885v5.885h-5.885zM1264.625 317.375h5.885v5.885h-5.885zM1288.125 317.375h5.885v5.885h-5.885zM1264.625 323.250h5.885v5.885h-5.885zM1288.125 323.250h5.885v5.885h-5.885zM1270.500 329.125h5.885v5.885h-5.885zM1276.375 329.125h5.885v5.885h-5.885zM1282.250 329.125h5.885v5.885h-5.885zM1299.875 293.875h5.885v5.885h-5.885zM1323.375 293.875h5.885v5.885h-5.885zM1299.875 299.750h5.885v5.885h-5.885zM1323.375 299.750h5.885v5.885h-5.885zM1299.875 305.625h5.885v5.885h-5.885zM1305.750 305.625h5.885v5.885h-5.885zM1323.375 305.625h5.885v5.885h-5.885zM1299.875 311.500h5.885v5.885h-5.885zM1311.625 311.500h5.885v5.885h-5.885zM1323.375 311.500h5.885v5.885h-5.885zM1299.875 317.375h5.885v5.885h-5.885zM1317.500 317.375h5.885v5.885h-5.885zM1323.375 317.375h5.885v5.885h-5.885zM1299.875 323.250h5.885v5.885h-5.885zM1323.375 323.250h5.885v5.885h-5.885zM1299.875 329.125h5.885v5.885h-5.885zM1323.375 329.125h5.885v5.885h-5.885zM1341.000 293.875h5.885v5.885h-5.885zM1346.875 293.875h5.885v5.885h-5.885zM1352.750 293.875h5.885v5.885h-5.885zM1346.875 299.750h5.885v5.885h-5.885zM1346.875 305.625h5.885v5.885h-5.885zM1346.875 311.500h5.885v5.885h-5.885zM1346.875 317.375h5.885v5.885h-5.885zM1346.875 323.250h5.885v5.885h-5.885zM1341.000 329.125h5.885v5.885h-5.885zM1346.875 329.125h5.885v5.885h-5.885zM1352.750 329.125h5.885v5.885h-5.885zM1376.250 293.875h5.885v5.885h-5.885zM1382.125 293.875h5.885v5.885h-5.885zM1388.000 293.875h5.885v5.885h-5.885zM1393.875 293.875h5.885v5.885h-5.885zM1370.375 299.750h5.885v5.885h-5.885zM1370.375 305.625h5.885v5.885h-5.885zM1376.250 311.500h5.885v5.885h-5.885zM1382.125 311.500h5.885v5.885h-5.885zM1388.000 311.500h5.885v5.885h-5.885zM1393.875 317.375h5.885v5.885h-5.885zM1393.875 323.250h5.885v5.885h-5.885zM1370.375 329.125h5.885v5.885h-5.885zM1376.250 329.125h5.885v5.885h-5.885zM1382.125 329.125h5.885v5.885h-5.885zM1388.000 329.125h5.885v5.885h-5.885zM1405.625 293.875h5.885v5.885h-5.885zM1411.500 293.875h5.885v5.885h-5.885zM1417.375 293.875h5.885v5.885h-5.885zM1423.250 293.875h5.885v5.885h-5.885zM1429.125 293.875h5.885v5.885h-5.885zM1417.375 299.750h5.885v5.885h-5.885zM1417.375 305.625h5.885v5.885h-5.885zM1417.375 311.500h5.885v5.885h-5.885zM1417.375 317.375h5.885v5.885h-5.885zM1417.375 323.250h5.885v5.885h-5.885zM1417.375 329.125h5.885v5.885h-5.885z"/></svg></div><div id=stk class=srk></div><p class=cap id=scp>Sound is measured on this device.<br>Nothing is recorded or sent.</p></div></div>
@@ -133,6 +157,7 @@ body.cmp #src .sk{height:32px}body.cmp #ply{width:48px;height:48px}
 'use strict'
 const PREVIEW=false                        // the build sets this: a preview page cannot use the microphone, so it offers playing only
 const $=id=>document.getElementById(id)
+const VB=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(_){}}          // a touch that is felt (Nano's): 4 a notch, 5 or 6 a key, 8 play, 10 something heavier
 // ---- pitch: which note is sounding and how far off it is.
 // McLeod's method (a normalised autocorrelation, here taken through an FFT), then the period is measured again across
 // many cycles at once, which is what takes the reading from "about right" to a fraction of a cent on a steady tone.
@@ -349,6 +374,14 @@ const SPREAD=.42,STIR=.14,JOSTLE=1.6,FR=5.4
 // LANDT = when the ones coming back start to land; NGL = grains on the plate that glow
 let QG=0,QRA=0,QR0=1,QA2=0,QB2=0,QA3=0,QB3=0,QS1=0,QS2=0,QCX=0,QCY=-1,QIR2=1,QSP=0,TK=0,FRM=0,FON=0,FX=0,FY=0,BUSY=0,LANDT=0,NGL=0,GDIRTY=0
 // the view (see "looking closer"): ZV = how many times closer than at home (1 at home); ZM = the sand is being drawn for a closer view
+// Each grain has a facet, a way it happens to face (GFX, GFY: anywhere in a square 255 across). The light has a place in the same square
+// (GLX, GLY: the middle as drawn, moving with the tilt of the phone). A grain whose facet is within 10 of the light catches it and
+// glints, brighter the nearer: about one grain in two hundred at any time, and which ones changes as the light moves. GLS = how much a
+// kind of powder glints (soot not at all, the powders that give off light a little, the rest fully). LK = how far round opal's colours
+// are turned by the light
+const GFX=new Int8Array(NG),GFY=new Int8Array(NG),GLS=new Uint8Array(MATS.length);let GLX=0,GLY=0,LK=0,SHOCK=0                  // (SHOCK: the jolt of the plate landing; see "the light")
+for(let i=0;i<NG;i++){let h=Math.imul(i+1,0x9E3779B1);h^=h>>>15,h=Math.imul(h,0x85EBCA6B),h^=h>>>13;GFX[i]=(h&255)-128,GFY[i]=(h>>>8&255)-128}
+MATS.forEach((m,k)=>GLS[k]=m.n=='soot'?0:m.glow?1:2)
 // ghosts: what a replaced grain was, left where it lay to fade while the new grain flies in. NGH of them; where (in cells), since when,
 // its colour, which size of dab it had from closer, and the pixel it was last painted on at home
 const GHX=new Float32Array(NG),GHY=new Float32Array(NG),GHT=new Float64Array(NG),GHC=new Uint32Array(NG),GHK=new Uint8Array(NG),GHQ=new Int32Array(NG).fill(-1);let NGH=0
@@ -370,7 +403,7 @@ let ZV=1,ZX=0,ZY=0,ZW=0,ZT=null,ZL=0,PN=null,PNX=0,Z1X=0,Z1Y=0,Z2X=0,Z2Y=0,ZCH=0
 // that hold it now are painted. (Seen from closer, ZPAINT draws them instead.) GDX, GDY = where each grain was last drawn, in cells.
 // A finger pushes a patch the size of a fingertip on the screen, so a smaller patch of the plate when it is seen from closer.
 const SAND=(f,live,w,hop,t)=>{const U=P.U,sq=Math.sqrt(f)/32768*live,sh=.2*w,hpr=hop*f/15*4294967296*live,kl=(1-Math.exp(-f/4.5))*live,sw=SPREAD*w,hk=1-.026*live,
-k1=TK|0,k2=TK*1.63|0,fr=FRM++&3,w2=w*w,c=S/2,r2=RP*RP,mx=S-2,jl=live/128,fon=FON,fx0=FX,fy0=FY,frz=Math.max(1.2,FR/ZV),fr2=frz*frz,zm=ZM;let z=RSD
+k1=TK|0,k2=TK*1.63|0,lk=LK,lx=GLX,ly=GLY,fr=FRM++&3,w2=w*w,c=S/2,r2=RP*RP,mx=S-2,jl=live/128,fon=FON,fx0=FX,fy0=FY,frz=Math.max(1.2,FR/ZV),fr2=frz*frz,zm=ZM,sk=SHOCK*.00125;let z=RSD
 if(!zm){for(let i=0;i<NG;i++){const q=GQ[i];q>=0&&(D32[q]=0,G32[q]=0,CNT[q]=0)}for(let j=0;j<NGH;j++){const q=GHQ[j];q>=0&&(D32[q]=0)}}
 for(let i=0;i<NG;i++){let x,y,gs=GS[i]
 if(gs==5&&t>=GT[i]){const b=MN[i],m=MT[i];if(NGH<NG){const j=NGH++;GHX[j]=GDX[i],GHY[j]=GDY[i],GHT[j]=t,GHC[j]=(m==IRI?IRT[PH[i]+k1&255]:SC[m*10+1+(i&3?0:5)])&0xffffff,GHK[j]=i&7,GHQ[j]=-1}
@@ -399,11 +432,13 @@ if(lv>.003){const s=lv*sw,g=lv*STIR,p=PH[i],sv=rm*(S2[i]*QS1+C2[i]*QS2)/(HR[i]+.
 else LX_[i]=LY_[i]=0
 if(HOX[i]||HOY[i]){const ox=HOX[i]*hk,oy=HOY[i]*hk;ox*ox+oy*oy<.01?HOX[i]=HOY[i]=0:(HOX[i]=ox,HOY[i]=oy),MV[i]=1}}}                    // a pushed grain's home works its way back while the plate rings
 x+=LX_[i],y+=LY_[i]                                                                    // where it lies, loosened
-const jt=JT[i];if(jt>.002){z^=z<<13,z^=z>>>17,z^=z<<5;const k=jt*jl;x+=((z&255)-128)*k,y+=((z>>>8&255)-128)*k}
+const k=JT[i]*jl+sk;if(k>1.5e-5){z^=z<<13,z^=z>>>17,z^=z<<5;x+=((z&255)-128)*k,y+=((z>>>8&255)-128)*k}                         // jostled as its looseness changes; and all of it for a moment when the plate lands (sk)
 const dx=x-c,dy=y-c,d=dx*dx+dy*dy;if(d>r2){const k=RP/Math.sqrt(d);x=c+dx*k,y=c+dy*k}}
 GDX[i]=x,GDY[i]=y;if(zm)GQ[i]=0;else{const p=GQ[i]=(y*KT|0)*T+(x*KT|0);CNT[p]<4&&CNT[p]++}}
-RSD=z;if(zm)return ZPAINT(k1,t)
-for(let i=0;i<NG;i++){const q=GQ[i];if(q<0)continue;const m=MT[i],n=CNT[q],col=m==IRI?IRT[(n-1<<8)+(PH[i]+(q>>2)+k1&255)]:SC[m*10+n+(i&3?0:5)];D32[q]=col;GLW[m]&&(G32[q]=col)}
+RSD=z;if(zm)return ZPAINT(k1+lk,t)
+for(let i=0;i<NG;i++){const q=GQ[i];if(q<0)continue;const m=MT[i],n=CNT[q],gx=GFX[i]-lx,gy=GFY[i]-ly,g2=gx*gx+gy*gy;let col=m==IRI?IRT[(n-1<<8)+(PH[i]+(q>>2)+k1+lk&255)]:SC[m*10+n+(i&3?0:5)]
+if(g2<100){const g=GLS[m];g&&(col=g>1&&g2<36?0xffffffff:g>1||g2<36?(col>>>1&0x7f7f7f)+0x808080|0xff000000:col+((~col>>>2)&0x3f3f3f))}                       // a glint: white, half way to white, or a quarter
+D32[q]=col;GLW[m]&&(G32[q]=col)}
 // (a ghost is painted only where no grain lies, and fainter as its time runs out)
 for(let j=0;j<NGH;){const e=(t-GHT[j])*2.5;if(e>=1){GHDEL(j);continue}const q=GHQ[j]=(GHY[j]*KT|0)*T+(GHX[j]*KT|0);CNT[q]||(D32[q]=GHC[j]|(255*(1-e)|0)<<24);j++}
 PX.putImageData(IM,0,0);if(NGL>0||GDIRTY)PXG.putImageData(IMG,0,0),GDIRTY=NGL>0?1:0
@@ -447,10 +482,16 @@ const DSHOW=(name,oct,l1,l2,L,pos)=>{DCLR(0,0,DC,24);if(name)DCHR(name[0],1,1,3,
 DTXT('A='+A4,58,2,A4==440?1:2),DTXT(l1,122,2,L),DTXT(l2,122,13,L),DBAR(pos,L)}
 // a word put up on the lower line for a moment (what was poured, and the like)
 let DMS='',DMT=0;const DMSG=(str,sec)=>{DMS=str,DMT=performance.now()/1000+sec,SHOWN=''}
-// only the dots that changed are drawn again. DPX = the distance from dot to dot on the screen. DCOL = the four brightnesses, in the accent colour
-let DCOL=[]
-const DFLUSH=_=>{const k=DPR(),p=DPX*k,o=DPAD*k,rd=p*.38;for(let i=0;i<DC*DR;i++){const v=DTG[i];if(v==DNOW[i])continue;DNOW[i]=v;const x=o+(i%DC)*p,y=o+(i/DC|0)*p
-DX.clearRect(x,y,p,p),DX.fillStyle=DCOL[v],DX.beginPath(),DX.arc(x+p/2,y+p/2,rd,0,6.2832),DX.fill()}}
+// Only the dots that are changing are drawn again. A dot does not change quite at once: it comes up within a frame or so and dies away
+// over two or three, which takes the hard edge off a change without smearing one word into the next; and no two dots are quite as bright as each other (DVR: up to a seventh dimmer).
+// DPX = the distance from dot to dot on the screen; DCA = the four brightnesses, and DCOL the same as colours (the dial uses them);
+// DRGB = the accent colour; DLV = how bright each dot is at this moment
+let DCOL=[],DRGB='255,180,84',DFT=0
+const DCA=[.06,.34,.72,1],DLV=new Float32Array(DC*DR).fill(-1),DVR=new Float32Array(DC*DR)
+for(let i=0;i<DC*DR;i++){let h=Math.imul(i+7,0x9E3779B1);h^=h>>>15,h=Math.imul(h,0x85EBCA6B),h^=h>>>13;DVR[i]=.86+(h&255)/255*.14}
+const DFLUSH=_=>{const now=performance.now(),dt=Math.min(.1,(now-DFT)/1000),k=DPR(),p=DPX*k,o=DPAD*k,rd=p*.38,ku=RMO?1:1-Math.exp(-dt/.009),kd=RMO?1:1-Math.exp(-dt/.018);DFT=now
+for(let i=0;i<DC*DR;i++){const v=DTG[i];if(v==DNOW[i])continue;const g=DCA[v];let a=DLV[i];a<0?a=g:(a+=(g-a)*(g>a?ku:kd),Math.abs(g-a)<.012&&(a=g));DLV[i]=a,a==g&&(DNOW[i]=v)
+const x=o+(i%DC)*p,y=o+(i/DC|0)*p;DX.clearRect(x,y,p,p),DX.fillStyle='rgba('+DRGB+','+(a*DVR[i]).toFixed(3)+')',DX.beginPath(),DX.arc(x+p/2,y+p/2,rd,0,6.2832),DX.fill()}}
 DTXT('E1',11,27,2),DTXT('G7',122,27,2),DBAR(-1,2)
 
 // ---------- layout ----------
@@ -462,8 +503,10 @@ const PUT=(el,x,y,w,h)=>{const q=el.style;q.left=x+'px',q.top=y+'px',w!=null&&(q
 const RING=(el,r)=>PUT(el,CX-r,CY-r,2*r,2*r)                      // a circle about the plate's centre
 const HOMEC=_=>{const sd=RS*S/P.R;PUT(C,CX-sd/2,CY-sd/2,sd,sd),PUT(cg,CX-sd/2,CY-sd/2,sd,sd)}        // the sand's two canvases, at home: over the plate's square
 // the plate's other parts on the sheet, placed for the view as it stands (see "looking closer"; at home they lie where the console has
-// its well): the face, the edge's blurred double (not drawn once it is off the screen), the finger's field, the bolt
-const PLATE=_=>{const z=ZV,x=CX*z+ZX,y=CY*z+ZY,R=(el,r)=>PUT(el,x-r*z,y-r*z,2*r*z,2*r*z);R(ring,RS+1.5),R(rimb,RS+2),R(fld,RS),PUT(bolt,x,y),bolt.style.scale=z==1?'':z.toFixed(3),SCREW(),rimb.style.visibility=z>1.7?'hidden':''}
+// its well): the face and its sheen, the edge's blurred double (not drawn once it is off the screen), the finger's field, the hole and its
+// screw, and under them all the shadow the plate throws once it is lifted (PSH; gone again once the plate fills the screen)
+const PSH=(z,x,y)=>{const q=psh.style,u=z-1;if(u<.004||z>2.7)return q.visibility='';const r=(RS+1.5)*z*(1.05+.07*Math.min(1,u)),d=Math.min(1,u);q.visibility='visible',q.opacity=Math.min(1,u*4).toFixed(2),PUT(psh,x+d*13-r,y+d*22-r,2*r,2*r)}
+const PLATE=_=>{const z=ZV,x=CX*z+ZX,y=CY*z+ZY,R=(el,r)=>PUT(el,x-r*z,y-r*z,2*r*z,2*r*z);R(ring,RS+1.5),R(shn,RS+1.5),R(rimb,RS+2),R(fld,RS),PSH(z,x,y),PUT(bolt,x,y),bolt.style.scale=z==1?'':z.toFixed(3),SCREW(),rimb.style.visibility=z>1.7?'hidden':''}
 // Portrait, top to bottom: the name (pressed into the metal, in the middle), the readout, the plate in its square (a button at each
 // corner, the powder ports in its bezel), the source keys, the dial, and the row of keys. Landscape: the name at the top left; readout
 // and source keys to the left of the plate; dial and keys to the right. Nothing moves when the source changes. PS = the side of the
@@ -478,11 +521,11 @@ PUT(dspw,X0,y,dw,dh),y+=dh+g,CX=VW/2,CY=y+PS/2,y+=PS+g,PUT(src,X0,y),y+=sh+10,PU
 else{PS=Math.max(150,Math.min(VH-st-sb-18,VW*.5)),CX=VW/2,CY=st+(VH-st-sb)/2;const e=Math.max(sl,sr_)+M,lw=CX-PS/2-M-e;cw=Math.max(140,Math.min(lw,430));const xl=e+(lw-cw)/2,xr=CX+PS/2+M+(lw-cw)/2
 B.toggle('nar',cw<300),dial.style.width=src.style.width=trn.style.width=cw+'px',dw=cw,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD
 const sh=src.offsetHeight,th=trn.offsetHeight,bm=Math.min(34,cw/6.04|0,VH-st-sb-35-dh-14-sh),br=bm<16?0:bm,y=Math.max(st+13+(br?br+12:0),CY-(dh+14+sh)/2),yr=CY-(DLH+12+th)/2      // (the name: at the top left, as tall as the room over the readout allows)
-brand.hidden=!br;br&&PUT(brand,xl+9,st+14,br*6.04,br)
+brand.hidden=!br;br&&PUT(brand,xl+9,Math.max(st+14,st+5+(y-st-5-br)/2),br*6.04,br)                                   // midway between the panel's top edge and the readout
 PUT(dspw,xl,y,dw,dh),PUT(src,xl,y+dh+14),PUT(dial,xr,yr),PUT(trn,xr,yr+DLH+12)}
 RS=Math.max(40,Math.min(PS/2-29,1.4142*(PS/2-21)-52));const o=PS/2-21,rj=RS+21.5
 PUT(mnb,CX-o-20,CY-o-20),PUT(pfs,CX+o-20,CY-o-20),PUT(pzm,CX-o-20,CY+o-20),PUT(pvt,CX+o-20,CY+o-20),PJ.forEach((b,i)=>PUT(b,CX+Math.sin(PJA[i])*rj,CY-Math.cos(PJA[i])*rj))
-RING(well,RS+27),RING(led,RS+8.5),PLATE(),HOMEC()
+RING(well,RS+27),RING(led,RS+8.5),PLATE(),HOMEC(),shn.style.setProperty('--rg',Math.max(1.05,400/(RS*k)).toFixed(2)+'%')                 // (the lathe's rings: never closer than four of the screen's own pixels at home, or they shimmer)
 PUT(s1,11,st+11),PUT(s2,VW-20,st+11),PUT(s3,11,VH-sb-20),PUT(s4,VW-20,VH-sb-20)
 DLW=dial.clientWidth||cw,SPX=Math.max(24,Math.min(38,DLW/9.5)),SLIDE=Math.round(Math.min(VW-58,Math.max(250,VW*.8),400)),document.documentElement.style.setProperty('--sl',SLIDE+'px')
 dsp.width=Math.round(dw*k),dsp.height=Math.round(dh*k),DNOW.fill(9),DFLUSH(),dial.width=Math.round(DLW*k),dial.height=Math.round(DLH*k),DIALDRAW()}
@@ -604,6 +647,29 @@ const w=2*Math.PI*TONEF()/DFS,a=.22*ENV;for(let i=0;i<BUF.length;i++){TPH+=w;BUF
 VTICK(t)}
 R0=RDG.push(DET(BUF,FMIN,FMAX),t,A4,GATE)}
 
+// ---------- the light ----------
+// Where the light is: (0, 0) as drawn, to 1 either way. TGX, TGY = where it is going; TLX, TLY = where it is (it follows over a tenth
+// of a second). A phone says how it is tilted; the way it is usually held (which follows over about eight seconds) counts as no tilt,
+// and 25 degrees from that as all the way. Tilting an edge away sends the light toward that edge, so what is lit by it shifts the other
+// way. With a mouse the light follows the pointer. Nothing here moves the sand: only what catches the light changes. RDW = the sand
+// wants drawing once more though it has not moved (the light moved, or a jolt has just died away); SHOCK = the jolt of the plate landing
+// on its base, 1 dying away over a tenth of a second or so: while it lasts every grain is drawn up to a sixth of a cell off its place
+let TGX=0,TGY=0,TLX=0,TLY=0,OB0=null,OG0=0,OT0=0,LSX=0,LSY=0,RDW=0
+const RMO=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)
+// (The phone's two angles are first turned into how far it leans forward and how far to the side, b and g, in a way that stays steady
+// when it is held upright, where the angles themselves jump about.)
+RMO||(addEventListener('deviceorientation',ev=>{if(ev.beta==null||ev.gamma==null)return;const D=Math.PI/180,eb=ev.beta*D,eg=ev.gamma*D,b=Math.atan2(Math.sin(eb),Math.cos(eb)*Math.cos(eg))/D,g=Math.asin(Math.max(-1,Math.min(1,Math.cos(eb)*Math.sin(eg))))/D,now=ev.timeStamp
+let db=OB0==null?0:b-OB0;db>180?db-=360:db<-180&&(db+=360);if(OB0==null)OB0=b,OG0=g;else{const k=1-Math.exp(-Math.min(1,(now-OT0)/1000)/8);OB0+=db*k,OG0+=(g-OG0)*k,db*=1-k}OT0=now
+const x=Math.max(-1,Math.min(1,(g-OG0)/25)),y=Math.max(-1,Math.min(1,db/25)),a=screen.orientation&&screen.orientation.angle||0;a==90?(TGX=y,TGY=-x):a==270?(TGX=-y,TGY=x):a==180?(TGX=-x,TGY=-y):(TGX=x,TGY=y)}),
+addEventListener('pointermove',ev=>{ev.pointerType=='mouse'&&VW&&(TGX=(.5-ev.clientX/VW)*1.1,TGY=(.5-ev.clientY/VH)*1.1)}))
+// each frame: the light goes toward where it is going; when it has moved far enough to show, the things it lights are moved (the patch
+// on the panel, the plate's sheen, the reflections in the orbs), and when it has moved far enough to change which grains catch it,
+// the sand is drawn again
+const LIGHT=dt=>{const k=1-Math.exp(-dt/.1);TLX+=(TGX-TLX)*k,TLY+=(TGY-TLY)*k
+const ax=Math.round(TLX*105),ay=Math.round(TLY*105);if(Math.abs(ax-GLX)>2||Math.abs(ay-GLY)>2)GLX=ax,GLY=ay,LK=(ax*.44+ay*.29)|0,RDW=1
+if(Math.abs(TLX-LSX)>.02||Math.abs(TLY-LSY)>.02){LSX=TLX,LSY=TLY;const v=(-TLX*1.6).toFixed(2)+'px '+(-TLY*1.6).toFixed(2)+'px';for(const e of PJS)e.style.translate=v
+lit.style.translate=(-TLX*7).toFixed(2)+'% '+(-TLY*11).toFixed(2)+'%',shn.style.rotate=((TLY-TLX)*18).toFixed(1)+'deg',well.style.setProperty('--sr',shn.style.rotate)}}
+
 // ---------- the loop ----------
 // OFF = how far off the note is, 0 (in tune) to 1; (LX, LY) = the place on the rim the disturbance comes from; W1, W2 = where that place is
 // in its wandering; TW = a clock that only runs while sand is being moved; LIVE = how much the sand is being moved (it eases to nothing
@@ -626,7 +692,7 @@ P.init(.02)
 // Each frame the plate takes its small steps (as many as the time since the last frame calls for, so it runs at one pace on any screen),
 // then the sand is moved and drawn. The sound is read about thirty times a second.
 const FRAME=now=>{requestAnimationFrame(FRAME);const t=now/1000,dt=Math.min(.05,Math.max(.001,t-LAST));LAST=t
-const zc=ZSTEP(dt)
+const zc=ZSTEP(dt);LIGHT(dt);SHOCK&&(SHOCK=SHOCK<.03?(RDW=1,0):SHOCK*Math.exp(-dt/.07));const rd=RDW||SHOCK;RDW=0
 mode=='tone'&&DIALSTEP(dt,t)
 if(mode&&t-TD>=.028)TD=t,READ(t)
 const r=R0,c=r.held?r.cents:0,ac=c<0?-c:c,fresh=LIVE<.3
@@ -637,7 +703,7 @@ LIVE+=((r.on?1:0)-LIVE)*(1-Math.exp(-dt/(r.on?.08:.15)))
 // nothing has sounded for a few seconds: the plate has fallen still too, so nothing is worked out until a note comes; unless sand is
 // on the move for another reason (poured, swept, pushed, or seen from a changing distance), and then only the sand is seen to
 const still=!r.held&&t-LH>4
-if(r.held)LH=t;else if(still&&!BUSY&&!NGH&&!FON&&!zc)return SHOW(r,ac,t)
+if(r.held)LH=t;else if(still&&!BUSY&&!NGH&&!FON&&!zc&&!rd)return SHOW(r,ac,t)
 // a new note well away from the last one: most of the old figure is shaken off and the new spacing grows in its place
 if(r.held){const l=LAMF(r.midi);if(Math.abs(l-LAMP)>.7){const U=P.U;for(let i=0;i<P.N;i++)U[i]*=.06;LAMP=l,GROW=t}}
 // drive: a note that has just started pushes hard for a moment (a struck plate), a sounding note holds the figure, silence lets the plate fall still
@@ -653,7 +719,7 @@ if(!r.held)IN=0,M2=36;else if(r.on)M2+=(c*c-M2)*(1-Math.exp(-dt/.25)),IN=M2<=(IN
 if(r.on){const g=Math.tanh((ac>2?ac-2:0)/22);OFF=fresh?g:OFF+(g-OFF)*(1-Math.exp(-dt/.16));fresh&&(W1=RND()*6.2832,W2=RND()*6.2832)
 if(ac>2){const th=(c>0?-1:1)*1.5708+.5*Math.sin(.25*TW+W1)+.25*Math.sin(.11*TW+W2),k=fresh?1:1-Math.exp(-dt/.3);LX+=(Math.cos(th)-LX)*k,LY+=(Math.sin(th)-LY)*k}}
 TW+=dt*LIVE,TK+=dt*LIVE*400
-if(LIVE>.004||BUSY||NGH||FON||zc)DISTURB(),SAND(dt*60,LIVE,LAMP*.5,.03,t)
+if(LIVE>.004||BUSY||NGH||FON||zc||rd)DISTURB(),SAND(dt*60,LIVE,LAMP*.5,.03,t)
 SHOW(r,ac,t)}
 // the readout. Playing, it shows what the dial is set to, as a tone generator's display does; listening, the note that is heard. The
 // note and the lights follow at once; the figures change at most about eight times a second, like a counter's
@@ -661,7 +727,7 @@ const SHOW=(r,ac,t)=>{let nm='',oc=0,ce=0,f=0,on=0,pos=-1
 if(mode=='tone'){const p=TP+BEND/100,m=Math.round(p);nm=NOTES[(m%12+12)%12],oc=Math.floor(m/12)-1,ce=(p-m)*100,f=TONEF(),on=ENV>.03?1:0,pos=p}
 else if(r.held)nm=r.name,oc=r.oct,ce=r.cents,f=r.f,on=r.on,pos=r.midi+r.cents/100
 const inn=IN&&r.held?1:0,L=3,a=ce<0?-ce:ce,n=Math.round(a),k=nm+'|'+oc+'|'+inn+'|'+on+'|'+mode,s=k+'|'+n+(ce<0?'f':'s')+'|'+f.toFixed(1)
-if(inn!=INW)INW=inn,led.classList.toggle('in',!!inn)
+if(inn!=INW)INW=inn,led.classList.toggle('in',!!inn),con.classList.toggle('lit',!!inn)
 // off the note the plate's edge is seen to shake: a soft double of it shows, more the further off, and none in tune or in silence
 const rw=Math.round(Math.min(1,OFF*1.7)*LIVE*20);rw!=RIMW&&(RIMW=rw,rimb.style.opacity=rw/20)
 const dm=t<DMT?1:0;dm!=DMW&&(DMW=dm,SHOWN='')
@@ -679,13 +745,14 @@ DFLUSH()}
 // DLD = the finger on the dial; VEL, COAST = how fast it is coasting; TGT = the note it is settling on; DLP = the place last drawn
 const DLX=$('dial').getContext('2d');let DLD=null,VEL=0,COAST=0,TGT=null,DLP=-1,LASTN=69
 const PCLAMP=p=>p<28?28:p>103?103:p
-const SETP=p=>{if(p==TP)return;TP=p,TMOVE=performance.now()/1000;const n=Math.round(p);n!=LASTN&&(LASTN=n,PLUCK(TMOVE),dial.setAttribute('aria-valuetext',NOTES[n%12]+(Math.floor(n/12)-1)))}
+const SETP=p=>{if(p==TP)return;TP=p,TMOVE=performance.now()/1000;const n=Math.round(p);n!=LASTN&&(LASTN=n,(DLD||COAST)&&VB(4),PLUCK(TMOVE),dial.setAttribute('aria-valuetext',NOTES[n%12]+(Math.floor(n/12)-1)))}
 const DIALDRAW=_=>{DLP=TP;const k=DPR(),w=DLW,h=DLH,x=DLX,c=w/2,half=c/SPX+1;x.setTransform(k,0,0,k,0,0),x.clearRect(0,0,w,h),x.textAlign='center',x.font='12px monospace'
 for(let m=Math.max(28,Math.ceil(TP-half));m<=Math.min(103,Math.floor(TP+half));m++){const X=c+(m-TP)*SPX,nm=NOTES[m%12],nat=nm.length==1,isC=m%12==0
 x.fillStyle=nat?isC?'#fff':'rgba(223,228,236,.72)':'rgba(223,228,236,.3)',x.fillRect(X-.75,nat?h-21:h-13,1.5,nat?15:7),nat&&x.fillText(isC?'C'+(m/12-1):nm,X,h-28)}
 for(const [m,sg] of [[28,-1],[103,1]]){const X=c+(m-TP)*SPX+sg*13;X>-4&&X<w+4&&(x.fillStyle=DCOL[2],x.fillRect(X-1,7,2,h-13))}                      // the two ends of the range
 x.fillStyle=x.shadowColor=DCOL[3],x.shadowBlur=7,x.fillRect(c-1,h-23,2,23),x.beginPath(),x.moveTo(c-5,0),x.lineTo(c+5,0),x.lineTo(c,7),x.fill(),x.shadowBlur=0                                                   // the pointer
-const g=x.createLinearGradient(0,0,w,0);g.addColorStop(0,'#040506'),g.addColorStop(.13,'rgba(4,5,6,0)'),g.addColorStop(.87,'rgba(4,5,6,0)'),g.addColorStop(1,'#040506'),x.fillStyle=g,x.fillRect(0,0,w,h)}
+const g=x.createLinearGradient(0,0,w,0);g.addColorStop(0,'#040506'),g.addColorStop(.13,'rgba(4,5,6,0)'),g.addColorStop(.87,'rgba(4,5,6,0)'),g.addColorStop(1,'#040506'),x.fillStyle=g,x.fillRect(0,0,w,h)
+const q=x.createLinearGradient(0,0,w*.07,h);q.addColorStop(0,'rgba(255,255,255,.07)'),q.addColorStop(.3,'rgba(255,255,255,.018)'),q.addColorStop(.5,'rgba(255,255,255,0)'),x.fillStyle=q,x.fillRect(0,0,w,h)}                          // (the glass over it)
 const SETTLE=must=>{const n=Math.round(TP);(must||Math.abs(TP-n)<=.12)&&(TGT=n)}
 dial.addEventListener('pointerdown',ev=>{mode=='mic'&&SETMODE('tone');DLD={x:ev.clientX,t:performance.now(),mv:0,v:0},VEL=0,COAST=0,TGT=null;try{dial.setPointerCapture(ev.pointerId)}catch(e){}})
 dial.addEventListener('pointermove',ev=>{const d=DLD;if(!d)return;const now=performance.now(),dx=ev.clientX-d.x,p=PCLAMP(TP-dx/SPX);d.v+=((p-TP)/Math.max(1,now-d.t)*1000-d.v)*.4,d.x=ev.clientX,d.t=now,d.mv+=dx<0?-dx:dx,SETP(p)})
@@ -753,11 +820,14 @@ const ZPF=[44,112,84],ZPM=ZPF[0]+ZPF[1]+ZPF[2]
 const WPX=w=>w<1?w*ZPF[0]:w<2?ZPF[0]+(w-1)*ZPF[1]:ZPF[0]+ZPF[1]+(w-2)*ZPF[2]
 const PXW=q=>q<=0?0:q<ZPF[0]?q/ZPF[0]:(q-=ZPF[0])<ZPF[1]?1+q/ZPF[1]:(q-=ZPF[1])<ZPF[2]?2+q/ZPF[2]:3
 // the screw as it now stands: turned as far as it is loose, risen a little, and (the plate's hole growing round it) no larger for
-// the plate coming closer, and gone dark by the time the plate is a third larger
-const SCREW=_=>{const u=ZW<1?ZW:1,q=scw.style;q.setProperty('--r',(35-900*u).toFixed(1)+'deg'),q.scale=((1+.14*u)/ZV).toFixed(3),q.opacity=ZV<1.015?'':Math.max(0,1-(ZV-1)/.3).toFixed(2)}
+// the plate coming closer, and gone dark by the time the plate is a third larger. It throws a longer shadow the further out it is,
+// and each half turn of it is felt
+let SCN=0
+const SCREW=_=>{const u=ZW<1?ZW:1,q=scw.style,n=u*5|0;n!=SCN&&(SCN=n,VB(4));q.boxShadow=u?'0 0 0 1px #000,0 '+(1+3*u).toFixed(1)+'px '+(3+4*u).toFixed(1)+'px rgba(0,0,0,.8)':'',q.setProperty('--r',(35-900*u).toFixed(1)+'deg'),q.scale=((1+.14*u)/ZV).toFixed(3),q.opacity=ZV<1.015?'':Math.max(0,1-(ZV-1)/.3).toFixed(2)}
 // the view for a way along. Between two of the views it passes through, the plate grows about one fixed place (so the sand never
 // fails to cover the screen on the way from one to the other)
-const ZSET=w=>{const z1=ZLV()[1];ZW=w
+let ZUP=0
+const ZSET=w=>{const z1=ZLV()[1];ZW=w;if(!ZUP)w>1.08&&(ZUP=1,VB(6));else if(w<=1)ZUP=0,SHOCK=1,VB(10)               // off its base (felt); back down on it: it lands, and the sand jumps a hair
 if(w<=1)ZV=1,ZX=ZY=0
 else if(w<=2){const z=ZV=Math.pow(z1,w-1),f=(z-1)/(z1-1);ZX=Z1X*f,ZY=Z1Y*f}
 else{const z=ZV=z1*Math.pow(2,w-2),f=z/z1-1;ZX=Z1X+(Z2X-Z1X)*f,ZY=Z1Y+(Z2Y-Z1Y)*f}}
@@ -773,7 +843,6 @@ const ZGO=(l,sx=VW/2,sy=VH/2)=>{if(!mode||OPEN)return;l=l<0?0:l>2?2:l;if(l==ZL&&
 // The fingers have let go: the plate runs on to the next stop the way they were last carrying it; if they hardly moved it (less than
 // 8 pixels of their travel), back to the stop it was at or on its way to
 const ZLET=_=>{const p=PN;PN=null;if(!p)return;const w=ZW;ZLSET(Math.abs(WPX(w)-p.p0)<8||!p.dir?ZL:p.dir>0?w>2?2:w>0?1:0:w>=3?2:w>=2?1:0)}
-const RMO=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)
 // each frame, when the plate is running to a stop by itself: the screw is turned at its own steady rate, the plate is eased; never
 // both at once (the screw is out before the plate lifts, and the plate is down before the screw goes in). Says whether the view changed
 const ZSTEP=dt=>{let ch=ZCH;ZCH=0
@@ -791,9 +860,12 @@ ch&&ZAPPLY();return ch}
 let ZBW=0,ZBH=0,ZRHO=1,ZK=0,ZKM=1,ZKZ=1,ZOX=0,ZOY=0,ZIM=null,ZD=null,ZC=null,ZMS=[],ZGF=0,ZGW=0,ZIMG=null,ZG=null
 const ZMG=20
 // the pixels of a dab k across, as steps from its top left corner on a canvas W wide: c the ones well inside it, r the ones on its edge
-// (painted fainter, so the dab looks round); h = half its width
-const DAB=(k,W)=>{const c=[],r=[];for(let y=0;y<k;y++)for(let x=0;x<k;x++){let n=0;for(let a=0;a<4;a++)for(let b=0;b<4;b++){const dx=x+(a+.5)/4-k/2,dy=y+(b+.5)/4-k/2;dx*dx+dy*dy<=k*k/4&&n++}n>=9?c.push(y*W+x):n>=3&&r.push(y*W+x)}
-return{c:Int32Array.from(c),r:Int32Array.from(r),h:k/2}}
+// (painted fainter, so the dab looks round); h = half its width. A dab is a bead lit from the upper left: of the pixels inside it, hi
+// are the ones on the side toward the light (painted a quarter lighter), lo the ones on the side away (a quarter darker), and sp, in a
+// dab large enough to have one, the bright point where the light itself shows
+const DAB=(k,W)=>{const c=[],r=[],hi=[],lo=[],sp=[];for(let y=0;y<k;y++)for(let x=0;x<k;x++){let n=0;for(let a=0;a<4;a++)for(let b=0;b<4;b++){const dx=x+(a+.5)/4-k/2,dy=y+(b+.5)/4-k/2;dx*dx+dy*dy<=k*k/4&&n++}
+const o=y*W+x;if(n>=9){c.push(o);const d=(x+y+1)/k-1;d<-.28?hi.push(o):d>.3&&lo.push(o);k>=5&&Math.hypot(x+.5-k*.34,y+.5-k*.34)<k*.13&&sp.push(o)}else n>=3&&r.push(o)}
+return{c:Int32Array.from(c),r:Int32Array.from(r),hi:Int32Array.from(hi),lo:Int32Array.from(lo),sp:Int32Array.from(sp),h:k/2}}
 const ZFIT=_=>{const r0=T/(RS*S/P.R),lim=Math.sqrt(1.1e6/(VW*VH));ZRHO=Math.min(lim,r0>=.85?Math.min(r0,1.5):1),ZBW=Math.ceil(VW*ZRHO)+2*ZMG,ZBH=Math.ceil(VH*ZRHO)+2*ZMG
 ZIM=PX.createImageData(ZBW,ZBH),ZD=new Uint32Array(ZIM.data.buffer),ZC=new Uint8Array(ZBW*ZBH)}
 // going over to the closer way of drawing, or back to the one at home
@@ -807,18 +879,23 @@ ZKZ=sd/S*ZV*ZRHO,ZOX=((CX-sd/2)*ZV+ZX)*ZRHO+ZMG,ZOY=((CY-sd/2)*ZV+ZY)*ZRHO+ZMG
 if(k!=ZK){ZK=k;const a=DAB(k,ZBW),b=k>=3?DAB(k-1,ZBW):a,c=k>=4?DAB(k+1,ZBW):a;ZMS=[c,b,b,a,a,a,a,a],ZKM=k>=4?k+1:k}
 if(f!=ZGF){ZGF=f,ZGW=Math.ceil(ZBW/f);const h=Math.ceil(ZBH/f);CG.width=ZGW,CG.height=h,ZIMG=PXG.createImageData(ZGW,h),ZG=new Uint32Array(ZIMG.data.buffer),GDIRTY=1,PUT(cg,m,m,ZGW*f/ZRHO,h*f/ZRHO)}}
 // home at once (the screen changed size)
-const ZHOME=_=>{ZV=1,ZX=ZY=0,ZT=PN=TAP=null,ZL=ZW=PNX=0,ZD=null,FP.clear(),FON=0,zo.hidden=true,pzm.classList.remove('on'),SCREW();ZM&&(ZMODE(0),ZCH=1)}
+const ZHOME=_=>{ZV=1,ZX=ZY=0,ZT=PN=TAP=null,ZL=ZW=PNX=ZUP=0,ZD=null,FP.clear(),FON=0,zo.hidden=true,pzm.classList.remove('on'),SCREW();ZM&&(ZMODE(0),ZCH=1)}
 // the sand, seen from closer: every grain on the plate is painted as its dab, at the place SAND found for it (GDX, GDY). As at home, a
 // pixel covered by more grains is lighter (ZC counts them, up to four), a grain that glows is marked on the canvas of glow too, and opal
 // takes its colour from where it is and when. A dab's edge pixels are painted only where nothing else covers them
-const ZPAINT=(k1,t)=>{const W=ZBW,D=ZD,N=ZC,gl=NGL>0||GDIRTY,GG=ZG,gw=ZGW,gf=1/ZGF,kz=ZKZ,ox=ZOX,oy=ZOY,xm=W-ZKM-1,ym=ZBH-ZKM-1;D.fill(0),N.fill(0),gl&&GG.fill(0)
+const ZPAINT=(k1,t)=>{const lx=GLX,ly=GLY,W=ZBW,D=ZD,N=ZC,gl=NGL>0||GDIRTY,GG=ZG,gw=ZGW,gf=1/ZGF,kz=ZKZ,ox=ZOX,oy=ZOY,xm=W-ZKM-1,ym=ZBH-ZKM-1;D.fill(0),N.fill(0),gl&&GG.fill(0)
 for(let i=0;i<NG;i++){if(GQ[i]<0)continue;const ms=ZMS[i&7],bx=GDX[i]*kz+ox-ms.h|0,by=GDY[i]*kz+oy-ms.h|0;if(bx<0||by<0||bx>xm||by>ym){GQ[i]=-1;continue}
 const p=GQ[i]=by*W+bx,co=ms.c,m=MT[i];for(let j=0;j<co.length;j++){const q=p+co[j];N[q]<4&&N[q]++}
 GLW[m]&&(GG[((by+ms.h)*gf|0)*gw+((bx+ms.h)*gf|0)]=SC[m*10+1])}
 for(let i=0;i<NG;i++){const p=GQ[i];if(p<0)continue;const ms=ZMS[i&7],co=ms.c,ri=ms.r,m=MT[i];let c1
 if(m==IRI){const hb=PH[i]+k1;for(let j=0;j<co.length;j++){const q=p+co[j];D[q]=IRT[(N[q]-1<<8)+(hb+(q>>3)&255)]}c1=IRT[hb&255]}
 else{const b=m*10+(i&3?0:5);for(let j=0;j<co.length;j++){const q=p+co[j];D[q]=SC[b+N[q]]}c1=SC[b+1]}
-c1=c1&0xffffff|0x70000000;for(let j=0;j<ri.length;j++){const q=p+ri[j];D[q]||(D[q]=c1)}}
+c1=c1&0xffffff|0x70000000;for(let j=0;j<ri.length;j++){const q=p+ri[j];D[q]||(D[q]=c1)}
+const hi=ms.hi,lo=ms.lo,sp=ms.sp,gx=GFX[i]-lx,gy=GFY[i]-ly,g2=gx*gx+gy*gy,g=g2<100?GLS[m]:0                           // the bead's light and shade; and a glint, if it catches the light
+for(let j=0;j<lo.length;j++){const q=p+lo[j],v=D[q];D[q]=v-((v>>>2)&0x3f3f3f)}
+if(g>1){for(let j=0;j<co.length;j++){const q=p+co[j],v=D[q];D[q]=v+((~v>>>2)&0x3f3f3f)}for(let j=0;j<hi.length;j++)D[p+hi[j]]=0xffffffff}
+else for(let j=0;j<hi.length;j++){const q=p+hi[j],v=D[q];D[q]=g?(v>>>1&0x7f7f7f)+0x808080|0xff000000:v+((~v>>>2)&0x3f3f3f)}
+for(let j=0;j<sp.length;j++){const q=p+sp[j],v=D[q];D[q]=g>1?0xffffffff:(v>>>1&0x7f7f7f)+0x808080|0xff000000}}
 for(let j=0;j<NGH;){const e=(t-GHT[j])*2.5;if(e>=1){GHDEL(j);continue}const ms=ZMS[GHK[j]],bx=GHX[j]*kz+ox-ms.h|0,by=GHY[j]*kz+oy-ms.h|0                    // the ghosts, where no grain lies
 if(bx>=0&&by>=0&&bx<=xm&&by<=ym){const p=by*W+bx,co=ms.c,ri=ms.r,a=255*(1-e)|0,col=GHC[j]|a<<24,c1=GHC[j]|(a*.44|0)<<24;for(let k=0;k<co.length;k++){const q=p+co[k];D[q]||(D[q]=col)}for(let k=0;k<ri.length;k++){const q=p+ri[k];D[q]||(D[q]=c1)}}j++}
 PX.putImageData(ZIM,0,0);if(gl)PXG.putImageData(ZIMG,0,0),GDIRTY=NGL>0?1:0
@@ -832,11 +909,11 @@ pzm.onclick=_=>ZGO(ZL?0:1),zo.onclick=_=>ZGO(0)
 // Held, one bends the note down and the other up, by up to half a semitone in about a third of a second; let go and the note springs
 // back (DIALSTEP does both). BDIR = which is held: -1 flat, 1 sharp, 0 neither
 let BDIR=0
-for(const [el,d] of [[tfl,-1],[tsh,1]]){const up=_=>{BDIR==d&&(BDIR=0)};el.addEventListener('pointerdown',ev=>{mode=='mic'&&SETMODE('tone');mode&&(BDIR=d);try{el.setPointerCapture(ev.pointerId)}catch(e){}}),el.addEventListener('pointerup',up),el.addEventListener('pointercancel',up)}
+for(const [el,d] of [[tfl,-1],[tsh,1]]){const up=_=>{BDIR==d&&(BDIR=0)};el.addEventListener('pointerdown',ev=>{VB(5),mode=='mic'&&SETMODE('tone');mode&&(BDIR=d);try{el.setPointerCapture(ev.pointerId)}catch(e){}}),el.addEventListener('pointerup',up),el.addEventListener('pointercancel',up)}
 // the octave keys (listening, a press on either goes over to the instrument first, as a touch on the dial or on flat or sharp does)
-tdn.onclick=_=>{mode=='mic'&&SETMODE('tone');STEP(-12)},tup.onclick=_=>{mode=='mic'&&SETMODE('tone');STEP(12)}
+tdn.onclick=_=>{VB(5),mode=='mic'&&SETMODE('tone');STEP(-12)},tup.onclick=_=>{VB(5),mode=='mic'&&SETMODE('tone');STEP(12)}
 // play: starts and stops the instrument (and, listening, goes over to it)
-ply.onclick=_=>{mode=='tone'?PLAYSET(!PLAYING):mode&&SETMODE('tone')}
+ply.onclick=_=>{VB(8),mode=='tone'?PLAYSET(!PLAYING):mode&&SETMODE('tone')}
 addEventListener('keydown',ev=>{const k=ev.key;if(k=='Escape')return ZL?ZGO(0):PM(!OPEN);if(!mode||OPEN)return
 if(k=='+'||k=='=')return ZGO(ZL+1);if(k=='-'||k=='_')return ZGO(ZL-1);if(k==' ')return ev.preventDefault(),ply.onclick()
 if(mode!='tone')return
@@ -850,7 +927,7 @@ try{const a=JSON.parse(localStorage.getItem('sst.accent')||'null');Array.isArray
 const ACUI=_=>{[fdr,fdg,fdb].forEach((el,j)=>{const c=ACR.map((x,i)=>i==j?0:x),d=ACR.map((x,i)=>i==j?255:x);el.firstElementChild.style.background='linear-gradient(to right,rgb('+c+'),rgb('+d+'))',el.lastElementChild.style.left=ACR[j]/2.55+'%'})}
 const ACAP=save=>{let [r,g,b]=ACR;const top=Math.max(r,g,b),lo=Math.min(r,g,b);if(top<110){const q=110/(top||1);r=Math.min(255,r*q||110)|0,g=Math.min(255,g*q||110)|0,b=Math.min(255,b*q||110)|0}
 const R=document.documentElement.style,f=x=>top==lo?255:Math.round((x-lo)/(top-lo)*255);R.setProperty('--ac','rgb('+r+','+g+','+b+')'),R.setProperty('--ach','rgb('+f(ACR[0])+','+f(ACR[1])+','+f(ACR[2])+')')
-DCOL=[.06,.34,.72,1].map(a=>'rgba('+r+','+g+','+b+','+a+')'),DNOW.fill(9),DFLUSH(),DIALDRAW();if(save)try{localStorage.setItem('sst.accent',JSON.stringify(ACR))}catch(e){}}
+DRGB=r+','+g+','+b,DCOL=DCA.map(a=>'rgba('+DRGB+','+a+')'),DNOW.fill(9),DFLUSH(),DIALDRAW();if(save)try{localStorage.setItem('sst.accent',JSON.stringify(ACR))}catch(e){}}
 const ACDRAG=(el,j)=>{let on=0;const at=ev=>{const r=el.getBoundingClientRect();ACR[j]=Math.round(Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width))*255),ACAP(),ACUI()};el.onpointerdown=ev=>{on=1;try{el.setPointerCapture(ev.pointerId)}catch(e){}at(ev)},el.onpointermove=ev=>on&&at(ev),el.onpointerup=el.onpointercancel=_=>{on&&ACAP(1),on=0}}
 ACDRAG(fdr,0),ACDRAG(fdg,1),ACDRAG(fdb,2),pac.onclick=_=>{acc.hidden=!acc.hidden,acc.hidden||ACUI()},acr.onclick=_=>{ACR=[255,180,84],ACAP(1),ACUI()}
 // ---------- title, the menu (the inside of the machine), the corner buttons, the powder keys ----------
@@ -858,35 +935,50 @@ ACDRAG(fdr,0),ACDRAG(fdg,1),ACDRAG(fdb,2),pac.onclick=_=>{acc.hidden=!acc.hidden
 // console, by a swipe to the left on the menu itself, or by Escape
 let OPEN=0
 const PM=on=>{OPEN=on?1:0,mnb.classList.toggle('on',!!on);if(on)pm.hidden=false,pm.scrollTop=0,requestAnimationFrame(_=>document.body.classList.add('open'));else document.body.classList.remove('open'),setTimeout(_=>OPEN||(pm.hidden=true),440)}
-con.addEventListener('click',ev=>{OPEN&&ev.target==con&&PM(0)})
-let SWP=null;pm.addEventListener('pointerdown',ev=>{SWP={x:ev.clientX,y:ev.clientY}}),pm.addEventListener('pointerup',ev=>{const d=SWP;SWP=null;d&&d.x-ev.clientX>50&&Math.abs(ev.clientY-d.y)<50&&!ev.target.closest('.fad')&&PM(0)})
+// The menu is closed by its cross, by Escape, by a tap on what shows of the console, or by taking hold anywhere (of the menu or of the
+// console) and dragging left: the console comes with the finger, and let go it closes if it has come 40 pixels or so, or was flicked
+// left, unless the finger was on its way back to the right; otherwise it goes back. MD = a touch that may be such a drag: where it began, whether it has become one (on), how
+// far it has come (dx) and how fast it is going (v, pixels a millisecond); MDT = when a drag last ended or a tap last closed the menu
+let MD=null,MDT=-1e9
+const MDSET=x=>{con.style.translate=pl.style.translate=x==null?'':Math.max(0,SLIDE+x)+'px 0'}
+const MDOWN=ev=>{if(!OPEN||MD&&MD.on||ev.target.closest('.fad'))return;MD={id:ev.pointerId,x:ev.clientX,y:ev.clientY,on:0,dx:0,px:ev.clientX,pt:ev.timeStamp,v:0,cat:ev.currentTarget==cat}}
+const MMOVE=ev=>{const d=MD;if(!d||ev.pointerId!=d.id)return;const dx=ev.clientX-d.x,dy=ev.clientY-d.y
+if(!d.on){if(dx<-8&&-dx>1.2*Math.abs(dy)){d.on=1,document.body.classList.add('drag');try{ev.currentTarget.setPointerCapture(d.id)}catch(e){}}else return}
+const dt=ev.timeStamp-d.pt;dt>0&&(d.v=.6*d.v+.4*(ev.clientX-d.px)/dt),d.px=ev.clientX,d.pt=ev.timeStamp,d.dx=Math.min(0,dx),MDSET(d.dx)}
+const MUP=ev=>{const d=MD;if(!d||ev.pointerId!=d.id)return;MD=null
+if(d.on)document.body.classList.remove('drag'),MDSET(null),MDT=ev.timeStamp,ev.type=='pointerup'&&d.v<.2&&(d.v<-.3||d.dx<-Math.max(40,.14*SLIDE))&&PM(0)
+else d.cat&&ev.type=='pointerup'&&Math.hypot(ev.clientX-d.x,ev.clientY-d.y)<12&&(MDT=ev.timeStamp,PM(0))}
+for(const el of [pm,cat])el.addEventListener('pointerdown',MDOWN),el.addEventListener('pointermove',MMOVE),el.addEventListener('pointerup',MUP),el.addEventListener('pointercancel',MUP)
+// (The click a browser makes of a touch comes after the touch has ended, and by then what lay under the finger has changed: the row
+// of the menu a drag ended over, or the part of the console that was showing where the tap fell. It must not press that.)
+addEventListener('click',ev=>{ev.timeStamp-MDT<350&&(ev.stopPropagation(),ev.preventDefault())},true)
 const ASET=a=>{A4=a<415?415:a>466?466:a,aval.textContent=A4+' Hz',ard.hidden=A4==440,SHOWN='';try{localStorage.setItem('sst.a4',A4)}catch(e){}}
 const BEGIN=async m=>{await SETMODE(m);document.body.classList.remove('pre'),st.classList.add('out'),setTimeout(_=>st.hidden=true,560)}
 document.body.classList.add('pre'),ASET(A4)
 // The source keys, on the console and on the title card: the microphone, then each instrument, each with its sign and its name. On the
 // title card a press starts the page with that source; on the console it changes the source
 const NOMIC=_=>TOAST('This preview page cannot use the microphone. The full page can.')
-const SKEYS=(host,ids,fn)=>['mic',...VOICES.map(v=>v.n)].map((n,k)=>{const b=document.createElement('button');b.className='sk',b.id=ids[k],b.innerHTML=SV(n)+'<b>'+n+'</b>',b.title=b.ariaLabel=k?'play the '+n:'listen with the microphone',b.onclick=_=>fn(k),host.appendChild(b);return b})
+const SKEYS=(host,ids,fn)=>['mic',...VOICES.map(v=>v.n)].map((n,k)=>{const b=document.createElement('button');b.className='sk',b.id=ids[k],b.innerHTML=SV(n)+'<b>'+n+'</b>',b.title=b.ariaLabel=k?'play the '+n:'listen with the microphone',b.onclick=_=>{VB(6),fn(k)},host.appendChild(b);return b})
 const SKS=SKEYS(src,['smc','sv0','sv1','sv2'],k=>{if(!mode)return;if(!k)return PREVIEW?NOMIC():mode!='mic'&&SETMODE('mic');mode=='tone'?VOICE==k-1&&PLAYING||VOICESET(k-1):(VOICE=k-1,VSAVE(),SETMODE('tone'))})                // (a press on the key that is already sounding changes nothing)
 const TKS=SKEYS(stk,['sgo','sto','st1','st2'],k=>{if(!k)return PREVIEW?NOMIC():BEGIN('mic');VOICE=k-1,VSAVE(),BEGIN('tone')})
 if(PREVIEW)SKS[0].classList.add('no'),TKS[0].classList.add('no'),scp.innerHTML='This preview page cannot use the microphone, so it only plays.<br>The full page also listens.'
-mnb.onclick=_=>{ZL||PM(1)},pmx.onclick=_=>PM(0)
+mnb.onclick=_=>{ZL||(VB(6),PM(1))},pmx.onclick=_=>PM(0)
 adn.onclick=_=>ASET(A4-1),aup.onclick=_=>ASET(A4+1),ard.onclick=_=>ASET(440)
 pt.onclick=_=>{PM(0),MICOFF(),PLAYSET(0),mode='',R0={on:0,held:0},SHOWN='',document.body.classList.remove('mic'),SRCUI(),st.hidden=false,document.body.classList.add('pre'),requestAnimationFrame(_=>st.classList.remove('out'))}
 // full screen, where the browser allows it (as on Nano)
 addEventListener('fullscreenchange',_=>{const f=!!document.fullscreenElement;pfs.innerHTML=SV(f?'unfull':'full'),pfs.classList.toggle('on',f)}),pfs.hidden=!document.fullscreenEnabled
 pfs.onclick=_=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}catch(e){}}
 // the powder orbs: one for each kind, set in the bezel (FIT places them). A press sprays in a quarter of a plateful, and the orb
-// flares for a moment. The broom sweeps the plate clear. ORB = an orb's colours, worked out from the kind's one colour
+// flares for a moment and is then spent for a moment more. The broom sweeps the plate clear. ORB = an orb's colours, worked out from the kind's one colour
 const ORB=m=>{if(m.iri)return'--p:#dfe3ee;--hi:rgba(255,255,255,.9);--lo:#9aa0b8;--dk:#3c4058;--gl:rgba(205,215,255,.4)';const o=m.o,dark=Math.max(...o)<60
 return'--p:rgb('+o+');--hi:rgba('+o.map(c=>Math.round(c+(255-c)*.55))+','+(dark?.4:.85)+');--lo:rgb('+o.map(c=>c*.42|0)+');--dk:rgb('+o.map(c=>c*.1|0)+');--gl:rgba('+o+','+(dark?0:.5)+')'}
-const PJ=MATS.map((m,k)=>{const b=document.createElement('button');b.className='pj'+(m.iri?' iri':''),b.dataset.m=k,b.title=b.ariaLabel='spray in '+m.n,b.style.cssText=ORB(m),b.appendChild(document.createElement('i'))
-b.onclick=_=>{POUR(k,performance.now()/1000),b.classList.add('fire'),setTimeout(_=>b.classList.remove('fire'),450)},con.appendChild(b);return b})
-pvt.onclick=_=>{VENT(performance.now()/1000),pvt.classList.add('on'),clearTimeout(pvt.t),pvt.t=setTimeout(_=>pvt.classList.remove('on'),700)}
+const PJ=MATS.map((m,k)=>{const b=document.createElement('button');b.className='pj'+(m.iri?' iri':''),b.dataset.m=k,b.title=b.ariaLabel='spray in '+m.n,b.style.cssText=ORB(m)+';--cx:'+(50-Math.sin(PJA[k])*46).toFixed(1)+'%;--cy:'+(50+Math.cos(PJA[k])*46).toFixed(1)+'%',b.appendChild(document.createElement('i')).innerHTML='<u></u><s></s>'
+b.onclick=_=>{VB(6),POUR(k,performance.now()/1000),b.classList.remove('spent'),b.classList.add('fire'),clearTimeout(b.t),b.t=setTimeout(_=>{b.classList.remove('fire'),b.classList.add('spent'),b.t=setTimeout(_=>b.classList.remove('spent'),1600)},450)},con.appendChild(b);return b}),PJS=PJ.map(b=>b.querySelector('s'))
+pvt.onclick=_=>{VB(10),VENT(performance.now()/1000),pvt.classList.add('on'),clearTimeout(pvt.t),pvt.t=setTimeout(_=>pvt.classList.remove('on'),700)}
 // the page gives the microphone back while it is out of sight and takes it up again on return
 document.addEventListener('visibilitychange',_=>{try{if(document.hidden){AC&&AC.state=='running'&&AC.suspend()}else{AC&&AC.resume().catch(_=>{}),mode&&WAKE()}}catch(e){}})
 // for the tests: the page's state; and the dial as two numbers, a note (TM) and cents off it (TB)
-window.__T=_=>({mode,r:R0,inn:IN,off:OFF,lx:LX,ly:LY,live:LIVE,amp:P.amp(),lam:LAMP,a4:A4,tp:TP,bend:BEND,tb:(TP-Math.round(TP))*100+BEND,tm:Math.round(TP),playing:PLAYING,env:ENV,voice:VOICES[VOICE].n,fs:DFS,open:OPEN,busy:BUSY,glow:NGL,acc:ACR,zw:+ZW.toFixed(4),zt:ZT,scu:+Math.min(1,ZW).toFixed(4),rot:scw.style.getPropertyValue('--r'),fading:GS.reduce((a,g)=>a+(g==5),0),ghosts:NGH,swept:GS.reduce((a,g)=>a+(g==1),0),z:ZV,zl:ZL,zm:ZM,zk:ZK,zx:ZX,zy:ZY,fon:FON,onp:GS.reduce((a,g)=>a+(g==0),0),kinds:MATS.map((m,k)=>{let n=0;for(let i=0;i<NG;i++)GS[i]==0&&MT[i]==k&&n++;return m.n+':'+n}).join(' ')})
+window.__T=_=>({mode,r:R0,inn:IN,off:OFF,lx:LX,ly:LY,live:LIVE,amp:P.amp(),lam:LAMP,a4:A4,tp:TP,bend:BEND,tb:(TP-Math.round(TP))*100+BEND,tm:Math.round(TP),playing:PLAYING,env:ENV,voice:VOICES[VOICE].n,fs:DFS,open:OPEN,busy:BUSY,glow:NGL,acc:ACR,light:[+TLX.toFixed(3),+TLY.toFixed(3),GLX,GLY,LK],glints:(_=>{let n=0;for(let i=0;i<NG;i++){if(GS[i])continue;const a=GFX[i]-GLX,b=GFY[i]-GLY;a*a+b*b<100&&GLS[MT[i]]&&n++}return n})(),shock:+SHOCK.toFixed(3),zup:ZUP,zw:+ZW.toFixed(4),zt:ZT,scu:+Math.min(1,ZW).toFixed(4),rot:scw.style.getPropertyValue('--r'),fading:GS.reduce((a,g)=>a+(g==5),0),ghosts:NGH,swept:GS.reduce((a,g)=>a+(g==1),0),z:ZV,zl:ZL,zm:ZM,zk:ZK,zx:ZX,zy:ZY,fon:FON,onp:GS.reduce((a,g)=>a+(g==0),0),kinds:MATS.map((m,k)=>{let n=0;for(let i=0;i<NG;i++)GS[i]==0&&MT[i]==k&&n++;return m.n+':'+n}).join(' ')})
 let TMX=69,TBX=0;Object.defineProperty(window,'TM',{get:_=>TMX,set:v=>{TMX=v,TP=v+TBX/100,TGT=null,COAST=0,TMOVE=performance.now()/1000}}),Object.defineProperty(window,'TB',{get:_=>TBX,set:v=>{TBX=v,TP=TMX+v/100,TGT=null,COAST=0,TMOVE=performance.now()/1000}})
 // The brushed metal is fine streaks of noise made by an SVG filter. Drawn as the console's background directly, the filter would be worked
 // out again at every size while the view is changing, which is slow; so it is drawn once into a picture here, and the console is given
