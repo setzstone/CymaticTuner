@@ -180,7 +180,7 @@ body.drag #con,body.drag #pl{transition:none;will-change:translate}
    settles in the row it is over: any of six, from above the name to under the dial. (The grip has a strip of its own at the
    readout's right end, DGW wide, so that it never lies over what the readout says) */
 #dgr{position:absolute;right:0;top:0;bottom:0;width:40px;touch-action:none;cursor:grab;z-index:2;pointer-events:auto}
-#dgr:before{content:'';position:absolute;right:5px;top:50%;margin-top:-7.25px;width:9px;height:14.5px;opacity:.9;background:linear-gradient(#8f949e,#8f949e) 0 0/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 5.5px 0/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 0 5.5px/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 5.5px 5.5px/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 0 11px/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 5.5px 11px/3.5px 3.5px no-repeat;filter:drop-shadow(0 0 2px rgba(0,0,0,.9))}
+#dgr:before{content:'';position:absolute;right:5px;top:50%;margin-top:-7.25px;width:9px;height:14.5px;opacity:.5;background:linear-gradient(#8f949e,#8f949e) 0 0/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 5.5px 0/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 0 5.5px/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 5.5px 5.5px/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 0 11px/3.5px 3.5px no-repeat,linear-gradient(#8f949e,#8f949e) 5.5px 11px/3.5px 3.5px no-repeat;filter:drop-shadow(0 0 2px rgba(0,0,0,.9))}
 #dspw.lift{scale:1.025;z-index:7;filter:drop-shadow(0 14px 12px rgba(0,0,0,.75))}#dspw.lift #dgr{cursor:grabbing}#dspw.lift #dgr:before{filter:brightness(1.9) drop-shadow(0 0 3px var(--ac))}
 #dspw{transition:scale .15s,filter .15s}body>#dspw{position:fixed;z-index:6}      /* (while it is carried the readout is taken out of the console and laid over everything, the plate too) */
 body.mv #con>*:not(#dspw),body.mv #pl>*{transition:left .24s cubic-bezier(.2,.8,.2,1),top .24s cubic-bezier(.2,.8,.2,1)}
@@ -229,7 +229,9 @@ body.cmp #ply{width:48px;height:48px}
 #st{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(20,24,30,.42);-webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3);transition:opacity .55s;cursor:default}#st,#st *{touch-action:pan-x pan-y}#st.out{opacity:0;pointer-events:none}
 #stb{display:flex;flex-direction:column;align-items:center;gap:9px;width:min(360px,90vw);max-height:94vh;overflow:hidden auto;padding:4px 2px;animation:bin .8s both}
 .logo{width:min(320px,84vw)}.logo svg{width:100%;height:auto;stroke:none;display:block}
-#stk{display:grid;grid-template-columns:1fr 1fr;align-items:center;justify-items:center;gap:12px 14px;width:min(320px,90vw);margin-top:24px;padding:14px 16px;border-radius:16px;background:var(--gp,none),#131417;box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 0 0 1px rgba(255,255,255,.04),0 0 0 1px #000,0 12px 30px rgba(0,0,0,.6)}#stk .knb{--kn:118px;touch-action:none}#stk .nmw{position:relative}#swl{margin:10px 0 0;font-size:13px;opacity:.86;max-width:310px}#swl+#stk{margin-top:14px}#stk .nmw{width:100%;height:36px}#stk .sk{width:100%;height:46px;gap:9px}#stk .sk svg{width:20px;height:20px}#stk .sk b{font-size:10px}#stk .sk{color:#a3a8b2}
+#stk{display:grid;grid-template-columns:1fr 1fr;align-items:center;justify-items:center;gap:12px 14px;width:min(320px,90vw);margin-top:24px;padding:14px 16px;border-radius:16px;background:var(--gp,none),#131417;box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 0 0 1px rgba(255,255,255,.04),0 0 0 1px #000,0 12px 30px rgba(0,0,0,.6)}#stk .knb{--kn:118px;touch-action:none}#stk .nmw{position:relative}#swl{margin:10px 0 0;font-size:13px;opacity:.86;max-width:310px}#swl+#stk{margin-top:14px}
+/* (on a screen that is wide and low the card would not fit one thing under another: the logo and the welcome stand at the left, the panel at the right) */
+@media (orientation:landscape) and (max-height:540px){#stb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;justify-items:center;column-gap:24px;row-gap:6px;width:min(720px,94vw)}#stt{grid-column:1;grid-row:1;width:min(290px,100%);align-self:end}#swl{grid-column:1;grid-row:2;margin:0;align-self:start}#swl+#stk{grid-column:2;grid-row:1/span 2;margin-top:0}#scp{grid-column:1/span 2;margin-top:2px}}#stk .nmw{width:100%;height:36px}#stk .sk{width:100%;height:46px;gap:9px}#stk .sk svg{width:20px;height:20px}#stk .sk b{font-size:10px}#stk .sk{color:#a3a8b2}
 @media (max-width:379px){#stk{gap:10px 10px;padding:12px 12px}#stk .knb{--kn:104px}}
 #st button:focus-visible,#pm button:focus-visible{outline:1px solid #fff}
 #st .cap{margin:18px 0 0;font-size:12px;opacity:.75;text-align:center;max-width:300px;line-height:1.5}
@@ -641,6 +643,8 @@ ZHOME(),B.toggle('land',!pt),B.toggle('cmp',cmp),DLH=cmp||cp?38:42,dial.style.he
 if(pt){cw=Math.min(VW-2*M,440);const X0=(VW-cw)/2,MW=cw>=320?46:40,br=cp?0:Math.min(VH>=850?44:VH>=730?38:30,(cw-92)/6.04|0);let y=st+12
 B.remove('nar'),trn.style.width=(cp?cw-KN-10-MK-6:cw-2*MW-12)+'px',dw=cp?cw-88:cw,DGW=br?16:0,DPX=(dw-DGW-2*DPAD)/DC,dh=DR*DPX+2*DPAD
 const th=trn.offsetHeight,hb=br?Math.max(36,br):0,bh=Math.max(KN,44+th),fix=y+(hb?hb+12:0)+dh+(cp?bh+10+DLH:KN+14+DLH+10+th)+sb+14;PS=Math.max(150,Math.min(cw,VH-fix-28));const g=Math.max(14,Math.min(30,(VH-fix-PS)/3));y+=Math.max(0,VH-fix-PS-2*g)*.42
+// (The small windows, the name, the pace and the measure, are as tall as the keys beside them look: 38 px, set 1 px lower, so
+// that a window's frame and a key's cap with its side begin and end together.)
 // (tall: five rows in order, and the readout among them in the place its grip has brought it to (RO; ROY: where its top would be
 // in each of the six). The rows: the name between the two corner keys, set a little low so that its large letters stand level
 // with the keys; the plate, a little below the middle of its room; left of the knob two rows in line, the microphone's key and the
@@ -650,22 +654,22 @@ const th=trn.offsetHeight,hb=br?Math.max(36,br):0,bh=Math.max(KN,44+th),fix=y+(h
 // measure, the lower one the metronome's key and the keys; the dial under them all; no volume, muffle or grip)
 ROK=br?1:0,dgr.hidden=!br,brand.hidden=!br,vkn.hidden=flt.hidden=!!cp
 if(br){const rw=cw-KN-10,R=[[hb,12,y=>{PUT(brand,(VW-br*6.04)/2,y+(hb-br)/2+br*.13,br*6.04,br),PUT(mnb,X0,y+(hb-36)/2),PUT(pfs,X0+cw-38,y+(hb-36)/2)}],[PS,g,y=>{CX=VW/2,CY=y+PS/2+5}],
-[KN+3,11,y=>{const y1=y+3+(KN-90)/2;PUT(smc,X0,y1),DEVOK&&PUT(sdv,X0+ms+6,y1),PUT(nmw,X0+ms+8+dv,y1+2,rw-ms-8-dv,34),PUT(mtk,X0,y1+52,ms,38),PUT(tpw,X0+ms+8,y1+54,rw-ms-MW-14,34),PUT(sgw,X0+rw-MW,y1+52,MW,38),PUT(knb,X0+cw-KN,y+3)}],
+[KN+3,11,y=>{const y1=y+3+(KN-90)/2;PUT(smc,X0,y1),DEVOK&&PUT(sdv,X0+ms+6,y1),PUT(nmw,X0+ms+8+dv,y1+1,rw-ms-8-dv,38),PUT(mtk,X0,y1+52,ms,38),PUT(tpw,X0+ms+8,y1+53,rw-ms-MW-14,38),PUT(sgw,X0+rw-MW,y1+53,MW,38),PUT(knb,X0+cw-KN,y+3)}],
 [th,10,y=>{PUT(trn,X0+MW+6,y),PUT(vkn,X0,y+(th-38)/2,MW,38),PUT(flt,X0+cw-MW,y+(th-38)/2,MW,38)}],[DLH,10,y=>PUT(dial,X0,y)]]
 let q=y;ROY=[0,1,2,3,4,5].map(i=>{const v=q;i<5&&(q+=R[i][0]+R[i][1]);return v});q=y;for(let i=0;i<6;i++){i==RO&&(PUT(dspw,X0,q,dw,dh),q+=dh+(i?g:12));i<5&&(R[i][2](q),q+=R[i][0]+R[i][1])}}
 else{PUT(mnb,X0,y+(dh-36)/2),PUT(pfs,X0+cw-38,y+(dh-36)/2),PUT(dspw,X0+44,y,dw,dh),y+=dh+g,CX=VW/2,CY=y+PS/2,y+=PS+g
-const rw=cw-KN-10,av=rw-ms-6-dv-MK-6,nw=Math.round(av*.45)-3;PUT(smc,X0,y),DEVOK&&PUT(sdv,X0+ms+6,y),PUT(nmw,X0+ms+6+dv,y+2,nw,34),PUT(tpw,X0+ms+12+dv+nw,y+2,av-nw-6,34),PUT(sgw,X0+rw-MK,y,MK,38),PUT(mtk,X0,y+44+(th-38)/2,MK,38),PUT(trn,X0+MK+6,y+44),PUT(knb,X0+cw-KN,y+(bh-KN)/2),y+=bh+10,PUT(dial,X0,y)}
+const rw=cw-KN-10,av=rw-ms-6-dv-MK-6,nw=Math.round(av*.45)-3;PUT(smc,X0,y),DEVOK&&PUT(sdv,X0+ms+6,y),PUT(nmw,X0+ms+6+dv,y+1,nw,38),PUT(tpw,X0+ms+12+dv+nw,y+1,av-nw-6,38),PUT(sgw,X0+rw-MK,y+1,MK,38),PUT(mtk,X0,y+44+(th-38)/2,MK,38),PUT(trn,X0+MK+6,y+44),PUT(knb,X0+cw-KN,y+(bh-KN)/2),y+=bh+10,PUT(dial,X0,y)}
 dial.style.width=cw+'px'}
 else{PS=Math.max(150,Math.min(VH-st-sb-28,VW*.5)),CX=VW/2,CY=st+(VH-st-sb)/2;const e=Math.max(sl,sr_)+M,lw=CX-PS/2-M-e;cw=Math.max(140,Math.min(lw,430));const xl=e+(lw-cw)/2,xr=CX+PS/2+M+(lw-cw)/2,T0=st+M,H=VH-st-sb,top=T0+46,bot=VH-sb-M,MW=cw<230?40:46           // (the corner keys stand as far from the top edge as from the side; what is under them has the room from top to bot)
 B.toggle('nar',cw<300),dial.style.width=trn.style.width=cw+'px',dw=cw,DGW=0,DPX=(dw-2*DPAD)/DC,dh=DR*DPX+2*DPAD,ROK=0,dgr.hidden=true,vkn.hidden=flt.hidden=false
 // (left: the menu key in the corner; under it, in the middle of the room that is left, the name (as tall as that room allows), the
 // readout, and the pace's row: the metronome's key, the pace, the measure)
 const th=trn.offsetHeight,bm=Math.min(34,cw/6.04|0,bot-top-dh-56),br=bm<16?0:bm,lh=(br?br+10:0)+dh+46;let y=top+Math.max(0,(bot-top-lh)/2)
-PUT(mnb,xl,T0),brand.hidden=!br,br&&(PUT(brand,xl+(cw-br*6.04)/2,y,br*6.04,br),y+=br+10),PUT(dspw,xl,y,dw,dh),y+=dh+8,PUT(mtk,xl,y,ms,38),PUT(tpw,xl+ms+6,y+2,cw-ms-MW-12,34),PUT(sgw,xl+cw-MW,y,MW,38)
+PUT(mnb,xl,T0),brand.hidden=!br,br&&(PUT(brand,xl+(cw-br*6.04)/2,y,br*6.04,br),y+=br+10),PUT(dspw,xl,y,dw,dh),y+=dh+8,PUT(mtk,xl,y,ms,38),PUT(tpw,xl+ms+6,y+1,cw-ms-MW-12,38),PUT(sgw,xl+cw-MW,y+1,MW,38)
 // (right: the full-screen key in the corner; under it, evenly spaced in the room that is left: the knob at the right with two rows
 // to its left (the microphone's key and the instrument's name; the volume and the filter), the row of keys, and the dial)
 const fr=bot-top-KN-th-DLH,g=Math.max(5,Math.min(16,fr/2)),yr=top+Math.max(0,(fr-2*g)/2),y1=yr+(KN-82)/2,rw=cw-KN-8
-PUT(pfs,xr+cw-38,T0),PUT(smc,xr,y1-2),DEVOK&&PUT(sdv,xr+ms+6,y1-2),PUT(nmw,xr+ms+6+dv,y1,rw-ms-6-dv,34),PUT(vkn,xr,y1+46,MW,38),PUT(flt,xr+MW+6,y1+46,MW,38),PUT(knb,xr+cw-KN,yr),PUT(trn,xr,yr+KN+g),PUT(dial,xr,yr+KN+g+th+g)}
+PUT(pfs,xr+cw-38,T0),PUT(smc,xr,y1-2),DEVOK&&PUT(sdv,xr+ms+6,y1-2),PUT(nmw,xr+ms+6+dv,y1-1,rw-ms-6-dv,38),PUT(vkn,xr,y1+46,MW,38),PUT(flt,xr+MW+6,y1+46,MW,38),PUT(knb,xr+cw-KN,yr),PUT(trn,xr,yr+KN+g),PUT(dial,xr,yr+KN+g+th+g)}
 // (the orbs are 40 px across where the plate's square has the room, and smaller where it has not; the bezel is as wide as they need, the plate what is left inside it)
 const D=PS>=300?40:PS>=262?36:PS>=226?32:28;con.style.setProperty('--od',D+'px'),well.style.setProperty('--bw',D-6+'px'),ORE=(D/2+7)*(D/2+7),ORL=(D/2+13)*(D/2+13)
 RS=Math.max(40,Math.min(PS/2-D-1.5,1.4142*(PS/2-14)-D-23));const o=PS/2-14,rj=RS+8+D/2
