@@ -137,7 +137,7 @@ body.drag #con,body.drag #pl{transition:none;will-change:translate}
    glass's reflection. Only the orbs that are down are animated, and only by turning: no work for the page between frames */
 .pj i:before,.pj i em{content:'';position:absolute;inset:-21%;border-radius:50%;background:var(--hi);-webkit-mask:var(--sd) 0 0/27px 27px;mask:var(--sd) 0 0/27px 27px;opacity:0;transition:opacity .3s;pointer-events:none}
 .pj i em{-webkit-mask-position:11px 7px;mask-position:11px 7px;background:#fff}
-.pj.tch i:before{opacity:.95;animation:tmb 1.7s linear infinite}.pj.tch i em{opacity:.5;animation:tmb 2.9s linear infinite reverse}
+.pj.tch i:before,.pj.sgp i:before{opacity:.95;animation:tmb 1.7s linear infinite}.pj.tch i em,.pj.sgp i em{opacity:.5;animation:tmb 2.9s linear infinite reverse}
 #con.cof .pj i:before,#con.cof .pj i em{display:none}
 @keyframes tmb{to{rotate:360deg}}
 .pj s{position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse 22% 15% at 31% 24%,#fff 0,#fff 55%,rgba(255,255,255,0) 100%),radial-gradient(ellipse 46% 34% at 33% 27%,rgba(255,255,255,.5) 0,rgba(255,255,255,0) 100%);will-change:translate;pointer-events:none}
@@ -416,7 +416,7 @@ hlp.innerHTML=[['fplate','In tune','Crisp lines and a lit ring mean the note is 
 ['ay','Sharp or flat','Off the note, the sand shakes loose. Loose at the top is sharp. Loose at the bottom is flat.'],
 ['mic','Mic','Listens to your instrument. It can stay on while a note plays.'],
 ...(DEVOK?[['spk','Device audio','Listens to what this computer is playing. The browser asks what to share: choose a tab or the screen, and tick its "share audio" box.']]:[]),
-['knob','Instrument','Turn the knob, touch a sign round it, or swipe the name beside it. A tap on either goes to the next.'],
+['knob','Instrument','Turn the knob, touch a sign round it, or swipe the name beside it. A tap on either goes to the next. The name goes on past the knob to four more: triangle, xylophone, music box and drum kit. On the drum kit each orb is a drum: C the kick, D the snare, F\u266f and A\u266f the hi-hats, E the crash, G\u266f the ride, the rest toms, a clap and a rim.'],
 ['play','Play','Starts and stops the note the dial is on.'],
 ['dial','Dial','Slide it to change the note.'],
 ['oct','Arrows','Jump an octave down or up.'],
@@ -767,7 +767,13 @@ const VOICES=[{n:'violin',bow:1,hp:185,lp:4200,pk:[[290,3.5,3],[470,3.5,4],[1050
 {n:'clarinet',bow:1,hp:130,lp:3600,pk:[[1500,2,1.2]],lv:.125,vr:5,vd:3,at:.045,sec:SOLO,w:[1,.03,.6,.04,.34,.05,.2,.05,.13,.04,.09,.03,.06,.02,.04]},
 {n:'trumpet',bow:1,hp:160,lp:4600,pk:[[1250,6,1.6],[2300,4,2]],lv:.115,vr:5.4,vd:5,at:.03,sec:SOLO,w:1},
 {n:'trombone',bow:1,hp:55,lp:2600,pk:[[520,6,1.6],[1500,3.5,2]],lv:.1,vr:5,vd:4,at:.04,sec:SOLO,w:1.12},
-{n:'voice',bow:1,hp:80,lp:4200,pk:[[730,11,5],[1090,9,6],[2440,6,6]],lv:.1,vr:5.5,vd:18,at:.08,sec:TRIO,w:1.7}]
+{n:'voice',bow:1,hp:80,lp:4200,pk:[[730,11,5],[1090,9,6],[2440,6,6]],lv:.1,vr:5.5,vd:18,at:.08,sec:TRIO,w:1.7},
+{n:'triangle',bow:0,hp:420,lp:15000,pk:[],lv:.85,vr:5,vd:0,tr:0,gen:'tri',ox:2,ks:{t6:1.7}},
+{n:'xylophone',bow:0,hp:160,lp:12500,pk:[[1600,2,1]],lv:1.25,vr:5,vd:0,tr:0,gen:'xyl',ox:2,ks:{t6:.34}},
+{n:'music box',bow:0,hp:170,lp:11500,pk:[[2600,2.5,1.2]],lv:1,vr:5,vd:0,tr:0,gen:'box',ks:{t6:.8}},
+{n:'drum kit',bow:0,hp:25,lp:16000,pk:[],lv:.6,vr:5,vd:0,tr:0,gen:'drum',ks:{t6:.35}}]
+// KV: how many are on the knob. The rest (from triangle on) are reached by sliding or tapping the name readout (setz, build 26)
+const KV=9
 // the five strings of a bowed section: how far to which side of the note (in SIDEs: -1 below, 0 on it, 1 above), how loud, and how its vibrato's rate differs
 const SECT=[[-1.9,.14,.9],[-1,.24,.95],[0,1,1],[1,.24,1.06],[1.9,.14,1.12]],SECT3=SECT.slice(1,4)      // (SECT3: the third note of a chord and those after it have the middle three: a chord has shimmer enough, and each string is work for the sound's thread)
 // how far a side string stands off the note, in cents: wide for low notes and narrow for high ones, so that the swell it makes is slow
@@ -853,11 +859,37 @@ VXS.set(d,{v,b,lfo,lg,ag,dl,os,xs,src:[],r0:1,d,pp:TP+BEND/100}),VBAL()}
 const KSC=new Map()                 // (the strings worked out lately, by instrument and pitch: the same note struck again is not worked out again)
 // pluck one note's strings (plucked voices only), d0 seconds from now: the same string twice, a few cents either side of the note, the
 // second quieter and a hundredth of a second late
-const KSB=(v,f,ac)=>{const kk=v.n+'|'+f.toFixed(2);let k=KSC.get(kk);if(!k||k.ac!=ac){const q=KS(f,ac.sampleRate,VT(v,f),v.ks),b=ac.createBuffer(1,q.y.length,ac.sampleRate);b.getChannelData(0).set(q.y),k={bf:b,rate:q.rate,ac},KSC.set(kk,k),KSC.size>48&&KSC.delete(KSC.keys().next().value)}return k}
+// the stored sound of one note of a voice with gen: struck bars and tines (damped sines at the bar's own overtones, begun at zero,
+// a short burst for the beater) and the drum kit (one drum per note name, whatever the octave: C the kick, C# the rim, D the snare,
+// D# a clap, E the crash, F the floor tom, F# the closed hi-hat, G the low tom, G# the ride, A the mid tom, A# the open hi-hat, B the
+// high tom, as on a General MIDI kit). All end in silence; all as loud at their peak (.6) as each other, give or take the drum's own share
+const DKN=['kick','rim','snare','clap','crash','floor tom','closed hat','low tom','ride','mid tom','open hat','high tom'],DKG=[1,.5,.9,.7,.5,.85,.32,.85,.42,.85,.38,.85]
+const GEN=(v,f,fs)=>{let z=0x2545F491^Math.round(f*7),nz=_=>(z^=z<<13,z^=z>>>17,z^=z<<5,(z>>>0)/2147483648-1),y,T=VT(v,f)
+const sines=(y,f0,parts,T)=>{for(const [r,a,d] of parts){const fr=f0*r;if(fr>fs*.45)continue;const w=2*Math.PI*fr/fs,k=Math.pow(10,-3/(fs*T*d)),c2=2*k*Math.cos(w),k2=k*k;let x1=a*k*Math.sin(w),x0=0;y[1]+=x1;for(let i=2;i<y.length;i++){const x=c2*x1-k2*x0;y[i]+=x,x0=x1,x1=x}}}
+const burst=(y,ms,a,hp)=>{const m=Math.round(fs*ms/1000);let p=0;for(let i=0;i<m;i++){const u=nz(),e=.5-.5*Math.cos(2*Math.PI*i/m);y[i]+=(hp?u-p:u)*a*e,p=u}}
+if(v.gen!='drum'){const f0=f*(v.ox||1);y=new Float32Array(Math.ceil(fs*Math.min(4,T*1.15)))
+if(v.gen=='box')sines(y,f0,[[1,1,1],[2,.06,.5],[3,.03,.35],[6.267,.2,.17],[17.55,.05,.06]],T),burst(y,1.4,.22,1)          // (a steel tine, plucked by a pin)
+if(v.gen=='xyl')sines(y,f0,[[1,1,1],[3,.42,.3],[6.1,.12,.12],[9.9,.05,.06]],T),burst(y,1.8,.35,0)                         // (a rosewood bar, its second overtone tuned to three times the first; a hard mallet)
+if(v.gen=='tri')sines(y,f0,[[1,.25,1],[2.756,.5,.95],[2.7601,.2,.9],[5.404,.8,.9],[5.4115,.3,.85],[8.933,.7,.85],[13.34,.5,.8],[18.64,.35,.75]],T),burst(y,.6,.15,1)}   // (a steel rod's overtones, a few in pairs that beat: the shimmer)
+else{const h=((Math.round(12*Math.log2(f/440))+69)%12+12)%12,K=DKN[h],L={kick:.55,rim:.12,snare:.45,clap:.42,crash:2.6,ride:2.2,'closed hat':.2,'open hat':.9}[K]||.7;y=new Float32Array(Math.ceil(fs*L))
+const met=(i,sc)=>{let q=0;for(const m of [205.3,304.4,369.6,522.7,540,800])q+=((i*m*sc/fs)%1<.5?1:-1);return q/6}
+let lp=0,p1=0,p2=0,ph=0
+for(let i=0;i<y.length;i++){const t=i/fs,u=nz(),hp1=u-p1;p1=u;let o=0
+if(K=='kick'){ph+=2*Math.PI*(48+110*Math.exp(-t/.035))/fs;o=Math.sin(ph)*Math.exp(-t/.28)}
+else if(K.endsWith('tom')){const f0={'floor tom':82,'low tom':110,'mid tom':147,'high tom':196}[K];ph+=2*Math.PI*f0*(1+.5*Math.exp(-t/.045))/fs;o=Math.sin(ph)*Math.exp(-t/.32)+u*.1*Math.exp(-t/.02)}
+else if(K=='snare'){lp+=(hp1-lp)*.55;o=(Math.sin(2*Math.PI*185*t)*.5*Math.exp(-t/.07)+Math.sin(2*Math.PI*330*t)*.3*Math.exp(-t/.05))+lp*.9*Math.exp(-t/.17)}
+else if(K=='rim')o=Math.sin(2*Math.PI*520*t)*.6*Math.exp(-t/.018)+hp1*.5*Math.exp(-t/.008)
+else if(K=='clap'){lp+=(hp1-lp)*.35;let e=0;for(const t0 of [0,.011,.022])t>=t0&&(e+=Math.exp(-(t-t0)/.006));t>=.03&&(e+=.55*Math.exp(-(t-.03)/.12));o=lp*e}
+else{const mt=met(i,K=='ride'?1.3:1.7),q=mt-p2;p2=mt;const d=K=='closed hat'?.035:K=='open hat'?.3:K=='crash'?1.1:.95;o=(q*.55+hp1*(K=='ride'?.25:.6))*Math.exp(-t/d);K=='ride'&&(o+=Math.sin(2*Math.PI*3150*t)*.12*Math.exp(-t/1.2))}
+const a=Math.min(1,t/.0012);y[i]=o*a}}
+let pk=0;for(let i=0;i<y.length;i++){const a=Math.abs(y[i]);a>pk&&(pk=a)}const g=pk>0?.6/pk*(v.gen=='drum'?DKG[((Math.round(12*Math.log2(f/440))+69)%12+12)%12]:1):0
+const F=Math.min(y.length>>2,Math.round(fs*.03));for(let i=0;i<y.length;i++)y[i]*=g*(i>=y.length-F?.5-.5*Math.cos(Math.PI*(y.length-1-i)/F):1)
+return{y,rate:1}}
+const KSB=(v,f,ac)=>{const kk=v.n+'|'+(v.gen=='drum'?((Math.round(12*Math.log2(f/440))+69)%12+12)%12:f.toFixed(2));let k=KSC.get(kk);if(!k||k.ac!=ac){const q=v.gen?GEN(v,f,ac.sampleRate):KS(f,ac.sampleRate,VT(v,f),v.ks),b=ac.createBuffer(1,q.y.length,ac.sampleRate);b.getChannelData(0).set(q.y),k={bf:b,rate:q.rate,ac},KSC.set(kk,k),KSC.size>48&&KSC.delete(KSC.keys().next().value)}return k}
 const PLK=(x,d0)=>{const ac=AC;if(!x||!ac||x.v.bow)return;const f=XF(x.d),k=KSB(x.v,f,ac),bf=k.bf,old=x.src,now=ac.currentTime;x.pp=TP+BEND/100
 for(const q of old)try{q.g.gain.setTargetAtTime(0,now+d0,.012)}catch(e){}
 setTimeout(_=>{for(const q of old)try{q.s.stop()}catch(e){}},200+d0*1000),x.src=[],x.r0=k.rate
-const sd=SIDE(f)*.4;for(const [ct,dly,gn] of [[-sd*.31,0,1],[sd*.69,x.v.ks?x.v.ks.dl:.011,x.v.ks?x.v.ks.g2:.45]]){const s=ac.createBufferSource(),g=ac.createGain(),vg=ac.createGain(),r=k.rate*Math.pow(2,ct/1200);s.buffer=bf,s.playbackRate.value=r,g.gain.value=gn*(x.vl||1),vg.gain.value=r*5.776e-4,x.lg.connect(vg),vg.connect(s.playbackRate),s.connect(g),g.connect(x.b.inp)
+const sd=SIDE(f)*.4;for(const [ct,dly,gn] of x.v.gen?[[0,0,1]]:[[-sd*.31,0,1],[sd*.69,x.v.ks?x.v.ks.dl:.011,x.v.ks?x.v.ks.g2:.45]]){const s=ac.createBufferSource(),g=ac.createGain(),vg=ac.createGain(),r=k.rate*Math.pow(2,ct/1200);s.buffer=bf,s.playbackRate.value=r,g.gain.value=gn*(x.vl||1),vg.gain.value=r*5.776e-4,x.lg.connect(vg),vg.connect(s.playbackRate),s.connect(g),g.connect(x.b.inp)
 try{s.start(now+d0+dly)}catch(e){}x.src.push({s,g,r})}}
 // pluck every note that is sounding, lowest first and a sixtieth of a second apart, as a hand goes across strings.
 // Not more often than every 70 ms unless made to
@@ -866,7 +898,7 @@ const PLUCK=(t,must,dial)=>{if(!SND()||VOICES[VOICE].bow||!must&&t-TPL<.07)retur
 // of a second once the note has stood still for .45 s and goes at once when the note moves. The vibrato is only in what is heard: the
 // plate is driven by the note itself (READ), so it never makes a note read out of tune. (A note below an instrument's own lowest is let
 // through its body rather than thinned to nothing.)
-const VTICK=t=>{const ac=AC;if(!ac||!VXS.size)return;const now=ac.currentTime,glob=t-TMOVE>.45;for(const x of VXS.values()){const f=XF(x.d),still=x.t0!=null?t-x.t0>.45:glob,tc=still?.3:.03,vd=still?x.v.vd:0;try{x.lg.gain.setTargetAtTime(vd,now,tc),x.ag.gain.setTargetAtTime(still?.06*(x.sg?(x.v.bow?1:x.vl||1):Math.sqrt(Math.max(1,VXS.size))):0,now,tc)
+const VTICK=t=>{const ac=AC;if(!ac||!VXS.size)return;const now=ac.currentTime,glob=t-TMOVE>.45;for(const x of VXS.values()){const f=XF(x.d),still=x.t0!=null?t-x.t0>.45:glob,tc=still?.3:.03,vd=still?x.v.vd:0;try{x.lg.gain.setTargetAtTime(vd,now,tc),x.ag.gain.setTargetAtTime(still?.06*(x.v.tr??1)*(x.sg?(x.v.bow?1:x.vl||1):Math.sqrt(Math.max(1,VXS.size))):0,now,tc)
 x.b.hpf.frequency.setTargetAtTime(Math.min(x.v.hp,f*.85),now,.05)
 for(const q of x.os)q.o.frequency.setTargetAtTime(f,now,.012),q.sd&&q.o.detune.setTargetAtTime(q.sd*SIDE(f),now,.05),q.lg.gain.setTargetAtTime(vd,now,tc)
 const bend=x.d>=1000?1:Math.pow(2,(TP+BEND/100-x.pp)/12);for(const q of x.src)q.s.playbackRate.setTargetAtTime(q.r*bend,now,.012)}catch(e){}}}
@@ -1261,7 +1293,7 @@ ACT(smc,_=>{VB(6);if(!mode)return;PREVIEW?NOMIC():LISTEN(LSN==1?0:1)}),ACT(sgd,_
 // round it has gone (t), how far it has come at most (mv), whether it began on the knob itself (cap), whether it has gone through
 // the middle (cross), whether its turning has changed the instrument (chg). KNS = the knobs
 const KNS=[]
-const KNOB=el=>{const n=VOICES.length;el.innerHTML=VOICES.map(v=>SV(v.n)).join('')+'<i class="cb kn"><u></u></i>',el.tabIndex=0,el.setAttribute('role','slider'),el.ariaLabel='instrument',el.setAttribute('aria-valuemin',1),el.setAttribute('aria-valuemax',n)
+const KNOB=el=>{const n=KV;el.innerHTML=VOICES.slice(0,KV).map(v=>SV(v.n)).join('')+'<i class="cb kn"><u></u></i>',el.tabIndex=0,el.setAttribute('role','slider'),el.ariaLabel='instrument',el.setAttribute('aria-valuemin',1),el.setAttribute('aria-valuemax',n)
 const ic=[...el.querySelectorAll(':scope>svg')],u=el.querySelector('u');ic.forEach((q,i)=>{const a=i*2*Math.PI/n;q.dataset.v=i,q.style.translate='calc(var(--kn,100px)*'+(.4*Math.sin(a)).toFixed(4)+') calc(var(--kn,100px)*'+(-.4*Math.cos(a)).toFixed(4)+')'})
 let g=null;const st=2*Math.PI/n,geo=ev=>{const r=el.getBoundingClientRect(),w=r.width,dx=ev.clientX-r.left-w/2,dy=ev.clientY-r.top-w/2;return{w,q:Math.hypot(dx,dy),a:Math.atan2(dx,-dy)}},pick=i=>{i=(i%n+n)%n;i!=VOICE&&(VB(4),VPICK(i))}
 el.addEventListener('pointerdown',ev=>{if(ev.button)return;try{el.setPointerCapture(ev.pointerId)}catch(e){}const p=geo(ev);g={id:ev.pointerId,x:ev.clientX,y:ev.clientY,v0:VOICE,base:VOICE,a:null,t:0,mv:0,cap:p.q<p.w*.3,cross:0,chg:0};if(!g.cap){const i=((Math.round(p.a/st)%n)+n)%n;g.base=i,g.a=p.a,i!=VOICE&&(g.chg=1),pick(i)}})
@@ -1282,9 +1314,10 @@ for(let r=0;r<gr;r++)for(let c=0;c<gc;c++)x.fillStyle='rgba('+DRGB+','+DCA[lv(c,
 // NSC says how it stands (ax: which way it is being drawn, 1 sideways, 2 up and down, 0 at rest; f: how far, in names, so that at
 // 1 the next name is where this one was; h: a finger has hold of it). Let go, it settles on the nearest name (NSTEP, each frame)
 const NMC=[...document.querySelectorAll('.nmw canvas')],NM=VOICES.map(v=>v.n.toUpperCase()),NSC={ax:0,f:0,h:0}
-const NAMES=_=>{const n=VOICES.length,ax=NSC.ax;for(const cv of NMC){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)continue;const q=Math.min(DPX*1.02,(w-6)/49,(h-6)/9),gc=Math.max(49,Math.floor((w-6)/q)),gr=Math.max(9,Math.floor((h-6)/q)),c0=gc-49>>1,r0=gr-9>>1,cw=gc+4,rh=gr+3,o=Math.round(NSC.f*(ax==1?cw:rh))
+const NW=Math.max(49,...VOICES.map(v=>v.n.length*6-1))
+const NAMES=_=>{const n=VOICES.length,ax=NSC.ax;for(const cv of NMC){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)continue;const q=Math.min(DPX*1.02,(w-6)/NW,(h-6)/9),gc=Math.max(NW,Math.floor((w-6)/q)),gr=Math.max(9,Math.floor((h-6)/q)),c0=gc-NW>>1,r0=gr-9>>1,cw=gc+4,rh=gr+3,o=Math.round(NSC.f*(ax==1?cw:rh))
 cv.q=DWIN(cv,gc,gr,(c,r)=>{let j=0,cc=c-c0,rr=r-r0;if(ax==1){const t=c+o+cw*8;j=Math.floor(t/cw)-8,cc=t-(j+8)*cw-c0}else if(ax==2){const t=r+o+rh*8;j=Math.floor(t/rh)-8,rr=t-(j+8)*rh-r0}
-const s=NM[((VOICE+j)%n+n)%n],x0=cc-(49-(s.length*6-1)>>1);if(x0<0||rr<1||rr>7)return 0;const ch=GL[s[x0/6|0]];return ch&&x0%6<5&&ch[rr-1]>>4-x0%6&1?3:0}),cv.cw=cw,cv.rh=rh}}
+const s=NM[((VOICE+j)%n+n)%n],x0=cc-(NW-(s.length*6-1)>>1);if(x0<0||rr<1||rr>7)return 0;const ch=GL[s[x0/6|0]];return ch&&x0%6<5&&ch[rr-1]>>4-x0%6&1?3:0}),cv.cw=cw,cv.rh=rh}}
 const NSTEP=_=>{if(!NSC.f||NSC.h)return;const a=Math.abs(NSC.f);NSC.f=RMO||a<.02?0:NSC.f-Math.sign(NSC.f)*Math.max(.02,a*.28);NSC.f||(NSC.ax=0);NAMES()}
 // a name window under a finger: a tap goes to the next instrument (its name comes in from the right); a finger drawn across takes
 // the row with it, the way it first goes, and each name that passes the middle is chosen
@@ -1296,7 +1329,7 @@ const up=ev=>{if(!d||ev.pointerId!=d.id)return;const tap=d.mv<7&&ev.type=='point
 el.addEventListener('pointerup',up),el.addEventListener('pointercancel',up)
 el.addEventListener('keydown',ev=>{const k=ev.key,q=k=='ArrowRight'||k=='ArrowDown'||k=='Enter'||k==' '?1:k=='ArrowLeft'||k=='ArrowUp'?-1:0;q&&(ev.preventDefault(),ev.stopPropagation(),VPICK(VOICE+q))})}
 // the knobs and the name windows as the instrument now chosen. A knob turns the short way round to it
-const KNUI=_=>{const st=360/VOICES.length;for(const k of KNS){let a=VOICE*st;k.a!=null&&(a=k.a+(((a-k.a)%360+540)%360-180));k.a=a,k.u.style.rotate=a+'deg',k.ic.forEach((q,i)=>q.classList.toggle('on',i==VOICE)),k.el.setAttribute('aria-valuenow',VOICE+1),k.el.setAttribute('aria-valuetext',VOICES[VOICE].n)}for(const cv of NMC)cv.parentNode.ariaLabel='instrument: '+VOICES[VOICE].n+'. Touch for the next';NAMES()}
+const KNUI=_=>{const st=360/KV;for(const k of KNS){if(VOICE<KV){let a=VOICE*st;k.a!=null&&(a=k.a+(((a-k.a)%360+540)%360-180));k.a=a,k.u.style.rotate=a+'deg',k.el.setAttribute('aria-valuenow',VOICE+1)}k.ic.forEach((q,i)=>q.classList.toggle('on',i==VOICE)),k.el.setAttribute('aria-valuetext',VOICES[VOICE].n)}for(const cv of NMC)cv.parentNode.ariaLabel='instrument: '+VOICES[VOICE].n+'. Touch for the next';NAMES()}
 KNOB(knb),NWIN(nmw)
 // ---------- the metronome ----------
 // Two small windows at the ends of the row of keys. The left one shows the pace, in beats a minute, and under the figures a lamp for
@@ -1429,7 +1462,7 @@ b.onpointerdown=ODOWN,b.onpointermove=OMOVE,b.onpointerup=b.onpointercancel=OUP
 b.onclick=ev=>{ev.detail||!RUN||(COL&&POUR(k,performance.now()/1000),NTS&&(NDOWN(h,-1),setTimeout(_=>NUP(-1),450)))}                                // (from a keyboard)
 con.appendChild(b);return b}),PJS=PJ.map(b=>b.querySelector('s')),RIMS=[pnt,pcl,pzm,pvt,ply,well,...document.querySelectorAll('.kn')]            // (what has polish that goes round with the light)
 // which orb glows because it is the dial's note that sounds (it moves round the ring as the dial moves), and which is marked as heard
-const KEYS=_=>{const m=(NTS&&PLAYING?1<<(Math.round(TP)%12+12)%12:0)|SGM;m!=KMASK&&(KMASK=m,PJ.forEach((b,k)=>b.classList.toggle('snd',!!(m>>(11-k+12)%12&1))))
+const KEYS=_=>{const m=(NTS&&PLAYING?1<<(Math.round(TP)%12+12)%12:0)|SGM,m2=m|SGM<<12;m2!=KMASK&&(KMASK=m2,PJ.forEach((b,k)=>{const h=(11-k+12)%12;b.classList.toggle('snd',!!(m>>h&1)),b.classList.toggle('sgp',!!(SGM>>h&1))}))
 const hd=LSN&&RM.held?(RM.midi%12+12)%12:-1;hd!=KHD&&(KHD=hd,PJ.forEach((b,k)=>b.classList.toggle('hd',(11-k+12)%12==hd)))}
 // the two switches. Thrown, the twelve answer one after another round the ring (#con.seq, for as long as that takes), and it is felt.
 // fl: each orb's glow flares as its turn comes (1; 2: in its own colour though the powders have just gone off)
