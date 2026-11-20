@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang=en><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Intunist"><meta name="apple-mobile-web-app-status-bar-style" content="black"><title>Scale Space Intunist</title><link rel=icon href="data:,"><style>
+<!DOCTYPE html><html lang=en><meta charset="utf-8"><script>try{localStorage.getItem('sst.ready')=='1'&&document.documentElement.classList.add('rt')}catch(e){}</script><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Intunist"><meta name="apple-mobile-web-app-status-bar-style" content="black"><title>Scale Space Intunist</title><link rel=icon href="data:,"><style>
 :root{--ac:#ffb454;--ach:#ff8f00}
 *{box-sizing:border-box;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;-webkit-tap-highlight-color:transparent}
 body{margin:0;overflow:hidden;color:#fff;font:12px/1.4 monospace;background:#050608}
@@ -226,6 +226,7 @@ body.cmp #ply{width:48px;height:48px}body.sn #trn .key{height:38px}body.sn #ply{
 #pm .hr{display:grid;grid-template-columns:22px 1fr;gap:12px;align-items:start;margin:0;padding:7px 20px;font-size:13px;line-height:1.45}.hr svg{width:20px;height:20px;margin-top:1px;color:var(--ac)}.hr p{margin:0;color:#c9cfd9}.hr p b{display:block;color:#fff;font-weight:700;letter-spacing:.04em}
 #pm .nt{margin:0;padding:8px 20px 4px;font-size:12px;line-height:1.5;color:#9aa3b3;font-style:italic}
 /* the title card, as on Nano: over the console, which is seen blurred behind it */
+html.rt #st{display:none}
 #st{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(20,24,30,.42);-webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3);transition:opacity .55s;cursor:default}#st,#st *{touch-action:pan-x pan-y}#st.out{opacity:0;pointer-events:none}
 #stb{display:flex;flex-direction:column;align-items:center;gap:9px;width:min(360px,90vw);max-height:94vh;overflow:hidden auto;padding:4px 2px;animation:bin .8s both}
 .logo{width:min(320px,84vw)}.logo svg{width:100%;height:auto;stroke:none;display:block}
@@ -782,6 +783,10 @@ const SIDE=f=>{const c=1731*Math.log(1+(.3+.0011*f)/f);return c<2?2:c>8?8:c}
 // A song (the module at the end of the script, where one is built in) plays the instrument as fingers on the orbs would, by its own
 // numbers: 2000 + n and 3000 + n are note n for its melody and for what goes with it, so that neither stops a note a finger holds
 // (1000 + n) or the other's. SONG = the one playing; SGM = the notes it sounds, as KEYS wants them; STICK = what it does each frame
+// RDY: whether this person is past the title card for good (sst.ready): set by "I can figure it out myself" (on the title card or
+// after a song), by the tour's "done", and by "yep!" when leaving it; RDY(1) sets it. Such a person comes straight to the console,
+// quiet, on every later visit (setz, build 24); the menu still has the tour, the song and the way back to the title card
+const RDY=v=>{try{v&&localStorage.setItem('sst.ready','1');return localStorage.getItem('sst.ready')=='1'}catch(e){return false}}
 let SONG=null,SGM=0,VPT=0,GQS=0,STICK=_=>{},SSTOP=_=>{},SNICE=_=>{},GUIDE=_=>{},GASK=_=>{}          // (SNICE: play a song, one not heard yet if there is one; GUIDE: the guide's step, or below 0 to end it; GASK: after a song, ask
 // whether the tour is wanted, unless the question is settled (GQS: the tour was chosen or declined, or the question asked))
 let VOICE=0,MOUT=null,FIN=null,FG=null,VOLG=null,VOL=1,MUF=0,BWAVE=null,TPL=-9,PP=69,TQ=2,TMOVE=0,NDT=-9,NDL=0
@@ -1230,7 +1235,8 @@ for(const el of [pm,cat])el.addEventListener('pointerdown',MDOWN),el.addEventLis
 // of the menu a drag ended over, or the part of the console that was showing where the tap fell. It must not press that.)
 addEventListener('click',ev=>{ev.timeStamp-MDT<350&&(ev.stopPropagation(),ev.preventDefault())},true)
 const ASET=a=>{A4=a<415?415:a>466?466:a,aval.textContent=A4+' Hz',ard.hidden=A4==440,SHOWN='';try{localStorage.setItem('sst.a4',A4)}catch(e){}}
-const BEGIN=async m=>{RUN=1,GQS=m=='song'?0:1,CTX();LSN&&await LISTEN(0);PLAYING&&PLAYSET(0);MODE(),WAKE();document.body.classList.remove('pre'),st.classList.add('out'),setTimeout(_=>st.hidden=true,560);m=='song'?SNICE():m=='guide'&&GUIDE(0)}          // (the console begins quiet: nothing sounds and nothing listens until it is asked to. The sound is made ready here, while the touch that asked still counts)
+const BEGIN=async m=>{RUN=1,GQS=m=='song'?0:1,m!='back'&&CTX();LSN&&await LISTEN(0);PLAYING&&PLAYSET(0);MODE(),WAKE();document.body.classList.remove('pre');if(m=='back')st.hidden=true,st.classList.add('out'),document.documentElement.classList.remove('rt');else st.classList.add('out'),setTimeout(_=>st.hidden=true,560);m=='self'&&RDY(1);m=='song'?SNICE():m=='guide'&&GUIDE(0)}          // (the console begins quiet: nothing sounds and nothing listens until it is asked to. The sound is made ready here, while the touch that asked still counts;
+// m 'back': a returning person, no touch yet: the sound is made ready by the first one, and the title card is simply not shown)
 document.body.classList.add('pre'),ASET(A4)
 // The microphone's key, the instrument's name and the instrument knob, on the console and on the title card. On the console the key
 // turns listening on and off. On the title card the name and the knob choose the instrument, and two keys begin: one listening,
@@ -1367,7 +1373,10 @@ ACT(mnb,_=>{ZL||(VB(6),PM(1))}),pmx.onclick=_=>PM(0)
 adn.onclick=_=>ASET(A4-1),aup.onclick=_=>ASET(A4+1),ard.onclick=_=>ASET(440)
 pt.onclick=_=>{SSTOP(),GUIDE(-1),PM(0),MICOFF(),MSET(0),QUIET(),LSN=RUN=0,PLAYSET(0),R0=RM=RT={on:0,held:0},RDG=makeReading(),SHOWN='',st.hidden=false,document.body.classList.add('pre'),requestAnimationFrame(_=>st.classList.remove('out'))}
 // full screen, where the browser allows it (as on Nano)
-addEventListener('fullscreenchange',_=>{const f=!!document.fullscreenElement;pfs.querySelector('svg').outerHTML=SV(f?'unfull':'full'),pfs.classList.toggle('on',f)}),pfs.hidden=!document.fullscreenEnabled
+addEventListener('fullscreenchange',_=>{const f=!!document.fullscreenElement;pfs.querySelector('svg').outerHTML=SV(f?'unfull':'full'),pfs.classList.toggle('on',f)}),pfs.hidden=!document.fullscreenEnabled||!!window.IntunistShell          // (in the Android app, IntunistShell, the system bars are hidden already)
+// the Android app's back button (the app asks INTUNIST_BACK; 1 = taken): the menu shut, the plate set down, or else the menu opened;
+// on the title card it is not taken, and the app steps aside (as Nano's NANO_BACK does)
+window.INTUNIST_BACK=_=>{if(!RUN)return 0;if(OPEN)return PM(0),1;if(ZL>0)return ZGO(0),1;return PM(1),1}
 ACT(pfs,_=>{VB(6);try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}catch(e){}})
 // the powder orbs: one for each kind, set in the bezel (FIT places them). The broom sweeps the plate clear. ORB = an orb's colours, worked out from the kind's one colour
 const ORB=m=>{if(m.iri)return'--p:#dfe3ee;--hi:rgba(255,255,255,.9);--lo:#9aa0b8;--dk:#3c4058;--gl:rgba(205,215,255,.4);--gt:rgba(215,222,255,.8)';const o=m.o,dark=Math.max(...o)<60
@@ -1569,7 +1578,7 @@ const GSIDE={H:[
 T:[
 {r:_=>well,t:"Here is the secret: there is no real plate in here. Many times a second the page works out how a plate would ripple for the note it hears, and shakes each grain as much as the plate moves under it."},
 {r:_=>well,t:"The rule it uses was first written for the rolls that form in a liquid heated from below. So these patterns are cousins of Chladni's, not copies."}]}
-const GASKP=[{t:_=>(GAD?"That was Keepsake. ":"")+"Would you like me to show you around?",k:[["a bit of guidance would be nice",_=>GSTART()],["I can figure it out myself",_=>GEND()]],x:1,z:1}]
+const GASKP=[{t:_=>(GAD?"That was Keepsake. ":"")+"Would you like me to show you around?",k:[["a bit of guidance would be nice",_=>GSTART()],["I can figure it out myself",_=>{RDY(1),GEND()}]],x:1,z:1}]
 let GP=null,GI=-1,GR=0,GV={},GW=0,GC=0,GAD=0
 const gd=document.createElement('div'),gdr=document.createElement('div');gd.id='gd',gdr.id='gdr',gd.hidden=gdr.hidden=true,gd.setAttribute('role','dialog'),gd.ariaLabel='guide'
 gd.innerHTML='<button id=gdx aria-label="leave the guide" title="leave the guide">'+SV('x','width:18px;height:18px')+'</button><p id=gdt aria-live=polite></p><div id=gdk></div>',document.body.append(gdr,gd)
@@ -1577,9 +1586,9 @@ const GKEY=(t,fn)=>{const b=document.createElement('button');b.className='sk',b.
 const GSID=p=>Object.values(GSIDE).includes(p)
 // the keys a step offers: its own; or, offering a sidetrack, "tell me" and "keep going"; or one to go on ("back to the tour" at the
 // end of a sidetrack, "done" at the end of the tour)
-const GKEYS=_=>{const s=GP[GI],last=GI==GP.length-1;return s.k||(s.o?[['tell me',_=>{GR=GI+1,GGO(GSIDE[s.o],0)}],['keep going',_=>GGO(GP,GI+1)]]:[[GSID(GP)&&last?'back to the tour':GP==GTOUR&&last?'done':'next',_=>{s.s&&s.s(),GGO(GP,GI+1)}]])}
+const GKEYS=_=>{const s=GP[GI],last=GI==GP.length-1;return s.k||(s.o?[['tell me',_=>{GR=GI+1,GGO(GSIDE[s.o],0)}],['keep going',_=>GGO(GP,GI+1)]]:[[GSID(GP)&&last?'back to the tour':GP==GTOUR&&last?'done':'next',_=>{s.s&&s.s(),GP==GTOUR&&last&&RDY(1),GGO(GP,GI+1)}]])}
 const GSAY=_=>{const s=GP[GI],k=gd.lastChild;k.textContent='',k.classList.toggle('col',!!(GC||s.k)),gd.children[1].textContent=GC?'Ready to go?':typeof s.t=='function'?s.t():s.t
-for(const [t,fn] of GC?[['yep!',_=>GEND()],['a little more guidance would be fantastic',_=>{GC=0,GSAY()}]]:GKEYS())k.append(GKEY(t,fn));GPUT()}
+for(const [t,fn] of GC?[['yep!',_=>{RDY(1),GEND()}],['a little more guidance would be fantastic',_=>{GC=0,GSAY()}]]:GKEYS())k.append(GKEY(t,fn));GPUT()}
 // where the ring and the bubble go: the ring round the thing; the bubble under it where there is room, over it otherwise, and at
 // the foot of the screen when there is neither (or nothing to ring, or the plate is lifted). All of it is put away while the menu
 // is open, and a bubble about the console while the plate is lifted
@@ -1594,14 +1603,17 @@ const GGO=(p,i)=>{for(;i<p.length;i++){const s=p[i],el=s.r&&s.r();if((!s.w||s.w(
 if(i>=p.length)return GSID(p)?GGO(GTOUR,GR):GEND()
 GP=p,GI=i,GW=GC=0,GV={tp:TP,v:VOICE,bpm:BPM,mon:MON,sw:0},gd.hidden=false,GSAY()}
 const GEND=_=>{GP=null,GI=-1,GC=0,gd.hidden=gdr.hidden=true}
-const GSTART=_=>{GQS=1,VOICE!=1&&(VOICE=1,KNUI()),PLAYING||LSN||(TGT=57,COAST=VEL=0),GGO(GTOUR,0)}
+const GSTART=async _=>{SSTOP(),PLAYING&&PLAYSET(0),LKS.size&&OREL(),MON&&MSET(0),ZL&&ZGO(0);LSN&&await LISTEN(0);GQS=1,VOICE!=1&&(VOICE=1,KNUI()),TGT=57,COAST=VEL=0,GGO(GTOUR,0)}          // (begun again from the menu or after a song: first everything that sounds is quieted, so that it begins as it did the first time)
 GUIDE=i=>i<0?GEND():i?GGO(GTOUR,i):GSTART()
 GASK=done=>{if(!RUN||GP||GQS)return;GQS=1,GAD=done?1:0,GGO(GASKP,0)}
 gd.firstChild.onclick=_=>{VB(5);const s=GP&&GP[GI];s&&s.x?GEND():(GC=1,GSAY())},pvt.addEventListener('pointerdown',_=>{GV.sw=1})
 // each frame while a bubble is up: things may have moved (the screen turned, the plate lifted), and the step may have been done
 {const lp=_=>{requestAnimationFrame(lp);if(!GP)return;GPUT();const s=GP[GI];!GC&&s.d&&!GW&&s.d()&&(GW=performance.now());GW&&performance.now()-GW>1400&&GGO(GP,GI+1)};requestAnimationFrame(lp)}
+// "Show me around" in the menu, under the help: the tour from its beginning, any time (setz, build 24). The menu shuts first
+{const d=document.createElement('div'),b=document.createElement('button');d.className='links',b.id='gdm',b.innerHTML=SV('touch')+'<span>Show me around<small>the guided tour, from the start</small></span>',b.ariaLabel='show me around: the guided tour',b.onclick=_=>{VB(5),PM(0),setTimeout(GSTART,320)},d.appendChild(b),phd.after(d)}
 window.__G=_=>({i:GI,path:GP==GTOUR?'tour':GP==GASKP?'ask':GP?'side':null,n:GP?GP.length:0,say:gd.children[1].textContent,keys:[...gd.lastChild.children].map(b=>b.textContent),ask:GC,ring:gdr.hidden?null:[gdr.offsetLeft,gdr.offsetTop,gdr.offsetWidth,gdr.offsetHeight],box:gd.hidden?null:[gd.offsetLeft,gd.offsetTop,gd.offsetWidth,gd.offsetHeight]})
 window.__GS=(p,i)=>{GP=p=='tour'?GTOUR:p=='ask'?GASKP:GSIDE[p],GI=i,GW=GC=0,GV={tp:TP,v:VOICE,bpm:BPM,mon:MON,sw:0},gd.hidden=false,GSAY()}          // (for the tests: any step, whatever its w)
 
 ACAP(),SRCUI(),PLAYSET(0),FIT(),KNUI(),GSET(GA),requestAnimationFrame(FRAME)
+RDY()&&BEGIN('back')
 </script>
