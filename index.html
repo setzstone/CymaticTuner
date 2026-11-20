@@ -782,7 +782,8 @@ const SIDE=f=>{const c=1731*Math.log(1+(.3+.0011*f)/f);return c<2?2:c>8?8:c}
 // A song (the module at the end of the script, where one is built in) plays the instrument as fingers on the orbs would, by its own
 // numbers: 2000 + n and 3000 + n are note n for its melody and for what goes with it, so that neither stops a note a finger holds
 // (1000 + n) or the other's. SONG = the one playing; SGM = the notes it sounds, as KEYS wants them; STICK = what it does each frame
-let SONG=null,SGM=0,VPT=0,STICK=_=>{},SSTOP=_=>{},SNICE=_=>{},GUIDE=_=>{}          // (SNICE: play a song, one not heard yet if there is one; GUIDE: the guide's step, or below 0 to end it)
+let SONG=null,SGM=0,VPT=0,GQS=0,STICK=_=>{},SSTOP=_=>{},SNICE=_=>{},GUIDE=_=>{},GASK=_=>{}          // (SNICE: play a song, one not heard yet if there is one; GUIDE: the guide's step, or below 0 to end it; GASK: after a song, ask
+// whether the tour is wanted, unless the question is settled (GQS: the tour was chosen or declined, or the question asked))
 let VOICE=0,MOUT=null,FIN=null,FG=null,VOLG=null,VOL=1,MUF=0,BWAVE=null,TPL=-9,PP=69,TQ=2,TMOVE=0,NDT=-9,NDL=0
 const VXS=new Map(),HELD=new Map(),NREF=new Map(),SND=_=>PLAYING||NREF.size>0,FOF=d=>TONEF()*Math.pow(2,d/12),XN=k=>k>=1000?k%1000:Math.round(TP)+k,XF=k=>k>=1000?A4*Math.pow(2,(k%1000-69)/12):FOF(k)
 const LEADN=_=>{if(PLAYING||!NREF.size)return null;if(SONG&&SONG.lead!=null)return SONG.lead;const r=Math.round(TP);let m=1e9;for(const k of NREF.keys()){const n=XN(k);if(n==r)return r;n<m&&(m=n)}return m}          // (a song's melody leads)
@@ -1189,7 +1190,7 @@ for(const [el,d] of [[tfl,-1],[tsh,1]]){const up=_=>{BDIR==d&&(BDIR=0)};el.addEv
 // the octave keys (listening, a press on either goes over to the instrument first, as a touch on the dial or on flat or sharp does)
 ACT(tdn,_=>{VB(5),TAKE(),STEP(-12)}),ACT(tup,_=>{VB(5),TAKE(),STEP(12)})
 // play: starts and stops the instrument (and, listening, goes over to it)
-ACT(ply,_=>{VB(8),RUN&&(SONG?SSTOP():LSN&&!PLAYING?TAKE():PLAYSET(!PLAYING))})          // (while a song plays the key shows the stop sign, and stops it)
+ACT(ply,_=>{VB(8),RUN&&(SONG?SSTOP(1):LSN&&!PLAYING?TAKE():PLAYSET(!PLAYING))})          // (while a song plays the key shows the stop sign, and stops it)
 addEventListener('keydown',ev=>{const k=ev.key;if(k=='Escape')return ZL?ZGO(0):PM(!OPEN);if(!mode||OPEN)return
 if(k=='+'||k=='=')return ZGO(ZL+1);if(k=='-'||k=='_')return ZGO(ZL-1);if(k==' ')return ev.preventDefault(),ply.onclick()
 if(!/^(Arrow|Page)/.test(k))return;TAKE()
@@ -1229,7 +1230,7 @@ for(const el of [pm,cat])el.addEventListener('pointerdown',MDOWN),el.addEventLis
 // of the menu a drag ended over, or the part of the console that was showing where the tap fell. It must not press that.)
 addEventListener('click',ev=>{ev.timeStamp-MDT<350&&(ev.stopPropagation(),ev.preventDefault())},true)
 const ASET=a=>{A4=a<415?415:a>466?466:a,aval.textContent=A4+' Hz',ard.hidden=A4==440,SHOWN='';try{localStorage.setItem('sst.a4',A4)}catch(e){}}
-const BEGIN=async m=>{RUN=1,CTX();LSN&&await LISTEN(0);PLAYING&&PLAYSET(0);MODE(),WAKE();document.body.classList.remove('pre'),st.classList.add('out'),setTimeout(_=>st.hidden=true,560);m=='song'?SNICE():m=='guide'&&GUIDE(0)}          // (the console begins quiet: nothing sounds and nothing listens until it is asked to. The sound is made ready here, while the touch that asked still counts)
+const BEGIN=async m=>{RUN=1,GQS=m=='song'?0:1,CTX();LSN&&await LISTEN(0);PLAYING&&PLAYSET(0);MODE(),WAKE();document.body.classList.remove('pre'),st.classList.add('out'),setTimeout(_=>st.hidden=true,560);m=='song'?SNICE():m=='guide'&&GUIDE(0)}          // (the console begins quiet: nothing sounds and nothing listens until it is asked to. The sound is made ready here, while the touch that asked still counts)
 document.body.classList.add('pre'),ASET(A4)
 // The microphone's key, the instrument's name and the instrument knob, on the console and on the title card. On the console the key
 // turns listening on and off. On the title card the name and the knob choose the instrument, and two keys begin: one listening,
@@ -1493,7 +1494,7 @@ x.sg=SGN*g,x.vl=g,x.t0=pn+when-now,NREF.set(k,1);const gn=x.b.out.gain,L=x.v.lv*
 try{gn.cancelScheduledValues(now);if(bow)gn.setValueAtTime(0,now),gn.setTargetAtTime(L*g*.84,when,x.v.at||.07),gn.setTargetAtTime(L*g,when+Math.min(.6,(off-when)*.4),Math.max(.1,(off-when)*.22));else gn.setValueAtTime(L,now),PLK(x,when-now)}catch(err){}
 S.on.set(k,{w:when,off:bow?off+(e.r?0:.035):off+(e.r?1:1.5),mel:!e.r,g}),SGQ.push({w:when,n:e.n,mel:!e.r,top:!e.r&&!(e.f&16),len:bow?off-when:Math.min(.5,off-when+.15)}),window.__sl&&window.__sl.push([+when.toFixed(4),e.n,e.r,+g.toFixed(3),bow?1:0,+(off-when).toFixed(3)])}
 const last=S.i>=S.ev.length;for(const [k,q] of S.on)now>=q.off&&SGOFF(S,k,last)          // (notes begun before the knob was turned finish on the instrument they began on)
-last&&!S.on.size&&now>S.t0+S.end+.5&&SSTOP()}
+last&&!S.on.size&&now>S.t0+S.end+.5&&SSTOP(2)}
 // each frame: the notes whose time has come to be heard are shown: the orb lit, its powder thrown (more for a note of the melody),
 // and a note of the melody takes the dial to itself, and the plate and the readout with it (LEADN). A struck note counts as
 // struck just now, so that the plate is shaken as long as the note rings
@@ -1504,8 +1505,8 @@ let m=0;for(let h=0;h<12;h++)SGLIT[h]>t&&(m|=1<<h);SGM=m}
 setInterval(_=>SONG&&SGGO(),40)                                          // (and when no frames come)
 // stop the song (the play key, the song's own line in the menu, the title card, or its end). The instrument goes back to the one
 // that was chosen before, unless the knob has been turned meanwhile
-SSTOP=_=>{const S=SONG;if(!S)return;SONG=null;for(const k of [...S.on.keys()])NREF.delete(k),VSTOP(k);VBAL(),SGQ.length=0,SGLIT.fill(0),SGM=0,PLAYSET(PLAYING)
-VPT<S.ts&&S.pv!=VOICE&&(VOICE=S.pv,KNUI());SGUI()}          // (VPT: when the knob was last turned by hand)
+SSTOP=q=>{const S=SONG;if(!S)return;SONG=null;for(const k of [...S.on.keys()])NREF.delete(k),VSTOP(k);VBAL(),SGQ.length=0,SGLIT.fill(0),SGM=0,PLAYSET(PLAYING)
+VPT<S.ts&&S.pv!=VOICE&&(VOICE=S.pv,KNUI());SGUI();q&&setTimeout(_=>GASK(q==2),q==2?900:350)}          // (q: 1 stopped by the person, 2 heard to its end; then the guide may ask)          // (VPT: when the knob was last turned by hand)
 // play song i from its beginning: whatever sounds is let go and the metronome stopped, the knob goes to the song's own instrument
 // (not kept as the chosen one), its name goes up on the readout, and the strings it will need are worked out before its first note
 const SPLAY=async i=>{SSTOP();const ac=CTX();if(!ac||!RUN)return;MOUT&&MOUT.context==ac||AOUT(ac);const G=SGS[i],S={g:i,i:0,on:new Map(),lead:null,t0:null,pv:VOICE,ts:performance.now(),...SGBUILD(G)}
@@ -1520,58 +1521,87 @@ const SGH=_=>{try{return JSON.parse(localStorage.getItem('sst.heard')||'[]').fil
 const SGPICK=_=>{if(SGP>=0)return SGP;const h=SGH(),all=SGS.map((_,i)=>i);let c=all.filter(i=>!h.includes(i));c.length||(c=all.filter(i=>all.length<2||i!=h[h.length-1]));return SGP=c[Math.random()*c.length|0]}
 SNICE=_=>{const i=SGPICK();let h=SGH().filter(x=>x!=i);h.push(i),h.length>=SGS.length&&(h=[i]),SGP=-1;try{localStorage.setItem('sst.heard',JSON.stringify(h))}catch(e){}return SPLAY(i)}
 const SGUI=_=>{const on=!!SONG,G=SGS[on?SONG.g:SGPICK()];sgb.classList.toggle('on',on),sgb.innerHTML=SV(on?'pause':'play')+'<span>Play me a nice song<small>'+G.n+', '+G.d+'</small></span>',sgb.ariaLabel=on?'stop the song':'play me a nice song'}
-{const h=document.createElement('p'),d=document.createElement('div'),b=document.createElement('button');h.className='h',h.textContent='songs',d.className='links',b.id='sgb',b.onclick=_=>SONG?SSTOP():SNICE(),d.appendChild(b),phd.after(h,d),SGUI()}
+{const h=document.createElement('p'),d=document.createElement('div'),b=document.createElement('button');h.className='h',h.textContent='songs',d.className='links',b.id='sgb',b.onclick=_=>SONG?SSTOP(1):SNICE(),d.appendChild(b),phd.after(h,d),SGUI()}
 window.__S=_=>({on:!!SONG,g:SONG?SONG.g:-1,i:SONG?SONG.i:0,n:SONG?SONG.ev.length:0,lead:SONG?SONG.lead:null,t:SONG&&SONG.t0!=null&&AC?+(AC.currentTime-SONG.t0).toFixed(3):null,end:SONG?+SONG.end.toFixed(2):0,held:SONG?SONG.on.size:0,keys:[...VXS.keys()],voice:VOICES[VOICE].n,lit:SGM})
 
 // ---------- the guide ----------
-// "A bit of guidance would be nice": the console explained one thing at a time, as to someone who has never seen any of it and
-// is welcome here. A bubble says what a thing is and what to do with it, a steady ring shows which thing, and the guide goes on
-// when the person has tried it (a moment after, so that what they did can be seen and heard first). Where there is nothing to
-// try, or they would rather not, "next" goes on. The x in the bubble's corner asks "Ready to go?": "yep!" ends the guide, the other
-// key goes back to where it was. What it tells is true of this page: what a Chladni plate is, who found what and when, and that
-// the plate here is worked out, not filmed.
-// GDS = the steps: what to ring (an element, or nothing), what to say, and what counts as having tried it (nothing: only "next").
-// GI = the step showing (-1: no guide); GV = how things stood when it began; GW = since when it has been done; GC = asking whether to end
-const GDS=[
-[_=>ply,"Welcome. This round plate has sand on it, and sound moves the sand. Let's begin with one note. Press the big round key under the plate.",_=>PLAYING],
-[_=>well,"You're a natural. That note is shaking the plate. The sand slides off the places that shake and comes to rest where the plate keeps still. The still places show up as lines."],
-[_=>well,"A man named Ernst Chladni showed this to the world in 1787. He drew a violin bow along the edge of a metal plate, and the sand on it jumped into figures. Plates like his are still called Chladni plates."],
-[_=>dial,"Every note draws its own figure. This strip is the dial. Slide it sideways to change the note. Go ahead and give it a try.",_=>Math.abs(TP-GV.tp)>=1.5],
-[_=>well,"There you go. Low notes draw wide lines. High notes draw fine, busy ones. It took years to work out why. Sophie Germain won a prize for the mathematics in 1816."],
-[_=>well,"Now the glass orbs round the plate. Each of the twelve holds one note, with C at the top, and a powder of its own colour. Press one and hold it down.",_=>[...OB.values()].some(k=>k>=0)||LKS.size>0],
-[_=>well,"Lovely. Now tap one orb twice, quickly, and it stays down by itself. Lock two or three and you have a chord. One more tap lets an orb go.",_=>LKS.size>0],
-[_=>knb,"You have the hang of it. This knob chooses the instrument. Turn it, or touch one of the small signs round it.",_=>VOICE!=GV.v],
-[_=>smc,_=>PREVIEW?"Now the real work of a tuner: listening. This key is the microphone. On this preview page it is switched off. On the full page it hears your own instrument or your voice.":"Now the real work of a tuner: listening. This key is the microphone. Press it, say yes if you are asked, and then play or sing one long note.",_=>!PREVIEW&&LSN==1],
-[_=>dspw,"The big letter is the note that is heard. When the lines of sand are crisp and the ring round the plate glows, the note is in tune. Loose sand at the top means sharp. Loose at the bottom means flat."],
-[_=>tpw,"This window is the pace, in beats a minute. Touch an arrow to change it. The key at its left ticks along like a metronome. Guitar and piano strike again on every beat.",_=>BPM!=GV.bpm||MON!=GV.mon],
-[_=>pzm,"Would you like a closer look at the sand? Press the magnifier. The plate lifts off the panel.",_=>ZL>0],
-[0,"There are 22,000 grains, and each one is drawn by itself. Push them about with a finger if you like. When you have seen enough, tap the plate to set it back down.",_=>ZL==0],
-[_=>pvt,"The little broom sweeps the plate clean. The next note or powder fills it again.",_=>GV.sw],
-[_=>vkn,"Two small things. Slide up or down on this knob for the volume. The key at the far end of the row muffles the sound, as if it came from the next room."],
-[_=>well,"One secret before you go. There is no real plate in here. Many times a second the page works out how a plate would ripple for the note it hears, and shakes each grain as much as the plate moves under it. It follows a rule that scientists use for ripples and stripes, so these figures are cousins of Chladni's, not copies."],
-[_=>well,"Pictures made by sound have a name: cymatics. A Swiss doctor, Hans Jenny, gave it to them in 1967, from the Greek word for wave. You have been doing cymatics for a few minutes now."],
-[_=>mnb,"The menu holds the rest: a help page, the tuning pitch, the colours, and a song the plate can play for you. That is everything. It is all yours now."]]
-let GI=-1,GV={},GW=0,GC=0
+// "A bit of guidance would be nice": the console shown one thing at a time, as to someone who has never seen any of it and is
+// welcome here. A bubble says what a thing is and what to do with it, a steady ring shows which thing, and the guide goes on a
+// moment after the person has tried it, so that what they did can be seen and heard first. "next" goes on without trying.
+// It minds where the person is (setz, build 23: the first tour had them start a shrill note, left it sounding, and then told
+// history over it). The first sounds are under their own finger and stop when it lifts. When a step leaves something sounding
+// (an orb locked, the dial's note, the metronome), the next bubble shows how to stop it, and "next" there stops it. The stories
+// (who found what; how the page does it) are sidetracks, offered at quiet moments. With the plate lifted, a bubble about the
+// console waits until it is set down; with the menu open, all of it waits. The tour begins on the cello, at A3, not kept as the
+// chosen instrument: warm and low. After a song, heard to its end or stopped, someone who began with the song is asked, once,
+// whether they would like the tour.
+// A step: r = what to ring; t = what to say (or a function giving it); d = it has been done; w = it is shown only while this
+// holds; s = what "next" does besides going on; o = a sidetrack to offer; k = keys of its own; x = its x ends it at once; z = it
+// may show with the plate lifted. GP = the steps being gone through (the tour, a sidetrack, or the question after a song); GI =
+// which; GR = where in the tour a sidetrack goes back to; GV = how things stood when the step began; GW = since when it has been
+// done; GC = asking whether to end; GAD = the song was heard to its end
+const ORBS=_=>[...OB.values()].filter(k=>k>=0).length
+const GTOUR=[
+{r:_=>well,t:"Welcome. This round plate has sand on it, and sound moves the sand. Press one of the glass orbs around the edge and hold it down.",d:_=>ORBS()>0},
+{r:_=>well,t:"You're a natural. While a note plays, the sand slides off the parts of the plate that shake and gathers where it stays still. That is what draws the lines."},
+{r:_=>well,t:"Each orb holds a different note, with C at the top, and a powder of its own color. Hold two or three at once and you have a chord.",d:_=>ORBS()>1},
+{r:_=>well,t:"Now tap one orb twice, quickly. It stays down on its own and keeps its note going.",d:_=>LKS.size>0},
+{r:_=>well,t:"Lovely. Tap it once more to let it go.",w:_=>LKS.size>0,d:_=>!LKS.size,s:_=>OREL()},
+{t:"Would you like to hear how people first discovered this? It's a short story.",o:'H',z:1},
+{r:_=>ply,t:"This big round key plays a note that keeps going until you press it again. Give it a try.",d:_=>PLAYING},
+{r:_=>dial,t:_=>(PLAYING?"Now slide this dial sideways to change the note.":"Press the round key for a note, then slide this dial sideways to change it.")+" Low notes draw wide lines. High notes draw fine ones.",d:_=>Math.abs(TP-GV.tp)>=1.5},
+{r:_=>ply,t:"There you go. Press the round key again whenever you'd like some quiet.",w:_=>PLAYING,d:_=>!PLAYING,s:_=>PLAYSET(0)},
+{r:_=>knb,t:"This knob chooses the instrument. Turn it, or touch one of the little pictures around it. Then hold an orb to hear how it sounds.",d:_=>VOICE!=GV.v},
+{r:_=>smc,t:_=>"This key is the microphone. It lets the tuner hear your own instrument or your voice. "+(PREVIEW?"On this preview page it is switched off. On the full page it listens.":"Press it, allow it if you're asked, and play or sing one long note."),d:_=>!PREVIEW&&LSN==1},
+{r:_=>dspw,t:"The big letter is the note it hears. When the lines of sand are crisp and the ring around the plate glows, you're in tune. Loose sand at the top means sharp. Loose at the bottom means flat."},
+{r:_=>tpw,t:"This window is the pace, in beats a minute. Touch an arrow to change it. The key on its left ticks along like a metronome. Guitar and piano play again on every beat.",d:_=>BPM!=GV.bpm||MON!=GV.mon},
+{r:_=>mtk,t:"Press the metronome key again to stop the ticking.",w:_=>MON,d:_=>!MON,s:_=>MSET(0)},
+{r:_=>pzm,t:"Would you like a closer look at the sand? Press the magnifier, and the plate lifts off the panel.",d:_=>ZL>0,z:1},
+{t:"There are 22,000 grains, and each one is drawn on its own. Push them around with a finger if you like. Tap the plate to set it back down.",w:_=>ZL>0,d:_=>!ZL,s:_=>ZGO(0),z:1},
+{r:_=>pvt,t:"This little broom sweeps the plate clean. The next note or powder fills it again.",d:_=>GV.sw},
+{r:_=>vkn,t:"Slide up or down on this small knob to change the volume. The key at the far end of the row makes everything sound as if it came from the next room."},
+{t:"Curious how a phone can do this without a real plate?",o:'T',z:1},
+{r:_=>mnb,t:"The menu holds the rest: a help page, the tuning pitch, the colors, and a song the plate can play for you. That's the tour. It's all yours now."}]
+const GSIDE={H:[
+{r:_=>well,t:"In 1787 a German scientist, Ernst Chladni, sprinkled sand on a metal plate and drew a violin bow along its edge. The sand jumped into patterns like these. Plates like his are still called Chladni plates."},
+{r:_=>well,t:"Why each note makes its own pattern took years to explain. In 1816 a mathematician, Sophie Germain, won a prize for working out the mathematics."},
+{r:_=>well,t:"In 1967 a Swiss doctor, Hans Jenny, gave pictures made by sound a name: cymatics, from the Greek word for wave. So what you are doing here is cymatics."}],
+T:[
+{r:_=>well,t:"Here is the secret: there is no real plate in here. Many times a second the page works out how a plate would ripple for the note it hears, and shakes each grain as much as the plate moves under it."},
+{r:_=>well,t:"The rule it uses was first written for the rolls that form in a liquid heated from below. So these patterns are cousins of Chladni's, not copies."}]}
+const GASKP=[{t:_=>(GAD?"That was Keepsake. ":"")+"Would you like me to show you around?",k:[["a bit of guidance would be nice",_=>GSTART()],["I can figure it out myself",_=>GEND()]],x:1,z:1}]
+let GP=null,GI=-1,GR=0,GV={},GW=0,GC=0,GAD=0
 const gd=document.createElement('div'),gdr=document.createElement('div');gd.id='gd',gdr.id='gdr',gd.hidden=gdr.hidden=true,gd.setAttribute('role','dialog'),gd.ariaLabel='guide'
 gd.innerHTML='<button id=gdx aria-label="leave the guide" title="leave the guide">'+SV('x','width:18px;height:18px')+'</button><p id=gdt aria-live=polite></p><div id=gdk></div>',document.body.append(gdr,gd)
 const GKEY=(t,fn)=>{const b=document.createElement('button');b.className='sk',b.innerHTML='<b>'+t+'</b>',b.onclick=_=>{VB(5),fn()};return b}
-// what the bubble says and offers, as things stand
-const GSAY=_=>{const s=GDS[GI],k=gd.lastChild;k.textContent='',k.classList.toggle('col',!!GC)
-if(GC)gd.children[1].textContent='Ready to go?',k.append(GKEY('yep!',_=>GUIDE(-1)),GKEY('a little more guidance would be fantastic',_=>{GC=0,GSAY()}));else gd.children[1].textContent=typeof s[1]=='function'?s[1]():s[1],k.append(GKEY(GI==GDS.length-1?'done':'next',_=>GUIDE(GI+1)))
-GPUT()}
+const GSID=p=>Object.values(GSIDE).includes(p)
+// the keys a step offers: its own; or, offering a sidetrack, "tell me" and "keep going"; or one to go on ("back to the tour" at the
+// end of a sidetrack, "done" at the end of the tour)
+const GKEYS=_=>{const s=GP[GI],last=GI==GP.length-1;return s.k||(s.o?[['tell me',_=>{GR=GI+1,GGO(GSIDE[s.o],0)}],['keep going',_=>GGO(GP,GI+1)]]:[[GSID(GP)&&last?'back to the tour':GP==GTOUR&&last?'done':'next',_=>{s.s&&s.s(),GGO(GP,GI+1)}]])}
+const GSAY=_=>{const s=GP[GI],k=gd.lastChild;k.textContent='',k.classList.toggle('col',!!(GC||s.k)),gd.children[1].textContent=GC?'Ready to go?':typeof s.t=='function'?s.t():s.t
+for(const [t,fn] of GC?[['yep!',_=>GEND()],['a little more guidance would be fantastic',_=>{GC=0,GSAY()}]]:GKEYS())k.append(GKEY(t,fn));GPUT()}
 // where the ring and the bubble go: the ring round the thing; the bubble under it where there is room, over it otherwise, and at
-// the foot of the screen when there is neither (or nothing to ring). Both are put away while the menu is open
-const GPUT=_=>{if(GI<0)return;const s=GDS[GI],el=!GC&&s[0]?s[0]():null,off=OPEN||!RUN,w=gd.offsetWidth,h=gd.offsetHeight;gd.style.opacity=gdr.style.opacity=off?0:1,gd.style.pointerEvents=off?'none':''
-if(!el||el.hidden){gdr.hidden=true,gd.classList.add('no'),gd.style.left=(VW-w)/2+'px',gd.style.top=VH-h-Math.max(14,VH*.04)+'px';return}
+// the foot of the screen when there is neither (or nothing to ring, or the plate is lifted). All of it is put away while the menu
+// is open, and a bubble about the console while the plate is lifted
+const GPUT=_=>{if(!GP)return;const s=GP[GI],el=!GC&&s.r?s.r():null,off=OPEN||!RUN||ZL>0&&!s.z&&!GC,w=gd.offsetWidth,h=gd.offsetHeight;gd.style.opacity=gdr.style.opacity=off?0:1,gd.style.pointerEvents=off?'none':''
+if(!el||el.hidden||ZL>0){gdr.hidden=true,gd.classList.add('no'),gd.style.left=(VW-w)/2+'px',gd.style.top=VH-h-Math.max(14,VH*.04)+'px';return}
 const r=el.getBoundingClientRect(),rd=el==well||el==ply||el==pzm||el==pvt||el==vkn,cx=r.left+r.width/2,x=Math.max(12,Math.min(VW-12-w,cx-w/2)),below=r.bottom+16+h<VH-6,above=r.top-16-h>6
 gdr.hidden=false,gdr.classList.toggle('rd',rd),gdr.style.left=r.left-6+'px',gdr.style.top=r.top-6+'px',gdr.style.width=r.width+12+'px',gdr.style.height=r.height+12+'px'
 gd.classList.toggle('no',!below&&!above),gd.classList.toggle('up',!below&&above),gd.style.left=x+'px',gd.style.top=(below?r.bottom+16:above?r.top-16-h:VH-h-10)+'px',gd.style.setProperty('--ax',Math.max(20,Math.min(w-20,cx-x))+'px')}
-// step i, or the end (below 0, or past the last). A thing this screen has no room for (the volume, on a very short one) is passed over
-GUIDE=i=>{if(i<0||i>=GDS.length){GI=-1,gd.hidden=gdr.hidden=true;return}{const el=GDS[i][0]&&GDS[i][0]();if(el&&el.hidden)return GUIDE(i+1)}GI=i,GW=GC=0,GV={tp:TP,v:VOICE,bpm:BPM,mon:MON,sw:0},gd.hidden=false,GSAY()}
-gd.firstChild.onclick=_=>{VB(5),GC=1,GSAY()},pvt.addEventListener('pointerdown',_=>{GV.sw=1})
-// each frame while the guide is up: things may have moved (the screen turned, the plate lifted), and the step may have been done
-{const lp=_=>{requestAnimationFrame(lp);if(GI<0)return;GPUT();const s=GDS[GI];!GC&&s[2]&&!GW&&s[2]()&&(GW=performance.now());GW&&performance.now()-GW>1400&&GUIDE(GI+1)};requestAnimationFrame(lp)}
-window.__G=_=>({i:GI,n:GDS.length,say:gd.children[1].textContent,keys:[...gd.lastChild.children].map(b=>b.textContent),ask:GC,ring:gdr.hidden?null:[gdr.offsetLeft,gdr.offsetTop,gdr.offsetWidth,gdr.offsetHeight],box:gd.hidden?null:[gd.offsetLeft,gd.offsetTop,gd.offsetWidth,gd.offsetHeight]})
+// step i of path p, passing over a step whose time has not come (w) or whose thing this screen has no room for (the volume, on a
+// very short one); past the end of a sidetrack, back to the tour; past the end of anything else, the end
+const GGO=(p,i)=>{for(;i<p.length;i++){const s=p[i],el=s.r&&s.r();if((!s.w||s.w())&&!(el&&el.hidden))break}
+if(i>=p.length)return GSID(p)?GGO(GTOUR,GR):GEND()
+GP=p,GI=i,GW=GC=0,GV={tp:TP,v:VOICE,bpm:BPM,mon:MON,sw:0},gd.hidden=false,GSAY()}
+const GEND=_=>{GP=null,GI=-1,GC=0,gd.hidden=gdr.hidden=true}
+const GSTART=_=>{GQS=1,VOICE!=1&&(VOICE=1,KNUI()),PLAYING||LSN||(TGT=57,COAST=VEL=0),GGO(GTOUR,0)}
+GUIDE=i=>i<0?GEND():i?GGO(GTOUR,i):GSTART()
+GASK=done=>{if(!RUN||GP||GQS)return;GQS=1,GAD=done?1:0,GGO(GASKP,0)}
+gd.firstChild.onclick=_=>{VB(5);const s=GP&&GP[GI];s&&s.x?GEND():(GC=1,GSAY())},pvt.addEventListener('pointerdown',_=>{GV.sw=1})
+// each frame while a bubble is up: things may have moved (the screen turned, the plate lifted), and the step may have been done
+{const lp=_=>{requestAnimationFrame(lp);if(!GP)return;GPUT();const s=GP[GI];!GC&&s.d&&!GW&&s.d()&&(GW=performance.now());GW&&performance.now()-GW>1400&&GGO(GP,GI+1)};requestAnimationFrame(lp)}
+window.__G=_=>({i:GI,path:GP==GTOUR?'tour':GP==GASKP?'ask':GP?'side':null,n:GP?GP.length:0,say:gd.children[1].textContent,keys:[...gd.lastChild.children].map(b=>b.textContent),ask:GC,ring:gdr.hidden?null:[gdr.offsetLeft,gdr.offsetTop,gdr.offsetWidth,gdr.offsetHeight],box:gd.hidden?null:[gd.offsetLeft,gd.offsetTop,gd.offsetWidth,gd.offsetHeight]})
+window.__GS=(p,i)=>{GP=p=='tour'?GTOUR:p=='ask'?GASKP:GSIDE[p],GI=i,GW=GC=0,GV={tp:TP,v:VOICE,bpm:BPM,mon:MON,sw:0},gd.hidden=false,GSAY()}          // (for the tests: any step, whatever its w)
 
 ACAP(),SRCUI(),PLAYSET(0),FIT(),KNUI(),GSET(GA),requestAnimationFrame(FRAME)
 </script>
