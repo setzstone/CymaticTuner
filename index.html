@@ -245,7 +245,7 @@ html.rt #st{display:none}
 </style>
 <div id=sa></div>
 <div id=pm hidden role=dialog aria-modal=true aria-label="menu"><button id=pmx aria-label="close menu" title="close menu"></button>
-<details id=phd><summary>help guide</summary><div id=hlp></div><p class=nt>Sound is measured on this device.<br>Nothing is recorded or sent.</p></details>
+<details id=phd><summary>help guide</summary><div id=hlp></div><p class=nt>Sound is measured on this device.<br>Nothing is recorded or sent.</p><p class=nt id=sndg></p></details>
 <p class=h>reference pitch</p><div class=rw><span>A4</span><span><button id=adn aria-label="lower the reference pitch">&#8722;</button><b id=aval>440 Hz</b><button id=aup aria-label="raise the reference pitch">+</button></span></div><button id=ard class=sm>back to 440</button>
 <p class=h>light</p><button id=pac>accent color<i class=sw></i></button><div id=acc hidden><div class=fad id=fdr><u></u><i></i></div><div class=fad id=fdg><u></u><i></i></div><div class=fad id=fdb><u></u><i></i></div><button id=acr class=sm>back to amber</button></div><div id=gla><span>glint</span><div class=fad id=fgl><u></u><i></i></div></div>
 <button id=pt class=dv>return to title</button>
@@ -721,7 +721,7 @@ let TP=69,BEND=0,PLAYING=0,ENV=0,TPH=0
 const GATE=.004,FMIN=30,FMAX=4200
 try{const a=+localStorage.getItem('sst.a4');a>=400&&a<=480&&(A4=a)}catch(e){}
 const TOAST=(s,ms=3600)=>{tst.textContent=s,tst.classList.add('on'),clearTimeout(TOAST.t),TOAST.t=setTimeout(_=>tst.classList.remove('on'),ms)}
-const CTX=_=>{if(!AC){const K=window.AudioContext||window.webkitAudioContext;if(!K)return null;try{AC=new K()}catch(e){return null}}try{AC.state=='suspended'&&AC.resume().catch(_=>{})}catch(e){}return AC}
+const CTX=_=>{if(!AC){const K=window.AudioContext||window.webkitAudioContext;if(!K)return null;try{AC=new K({latencyHint:.05})}catch(e){try{AC=new K()}catch(e2){return null}}}try{AC.state=='suspended'&&AC.resume().catch(_=>{})}catch(e){}return AC}
 const WAKE=async _=>{try{WAKE.l=await navigator.wakeLock.request('screen')}catch(e){}}
 const MICOFF=_=>{if(MS){for(const t of MS.getTracks())t.stop();MS=null}if(AN){try{AN.disconnect()}catch(e){}AN=null}}
 // a stream of sound coming in (the microphone's, or the computer's own) is read by the same detector: INWIRE puts one in the other's place
@@ -789,7 +789,7 @@ const SIDE=f=>{const c=1731*Math.log(1+(.3+.0011*f)/f);return c<2?2:c>8?8:c}
 const RDY=v=>{try{v&&localStorage.setItem('sst.ready','1');return localStorage.getItem('sst.ready')=='1'}catch(e){return false}}
 let SONG=null,SGM=0,VPT=0,GQS=0,STICK=_=>{},SSTOP=_=>{},SNICE=_=>{},GUIDE=_=>{},GASK=_=>{}          // (SNICE: play a song, one not heard yet if there is one; GUIDE: the guide's step, or below 0 to end it; GASK: after a song, ask
 // whether the tour is wanted, unless the question is settled (GQS: the tour was chosen or declined, or the question asked))
-let VOICE=0,MOUT=null,FIN=null,FG=null,VOLG=null,VOL=1,MUF=0,BWAVE=null,TPL=-9,PP=69,TQ=2,TMOVE=0,NDT=-9,NDL=0
+let HUSH=null,VOICE=0,MOUT=null,FIN=null,FG=null,VOLG=null,VOL=1,MUF=0,BWAVE=null,TPL=-9,PP=69,TQ=2,TMOVE=0,NDT=-9,NDL=0
 const VXS=new Map(),HELD=new Map(),NREF=new Map(),SND=_=>PLAYING||NREF.size>0,FOF=d=>TONEF()*Math.pow(2,d/12),XN=k=>k>=1000?k%1000:Math.round(TP)+k,XF=k=>k>=1000?A4*Math.pow(2,(k%1000-69)/12):FOF(k)
 const LEADN=_=>{if(PLAYING||!NREF.size)return null;if(SONG&&SONG.lead!=null)return SONG.lead;const r=Math.round(TP);let m=1e9;for(const k of NREF.keys()){const n=XN(k);if(n==r)return r;n<m&&(m=n)}return m}          // (a song's melody leads)
 try{const q=localStorage.getItem('sst.vol');q!=null&&+q>=0&&+q<=1&&(VOL=+q)}catch(e){}
@@ -811,7 +811,9 @@ for(let i=0;i<N;i++)z^=z<<13,z^=z>>>17,z^=z<<5,l1+=((z>>>0)/2147483648-1-l1)*a,l
 if(o.hm){const W=Math.max(2,Math.min(o.hm*fs,N*.5));mean=0;for(let i=0;i<N;i++){const u=(i-N/2)/W,v=(u>-.5&&u<.5?.5+.5*Math.cos(6.2832*u):0)+.05*y[i];y[i]=v,mean+=v/N}}          // (a struck string: the hammer's blow, and only a trace of the noise)
 for(let i=0;i<N;i++)y[i]-=mean
 const d=Math.max(1,N*(o.np||.19)|0),nt=o.nt==null?.7:o.nt;for(let i=N-1;i>=d;i--)y[i]-=y[i-d]*nt
+{let m2=0;for(let i=0;i<N;i++)m2+=y[i]/N;for(let i=0;i<N;i++)y[i]-=m2}
 y[N]=rho*y[0];for(let i=N+1;i<n;i++)y[i]=rho*((1-sh)*y[i-N]+sh*y[i-N-1])
+{const F=Math.min(n-N-1,Math.round(fs*.03));for(let i=0;i<F;i++)y[n-1-i]*=.5-.5*Math.cos(Math.PI*i/F)}
 for(let i=0;i<n;i++){const v=y[i]<0?-y[i]:y[i];v>pk&&(pk=v)}
 if(o.hm){let q=0;const m=Math.min(n,2*N);for(let i=0;i<m;i++)q+=y[i]*y[i];pk=Math.min(1/(pk||1),.3/Math.sqrt(q/m||1))}else pk=.9/(pk||1)       // (as loud as: a plucked string by its highest point; a struck one by its first two rounds, which a narrow blow leaves much lower than its point)
 for(let i=0;i<n;i++)y[i]*=pk
@@ -820,28 +822,30 @@ return{y,rate:f*(N+sh)/fs}}
 // everything goes out through one gentle limiter, with a little of it sent round a room on the way (a second and a half of dying noise)
 const AOUT=ac=>{MOUT=ac.createGain(),MOUT.gain.value=.85;const cp=ac.createDynamicsCompressor(),cv=ac.createConvolver(),wg=ac.createGain(),n=ac.sampleRate*1.6|0,ir=ac.createBuffer(1,n,ac.sampleRate),d=ir.getChannelData(0)
 let z=0x1234567,lp=0;for(let i=0;i<n;i++)z^=z<<13,z^=z>>>17,z^=z<<5,lp+=((z>>>0)/2147483648-1-lp)*.22,d[i]=lp*Math.exp(-i/(ac.sampleRate*.4))*(1-Math.exp(-i/(ac.sampleRate*.006)))
-cv.buffer=ir,wg.gain.value=.3,cp.threshold.value=-16,cp.ratio.value=5,cp.attack.value=.004,cp.release.value=.2,MOUT.connect(cp),MOUT.connect(wg),wg.connect(cv),cv.connect(cp),FIN=ac.createBiquadFilter(),FIN.type='lowpass',FIN.frequency.value=OPEN||MUF?520:20000,FIN.Q.value=.5,FG=ac.createGain(),FG.gain.value=OPEN||MUF?.34:1,VOLG=ac.createGain(),VOLG.gain.value=VOL*VOL,cp.connect(FIN),FIN.connect(FG),FG.connect(VOLG),VOLG.connect(ac.destination)
+cv.buffer=ir,wg.gain.value=.3,cp.threshold.value=-16,cp.ratio.value=5,cp.attack.value=.004,cp.release.value=.2,MOUT.connect(cp),MOUT.connect(wg),wg.connect(cv),cv.connect(cp),FIN=ac.createBiquadFilter(),FIN.type='lowpass',FIN.frequency.value=OPEN||MUF?520:20000,FIN.Q.value=.5,FG=ac.createGain(),FG.gain.value=OPEN||MUF?.34:1,VOLG=ac.createGain(),VOLG.gain.value=VOL*VOL,HUSH=ac.createGain();const pre=ac.createGain(),ws=ac.createWaveShaper(),cv2=new Float32Array(4097);pre.gain.value=.5;for(let i=0;i<4097;i++){const u=2*(i/2048-1),a=Math.abs(u);cv2[i]=a<.8?u:Math.sign(u)*(.8+.19*Math.tanh((a-.8)/.19))}ws.curve=cv2,ws.oversample='none',cp.connect(FIN),FIN.connect(FG),FG.connect(VOLG),VOLG.connect(HUSH),HUSH.connect(pre),pre.connect(ws),ws.connect(ac.destination)
 const re=new Float32Array(41),im=new Float32Array(41);for(let h=1;h<41;h++)im[h]=1/Math.pow(h,1.25);BWAVE=ac.createPeriodicWave(re,im)}
 // With the menu open the sound goes on, but as from the next room: quieter, and with its top taken off (FIN, FG: everything passes
 // them, the metronome's ticks too). The filter's key (MUF) does the same with the menu shut. Last of all comes the volume (VOLG)
-const ROOMSET=_=>{if(!FIN||!AC||FIN.context!=AC)return;const t=AC.currentTime,on=OPEN||MUF;try{FIN.frequency.cancelScheduledValues(t),FG.gain.cancelScheduledValues(t),FIN.frequency.setTargetAtTime(on?520:20000,t,on?.09:.05),FG.gain.setTargetAtTime(on?.34:1,t,.12)}catch(e){}}
+const ROOMSET=_=>{if(!FIN||!AC||FIN.context!=AC)return;const t=AC.currentTime,on=OPEN||MUF;try{HOLD(FIN.frequency,t),HOLD(FG.gain,t),FIN.frequency.setTargetAtTime(on?520:20000,t,on?.09:.05),FG.gain.setTargetAtTime(on?.34:1,t,.12)}catch(e){}}
 // a voice's body: in at inp, out (and how loud) at out. (out lets nothing through from the moment it is made: a note is put together
 // from dozens of parts while the sound goes on being made, and until its loudness was set, last of all, a half-built note could be
 // heard at full strength for a few thousandths of a second: a crack, now and then, when notes began.)
-const BODY=(ac,v)=>{const inp=ac.createGain(),out=ac.createGain();out.gain.value=0;let n=inp
-const add=(type,f,q,g)=>{const b=ac.createBiquadFilter();b.type=type,b.frequency.value=f,b.Q.value=q,g&&(b.gain.value=g),n.connect(b),n=b}
-add('highpass',v.hp,.7);const hpf=n;for(const [f,g,q] of v.pk)add('peaking',f,q,g);add('lowpass',v.lp,.7),n.connect(out),out.connect(MOUT);return{inp,out,hpf}}
-const VSTOP=d=>{if(d==null){for(const k of [...VXS.keys()])VSTOP(k);return}const x=VXS.get(d);if(!x||!AC)return;VXS.delete(d);const t=AC.currentTime;try{x.b.out.gain.cancelScheduledValues(t),x.b.out.gain.setTargetAtTime(0,t,.06)}catch(e){}
-setTimeout(_=>{for(const q of x.xs)try{q.stop()}catch(e){}try{for(const q of x.os)q.o.stop(),q.l.stop();for(const q of x.src)q.s.stop();x.lfo.stop(),x.dl.stop(),x.b.out.disconnect()}catch(e){}},600)}
+const SBS=new Map(),SB=(ac,v)=>{let q=SBS.get(v.n);if(!q||q.ac!=ac||q.m!=MOUT){const inp=ac.createGain();let n=inp;const add=(type,f,Q,g)=>{const b=ac.createBiquadFilter();b.type=type,b.frequency.value=f,b.Q.value=Q,g&&(b.gain.value=g),n.connect(b),n=b}
+for(const [f,g,Q] of v.pk)add('peaking',f,Q,g);add('lowpass',v.lp,.7),n.connect(MOUT),q={ac,m:MOUT,inp},SBS.set(v.n,q)}return q.inp}
+const BODY=(ac,v)=>{const inp=ac.createGain(),hpf=ac.createBiquadFilter(),out=ac.createGain(),trem=ac.createGain();out.gain.value=0,hpf.type='highpass',hpf.frequency.value=v.hp,hpf.Q.value=.7
+inp.connect(hpf),hpf.connect(out),out.connect(trem),trem.connect(SB(ac,v));return{inp,out,trem,hpf}}
+const HOLD=(p,t)=>{try{p.cancelAndHoldAtTime?p.cancelAndHoldAtTime(t):p.cancelScheduledValues(t)}catch(e){try{p.cancelScheduledValues(t)}catch(e2){}}}          // (stop a change where it stands)
+const VSTOP=d=>{if(d==null){for(const k of [...VXS.keys()])VSTOP(k);return}const x=VXS.get(d);if(!x||!AC)return;VXS.delete(d);const t=AC.currentTime;try{HOLD(x.b.out.gain,t),x.b.out.gain.setTargetAtTime(0,t,.06)}catch(e){}
+setTimeout(_=>{for(const q of x.xs)try{q.stop()}catch(e){}try{for(const q of x.os)q.o.stop(),q.l.stop();for(const q of x.src)q.s.stop();x.lfo.stop(),x.dl.stop(),x.b.trem.disconnect()}catch(e){}},600)}
 // (several notes at once are each made quieter, so that a chord is not much louder than one note)
 const VBAL=_=>{if(!AC)return;const g=1/Math.sqrt(Math.max(1,VXS.size)),t=AC.currentTime;for(const x of VXS.values())if(!x.sg)try{x.b.out.gain.setTargetAtTime(x.v.lv*g,t,x.v.at||.07)}catch(e){}}          // (sg: a song's note, whose loudness is the song's affair)
 // set a note sounding, d semitones from the dial's. os = its bowed strings, each {o: its oscillator, sd: which side of the note, l and
 // lg: its vibrato}; dl = the slow drift that widens and narrows the two side strings together; src = its plucked ones; lfo, lg = the
 // plucked voice's vibrato; ag = how much the loudness breathes with the vibrato; pp = the note it was last plucked at
 const VSTART=(d=0)=>{const ac=CTX();if(!ac)return;MOUT&&MOUT.context==ac||AOUT(ac),VSTOP(d);const v=VOICES[VOICE],b=BODY(ac,v),lfo=ac.createOscillator(),lg=ac.createGain(),ag=ac.createGain(),dl=ac.createOscillator(),f=XF(d),os=[],xs=[]
-lfo.frequency.value=v.vr,dl.frequency.value=.21,lg.gain.value=ag.gain.value=0,lfo.connect(lg),lfo.connect(ag),ag.connect(b.out.gain),b.hpf.frequency.value=Math.min(v.hp,f*.85);try{lfo.start(),dl.start()}catch(e){}
+lfo.frequency.value=v.vr,dl.frequency.value=.21,lg.gain.value=ag.gain.value=0,lfo.connect(lg),lfo.connect(ag),ag.connect(b.trem.gain),b.hpf.frequency.value=Math.min(v.hp,f*.85);try{lfo.start(),dl.start()}catch(e){}
 if(v.bow){const wv=VWAVE(ac,v);for(const [sd,gn,vr] of v.sec||(VXS.size>1?SECT3:SECT)){const o=ac.createOscillator(),g=ac.createGain(),l=ac.createOscillator(),xg=ac.createGain()
-o.setPeriodicWave(wv),o.frequency.value=f,o.detune.value=sd*SIDE(f),g.gain.value=gn,l.frequency.value=v.vr*vr,xg.gain.value=0,l.connect(xg),xg.connect(o.detune),o.connect(g),g.connect(b.inp)
+o.setPeriodicWave(wv),o.frequency.value=f,o.detune.value=sd*SIDE(f);try{o.detune.automationRate='k-rate'}catch(e){}g.gain.value=gn,l.frequency.value=v.vr*vr,xg.gain.value=0,l.connect(xg),xg.connect(o.detune),o.connect(g),g.connect(b.inp)
 if(sd){const dg=ac.createGain();dg.gain.value=sd*1.2,dl.connect(dg),dg.connect(o.detune)}try{o.start(),l.start()}catch(e){}os.push({o,sd,l,lg:xg})}
 if(v.nz){const s=ac.createBufferSource(),bp=ac.createBiquadFilter(),g=ac.createGain();s.buffer=NOISE(ac),s.loop=true,bp.type='bandpass',bp.frequency.value=Math.max(1100,Math.min(3600,f*3)),bp.Q.value=.8,g.gain.value=v.nz,s.connect(bp),bp.connect(g),g.connect(b.inp);try{s.start()}catch(e){}xs.push(s)}     // (breath)
 b.out.gain.value=0}else b.out.gain.value=v.lv/Math.sqrt(VXS.size+1)         // (a struck or plucked note begins at the loudness it will have among the others: its beginning is its loudest part, and VBAL's easing came too late for it)
@@ -862,7 +866,7 @@ const PLUCK=(t,must,dial)=>{if(!SND()||VOICES[VOICE].bow||!must&&t-TPL<.07)retur
 // of a second once the note has stood still for .45 s and goes at once when the note moves. The vibrato is only in what is heard: the
 // plate is driven by the note itself (READ), so it never makes a note read out of tune. (A note below an instrument's own lowest is let
 // through its body rather than thinned to nothing.)
-const VTICK=t=>{const ac=AC;if(!ac||!VXS.size)return;const now=ac.currentTime,glob=t-TMOVE>.45;for(const x of VXS.values()){const f=XF(x.d),still=x.t0!=null?t-x.t0>.45:glob,tc=still?.3:.03,vd=still?x.v.vd:0;try{x.lg.gain.setTargetAtTime(vd,now,tc),x.ag.gain.setTargetAtTime(still?x.v.lv*.06*(x.sg||1):0,now,tc)
+const VTICK=t=>{const ac=AC;if(!ac||!VXS.size)return;const now=ac.currentTime,glob=t-TMOVE>.45;for(const x of VXS.values()){const f=XF(x.d),still=x.t0!=null?t-x.t0>.45:glob,tc=still?.3:.03,vd=still?x.v.vd:0;try{x.lg.gain.setTargetAtTime(vd,now,tc),x.ag.gain.setTargetAtTime(still?.06*(x.sg?(x.v.bow?1:x.vl||1):Math.sqrt(Math.max(1,VXS.size))):0,now,tc)
 x.b.hpf.frequency.setTargetAtTime(Math.min(x.v.hp,f*.85),now,.05)
 for(const q of x.os)q.o.frequency.setTargetAtTime(f,now,.012),q.sd&&q.o.detune.setTargetAtTime(q.sd*SIDE(f),now,.05),q.lg.gain.setTargetAtTime(vd,now,tc)
 const bend=x.d>=1000?1:Math.pow(2,(TP+BEND/100-x.pp)/12);for(const q of x.src)q.s.playbackRate.setTargetAtTime(q.r*bend,now,.012)}catch(e){}}}
@@ -1216,7 +1220,8 @@ ACDRAG(fdr,0),ACDRAG(fdg,1),ACDRAG(fdb,2),pac.onclick=_=>{acc.hidden=!acc.hidden
 // The menu is behind the console: opening it slides the console aside. It closes by its X, by a touch or a swipe on what still shows of the
 // console, by a swipe to the left on the menu itself, or by Escape
 let OPEN=0
-const PM=on=>{OPEN=on?1:0,ROOMSET(),mnb.classList.toggle('on',!!on);if(on)pm.hidden=false,pm.scrollTop=0,requestAnimationFrame(_=>document.body.classList.add('open'));else document.body.classList.remove('open'),setTimeout(_=>OPEN||(pm.hidden=true),440)}
+const SNDG=_=>{try{const ac=AC;if(!ac){sndg.textContent='';return}const ms=Math.round(((ac.baseLatency||0)+(ac.outputLatency||0))*1000),st=ac.playbackStats||ac.playoutStats,u=st&&(st.underrunEvents??st.underrunCount);sndg.textContent='sound: '+ms+' ms buffer'+(u!=null?' \u00b7 '+u+' dropout'+(u==1?'':'s'):'')}catch(e){}}
+const PM=on=>{OPEN=on?1:0,ROOMSET(),mnb.classList.toggle('on',!!on);if(on)SNDG(),pm.hidden=false,pm.scrollTop=0,requestAnimationFrame(_=>document.body.classList.add('open'));else document.body.classList.remove('open'),setTimeout(_=>OPEN||(pm.hidden=true),440)}
 // The menu is closed by its cross, by Escape, by a tap on what shows of the console, or by taking hold anywhere (of the menu or of the
 // console) and dragging left: the console comes with the finger, and let go it closes if it has come 40 pixels or so, or was flicked
 // left, unless the finger was on its way back to the right; otherwise it goes back. MD = a touch that may be such a drag: where it began, whether it has become one (on), how
@@ -1438,7 +1443,7 @@ for(const b of [...document.querySelectorAll('.key,.sk,.nmw,.mw'),dspw,dlg])b.in
 const GSS=[...document.querySelectorAll('.gs')]                                             // (the streaks that slide with it)
 ACT(pvt,_=>{VB(10),VENT(performance.now()/1000),pvt.classList.add('fl'),clearTimeout(pvt.t),pvt.t=setTimeout(_=>pvt.classList.remove('fl'),700)})
 // the page gives the microphone back while it is out of sight and takes it up again on return
-document.addEventListener('visibilitychange',_=>{try{if(document.hidden){AC&&AC.state=='running'&&AC.suspend()}else{AC&&AC.resume().catch(_=>{}),mode&&WAKE()}}catch(e){}})
+const SUSP={t:0};document.addEventListener('visibilitychange',_=>{try{clearTimeout(SUSP.t);if(document.hidden){if(AC&&AC.state=='running'){HUSH&&HUSH.context==AC&&HUSH.gain.setTargetAtTime(0,AC.currentTime,.012);SUSP.t=setTimeout(_=>{document.hidden&&AC&&AC.suspend()},90)}}else{AC&&AC.resume().then(_=>{HUSH&&HUSH.context==AC&&HUSH.gain.setTargetAtTime(1,AC.currentTime,.02)}).catch(_=>{}),mode&&WAKE()}}catch(e){}})
 // for the tests: the page's state; and the dial as two numbers, a note (TM) and cents off it (TB)
 window.__T=_=>({mode,r:R0,inn:IN,off:OFF,lx:LX,ly:LY,live:LIVE,amp:P.amp(),lam:LAMP,a4:A4,tp:TP,bend:BEND,tb:(TP-Math.round(TP))*100+BEND,tm:Math.round(TP),playing:PLAYING,env:ENV,voice:VOICES[VOICE].n,vi:VOICE,fs:LSN?FSM:DFS,lsn:LSN,col:COL,nts:NTS,ob:[...OB.values()],vx:[...VXS.keys()],held:[...HELD.values()],lk:[...LKS.keys()],notes:[...VXS.keys()].map(XN).sort((a,b)=>a-b),mon:MON,bpm:BPM,sig:SIGS[SIG][0]+'/'+SIGS[SIG][1],chord:CHNAME(),lit:PJ.map((b,k)=>b.classList.contains('snd')?NOTES[(11-k+12)%12]:'').filter(x=>x).join(' '),open:OPEN,busy:BUSY,glow:NGL,acc:ACR,light:[+TLX.toFixed(3),+TLY.toFixed(3),GLX,GLY,LK],ga:GA,glints:(_=>{let n=0;for(let i=0;i<NG;i++){if(GS[i])continue;const a=GFX[i]-GLX,b=GFY[i]-GLY;a*a+b*b<GR2&&GLS[MT[i]]&&n++}return n})(),shock:+SHOCK.toFixed(3),zup:ZUP,zw:+ZW.toFixed(4),zt:ZT,scu:+Math.min(1,ZW).toFixed(4),rot:scw.style.getPropertyValue('--r'),fading:GS.reduce((a,g)=>a+(g==5),0),ghosts:NGH,swept:GS.reduce((a,g)=>a+(g==1),0),z:ZV,zl:ZL,zm:ZM,zk:ZK,zx:ZX,zy:ZY,fon:FON,onp:GS.reduce((a,g)=>a+(g==0),0),kinds:MATS.map((m,k)=>{let n=0;for(let i=0;i<NG;i++)GS[i]==0&&MT[i]==k&&n++;return m.n+':'+n}).join(' ')})
 let TMX=69,TBX=0;Object.defineProperty(window,'TM',{get:_=>TMX,set:v=>{TMX=v,TP=v+TBX/100,TGT=null,COAST=0,TMOVE=performance.now()/1000}}),Object.defineProperty(window,'TB',{get:_=>TBX,set:v=>{TBX=v,TP=TMX+v/100,TGT=null,COAST=0,TMOVE=performance.now()/1000}})
@@ -1488,19 +1493,19 @@ t+=r?(r==2?-.004:0)+.005*GAUSS():.012+.007*GAUSS(),f&1&&(t+=.05+.03*Math.random(
 ev.push({t,te:Math.max(te,t+.09),n,v:Math.max(.12,Math.min(1.1,v*(1+.05*GAUSS()))),r,c,f,rs:RS.get(b)}),te>end&&(end=te)}
 ev.sort((a,b)=>a.t-b.t);return{ev,end}}
 // a song's note stops. (slow: the last notes of a song die away rather than stop)
-const SGOFF=(S,k,slow)=>{S.on.delete(k),NREF.delete(k);const x=VXS.get(k);if(slow&&x&&AC){try{x.b.out.gain.cancelScheduledValues(AC.currentTime),x.b.out.gain.setTargetAtTime(0,AC.currentTime,.4)}catch(e){}setTimeout(_=>VXS.get(k)==x&&(VSTOP(k),VBAL()),1700)}else VSTOP(k),VBAL()}
+const SGOFF=(S,k,slow)=>{S.on.delete(k),NREF.delete(k);const x=VXS.get(k);if(slow&&x&&AC){try{HOLD(x.b.out.gain,AC.currentTime),x.b.out.gain.setTargetAtTime(0,AC.currentTime,.4)}catch(e){}setTimeout(_=>VXS.get(k)==x&&(VSTOP(k),VBAL()),1700)}else VSTOP(k),VBAL()}
 // the notes due within the next moment are set going, each at its exact time by the sound's clock (a struck note is struck
 // then; a held one, which begins softly, is begun a little before); the ones whose time is over are stopped. No more sound at once
 // than the orbs allow fingers (six held notes; nine struck ones, which are lighter work): the one longest sounding gives way,
 // a note of the melody last. A tied note is held on by an instrument that holds, and struck again, softer, by one that cannot
-const SGGO=_=>{const S=SONG,ac=AC;if(!S||!ac||S.t0==null||ac.state!='running')return;const now=ac.currentTime,bow=VOICES[VOICE].bow,la=bow?.04:.18,pn=performance.now()/1000
+const SGGO=_=>{const S=SONG,ac=AC;if(!S||!ac||S.t0==null||ac.state!='running')return;const now=ac.currentTime,bow=VOICES[VOICE].bow,la=bow?.12:.3,pn=performance.now()/1000          // (set going this far ahead: a busy moment on the page cannot make a note late)
 while(S.i<S.ev.length&&S.t0+S.ev[S.i].t<now+la){const e=S.ev[S.i++],k=(e.r?3000:2000)+e.n,q=S.on.get(k);let x=VXS.get(k)
-const when=Math.max(now+.004,S.t0+e.t+e.c*e.rs*(bow?.22:1)),off=S.t0+e.te
+const due=S.t0+e.t+e.c*e.rs*(bow?.22:1),when=Math.max(now+.004,due),off=S.t0+e.te;due<now+.004&&(S.late=(S.late||0)+1)
 if(e.f&4&&bow&&q&&x){q.off=Math.max(q.off,off+.035);continue}
 for(const lim=bow?6:9;!q&&S.on.size>=lim;){let o=null,m=1e9;for(const [kk,qq] of S.on){const a=qq.w+(qq.mel?4:0);a<m&&(m=a,o=kk)}SGOFF(S,o)}
 const g=e.v*(e.f&4?.85:1);if(!x||bow||x.v!=VOICES[VOICE])VSTART(k),x=VXS.get(k);if(!x)continue          // (a struck note still ringing is struck again as it is; any other is begun, on the instrument the knob stands at now)
 x.sg=SGN*g,x.vl=g,x.t0=pn+when-now,NREF.set(k,1);const gn=x.b.out.gain,L=x.v.lv*SGN
-try{gn.cancelScheduledValues(now);if(bow)gn.setValueAtTime(0,now),gn.setTargetAtTime(L*g*.84,when,x.v.at||.07),gn.setTargetAtTime(L*g,when+Math.min(.6,(off-when)*.4),Math.max(.1,(off-when)*.22));else gn.setValueAtTime(L,now),PLK(x,when-now)}catch(err){}
+try{HOLD(gn,now);if(bow)gn.setValueAtTime(0,now),gn.setTargetAtTime(L*g*.84,when,x.v.at||.07),gn.setTargetAtTime(L*g,when+Math.min(.6,(off-when)*.4),Math.max(.1,(off-when)*.22));else gn.setValueAtTime(L,now),PLK(x,when-now)}catch(err){}
 S.on.set(k,{w:when,off:bow?off+(e.r?0:.035):off+(e.r?1:1.5),mel:!e.r,g}),SGQ.push({w:when,n:e.n,mel:!e.r,top:!e.r&&!(e.f&16),len:bow?off-when:Math.min(.5,off-when+.15)}),window.__sl&&window.__sl.push([+when.toFixed(4),e.n,e.r,+g.toFixed(3),bow?1:0,+(off-when).toFixed(3)])}
 const last=S.i>=S.ev.length;for(const [k,q] of S.on)now>=q.off&&SGOFF(S,k,last)          // (notes begun before the knob was turned finish on the instrument they began on)
 last&&!S.on.size&&now>S.t0+S.end+.5&&SSTOP(2)}
@@ -1531,7 +1536,7 @@ const SGPICK=_=>{if(SGP>=0)return SGP;const h=SGH(),all=SGS.map((_,i)=>i);let c=
 SNICE=_=>{const i=SGPICK();let h=SGH().filter(x=>x!=i);h.push(i),h.length>=SGS.length&&(h=[i]),SGP=-1;try{localStorage.setItem('sst.heard',JSON.stringify(h))}catch(e){}return SPLAY(i)}
 const SGUI=_=>{const on=!!SONG,G=SGS[on?SONG.g:SGPICK()];sgb.classList.toggle('on',on),sgb.innerHTML=SV(on?'pause':'play')+'<span>Play me a nice song<small>'+G.n+', '+G.d+'</small></span>',sgb.ariaLabel=on?'stop the song':'play me a nice song'}
 {const h=document.createElement('p'),d=document.createElement('div'),b=document.createElement('button');h.className='h',h.textContent='songs',d.className='links',b.id='sgb',b.onclick=_=>SONG?SSTOP(1):SNICE(),d.appendChild(b),phd.after(h,d),SGUI()}
-window.__S=_=>({on:!!SONG,g:SONG?SONG.g:-1,i:SONG?SONG.i:0,n:SONG?SONG.ev.length:0,lead:SONG?SONG.lead:null,t:SONG&&SONG.t0!=null&&AC?+(AC.currentTime-SONG.t0).toFixed(3):null,end:SONG?+SONG.end.toFixed(2):0,held:SONG?SONG.on.size:0,keys:[...VXS.keys()],voice:VOICES[VOICE].n,lit:SGM})
+window.__S=_=>({late:SONG?SONG.late||0:0,on:!!SONG,g:SONG?SONG.g:-1,i:SONG?SONG.i:0,n:SONG?SONG.ev.length:0,lead:SONG?SONG.lead:null,t:SONG&&SONG.t0!=null&&AC?+(AC.currentTime-SONG.t0).toFixed(3):null,end:SONG?+SONG.end.toFixed(2):0,held:SONG?SONG.on.size:0,keys:[...VXS.keys()],voice:VOICES[VOICE].n,lit:SGM})
 
 // ---------- the guide ----------
 // "A bit of guidance would be nice": the console shown one thing at a time, as to someone who has never seen any of it and is
